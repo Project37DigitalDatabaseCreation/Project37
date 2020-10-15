@@ -34,6 +34,9 @@
     </style>
   </head>
   <body>
+    <div style="width:100%;">
+      <h1 style="text-align:center;">First Successful Deployment for Team 37</h1>
+    </div>
     <div id="message">
       <h2>Welcome</h2>
       <h1>Firebase Hosting Setup Complete</h1>
@@ -61,11 +64,11 @@
         try {
           let app = firebase.app();
           let features = [
-            'auth', 
-            'database', 
-            'messaging', 
-            'storage', 
-            'analytics', 
+            'auth',
+            'database',
+            'messaging',
+            'storage',
+            'analytics',
             'remoteConfig',
             'performance',
           ].filter(feature => typeof app[feature] === 'function');
