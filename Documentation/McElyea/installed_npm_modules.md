@@ -1,4 +1,6 @@
-/usr/local/lib
+# Installed Node Modules:
+
+```/usr/local/lib
 ├─┬ @vue/cli@4.5.7
 │ ├── @types/ejs@2.7.0
 │ ├─┬ @types/inquirer@6.5.0
@@ -3314,5 +3316,5 @@
   └─┬ write-file-atomic@2.4.3
     ├── graceful-fs@4.2.3 deduped
     ├── imurmurhash@0.1.4 deduped
-    └── signal-exit@3.0.2 deduped
+    └── signal-exit@3.0.2 deduped```
 
