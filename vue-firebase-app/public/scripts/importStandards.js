@@ -1,6 +1,4 @@
-import {initializeApp} from 'firebase';
-
-const app = initializeApp({
+const app = firebase.initializeApp({
     apiKey: "AIzaSyCfqZoAkpuSBfp9n9sN3RCyHPV5wmA6cxs",
     authDomain: "ser401-project-37.firebaseapp.com",
     databaseURL: "https://ser401-project-37.firebaseio.com",
@@ -10,12 +8,13 @@ const app = initializeApp({
     appId: "1:46311260060:web:1e381fb482afc30c955259"
   });
 
-const db = app.database();
+const db = app.firestore();
 
 db.collection("GeneralStandards").add({
   title: "Course Overview and Introduction"
 })
 .then(function(docRef) {
+  document.getElementById("app").innerHTML += "<div>Document written with ID: " + docRef.id + "</div>";
   console.log("Document written with ID: ", docRef.id);
 })
 .catch(function(error) {
