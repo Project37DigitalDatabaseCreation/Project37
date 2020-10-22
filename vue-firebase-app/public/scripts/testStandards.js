@@ -21,26 +21,26 @@ function populateStandards() {
         let gsId = doc.id;
 
         appDiv.innerHTML += "<div id=&quot;" + gsId + 
-                            "&quot;><h4>General Standard " + gs.number + 
+                            "&quot;><h3>General Standard " + gs.number + 
                             " &mdash; " + gs.title +
-                            ": </h4>" + gs.description + "<br /><br />" +
+                            ": </h3>" + gs.description + "<br /><br />" +
                             "<span style='font-style: italic'>" + gs.annotation + "</span><br /></div>";
         standards.forEach(doc =>{
             let s = doc.data();
             if(s.general_standard_ref.id == gsId) {
-                appDiv.innerHTML += "<div id='" + doc.id +
+                appDiv.innerHTML += "<div style='margin-left: 25px;' id='" + doc.id +
                                     "'><br />" + gs.number + "." + s.number +
                                     " " + s.title + "<br />" +
-                                    s.annotation;
+                                    s.annotation + "Points: " + s.points;
             }
         });
     });
 };
 
-db.collection("GeneralStandards").get()
+db.collection("GeneralStandards").orderBy("number", "asc").get()
 .then(result => {
     generalStandards = result;
-    db.collection("Standards").get()
+    db.collection("Standards").orderBy("number", "asc").get()
     .then(result => {
         standards = result;
         populateStandards();   
