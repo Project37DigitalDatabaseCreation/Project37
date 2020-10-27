@@ -190,6 +190,75 @@ function addStandards2(docRef) {
   });  
 };
 
+function addStandards3(docRef) {
+  let standards = [];
+
+  let data = {
+    general_standard_ref: db.doc('GeneralStandards/' + docRef.id),
+    number: 1,
+    title: "The assessments measure the stated learning objectives or competencies.",
+    annotation: "<p><span style='font-weight: bold;'>Alignment:</span> Course assessments (ways of confirming learner progress and mastery) are consistent with the course and module/unit-level learning objectives or competencies (2.1 and 2.2) by measuring the accomplishment of those objectives or competencies. Instructional materials (4.1), learning activities (5.1), and course tools (6.1) support the learning objectives or competencies and enable learners to be successful on the assessments.</p><p>From the types of assessments chosen, it is clear that learners can successfully complete the assessments if they have met the objectives or competencies stated in the course materials and learning activities.</p><p>Reviewers, examine both the course and module or unit objectives or competencies in your review of assessments. The review team is expected to review all assessments in the course. For example, reviewers should look at quiz and exam questions, discussion prompts, etc. Ensure that the assessments measure the learning objectives or competencies.</p><p>Examples of alignment between a learning objective or competency and an assessment:</p><ol><li>An essay or discussion shows learners can &quot;explain&quot; or &quot;describe&quot; something.</li><li>A multiple-choice quiz verifies that learners can &quot;define&quot; or &quot;identify&quot; vocabulary.</li><li>An assignment shows that learners can &quot;write&quot; or &quot;compose&quot; a composition.</li><li>A video of a learner presentation in a foreign language shows that learners can &quot;speak&quot; or &quot;translate&quot; a foreign language.</li><li>Participation in a game reveals learners can &quot;analyze&quot; and &quot;evaluate&quot; complex factors and &quot;make good decisions&quot; that allow progress through the game.</li></ol><p>Examples of lack of alignment between a learning objective or competency and an assessment:</p><ol><li>The objective or competency is to &quot;write a persuasive essay,&quot; but the assessment is a multiple-choice test.</li><li>The objective or competency is to &quot;create a body of work that illustrates your photographic vision,&quot; but the assessment is a 25-page thesis about contemporary photographers.</li></ol><p>Some assessments may be geared toward meeting outcomes other than those stated in the course; for example, a course may have a writing component as part of an institution-wide writing-across-the-curriculum requirement. In that case, the reviewer suggests including in the course the objectives or competencies that reflect the institution-wide requirement, if those objectives or competencies are not already included.</p><p><span style='font-weight: bold;'>Special Situations:</span> In some cases (check the Course Worksheet), the course objectives or competencies are institutionally mandated, and the individual instructor does not have the authority to change them. For such cases, consider the module/unit-level objectives or competencies to assess whether the course meets Specific Review Standard 3.1.</p><p><span style='font-weight: bold;'>Competency-Based Courses:</span> Learners have flexibility in preparing for assessment of competencies, as they may have acquired competencies in a work environment or through life experience, independent study, etc.</p>",
+    points: 3,
+    is_active: true
+  };
+  
+  standards.push(data);
+
+  data = {
+    general_standard_ref: db.doc('GeneralStandards/' + docRef.id),
+    number: 2,
+    title: "The course grading policy is stated clearly at the beginning of the course.",
+    annotation: "<p>A clear, written statement at the beginning of the course fully explains to the learner how the course grades are calculated. The points, percentages, and weights for each component of the course grade are clearly stated. The relationship(s) between points, percentages, weights, and letter grades are explained. If grades are reduced because of late submission, the instructor’s policy on late submission clearly states the amount of the reduction.</p><p>Review the clarity of the explanation and presentation to the learner, not the simplicity or complexity of a given grading system itself. Even a relatively complex grading system can be made easy to understand. Look for a clearly explained grading policy in the syllabus, Start Here folder, or another place that is open to learners at the start of the course.</p><p>Examples of what to look for:</p><ol><li>A list of all activities, tests, etc., that will determine the final grade, along with their weights or points</li><li>An explanation of the relationship between the final course letter grade and the learner’s accumulated points or percentages</li><li>An explanation of the relationship between points and percentages, if both are used</li><li>A clear statement about how late submissions will be graded, including information on any point deductions for assignments submitted late</li></ol><p><span style='font-weight: bold;'>Competency-Based Courses:</span> The grading pattern may be different from that used in traditionally graded courses, and grading policy is equally essential to describe in competency-based courses. Competency-based grades may rely exclusively on demonstration of mastery of the stated competencies, which may occur within the course or in a separate process external to the course. Grades may be in the form of a transcript listing competencies attained.</p>",
+    points: 3,
+    is_active: true
+  };
+  
+  standards.push(data);
+
+  data = {
+    general_standard_ref: db.doc('GeneralStandards/' + docRef.id),
+    number: 3,
+    title: "Specific and descriptive criteria are provided for the evaluation of learners’ work, and their connection to the course grading policy is clearly explained.",
+    annotation: "<p>Learners are provided with a clear and complete description of the criteria that will be used to evaluate their work in the course. Evaluation criteria are provided to learners prior to beginning a particular assessment. The description or statement of criteria provides learners with clear guidance on the instructor’s expectations and on the required components of coursework and participation. The criteria give learners the information they need to understand how a grade on an assignment or activity is calculated.</p><p>Reviewers, confirm that the criteria used to evaluate learners’ performance are both specific and connected to the grading policy. Note, however, that you are not asked to look for and evaluate the instructor’s specific feedback to learners in Specific Review Standard 3.3. Your focus is the design of the course, not the delivery of the course.</p><p>Examples of what to look for:</p><ol><li>Evidence that the instructor has stated the evaluation criteria for all graded work. Criteria may be in the form of a detailed checklist, rubric, or other evaluation instrument.</li><li>A description of how learners’ participation in discussions will be graded, including the number of required postings per week; the criteria for evaluating the originality and quality of learners’ comments and their responsiveness to classmates’ comments; and the grade or credit learners can expect for varying levels of performance.</li><li>Clearly stated point values for each question in quizzes and exams, including information about partial credit.</li><li>For group or team projects, an explanation of the criteria used to evaluate individual or team performance and whether scores or grades will be assigned by individual or by team.</li></ol><p>Reviewers, determine that both conditions of the Specific Review Standard are met. If only one part of the Specific Review Standard is met, the Specific Review Standard is not met.</p><p><span style='font-weight: bold;'>Competency-Based Courses:</span> A description makes clear in specific terms the levels of mastery required to demonstrate the defined competencies.</p>",
+    points: 3,
+    is_active: true
+  };
+  
+  standards.push(data);
+
+  data = {
+    general_standard_ref: db.doc('GeneralStandards/' + docRef.id),
+    number: 4,
+    title: "The assessments used are sequenced, varied, and suited to the level of the course.",
+    annotation: "<p>Multiple assessment strategies are used that require learners to apply what they learn and to think critically. In reviewing this Specific Review Standard, consider multiple factors, such as the discipline, type, and level of the course, and consult the team Subject Matter Expert when needed. Look at the course as a whole to determine if the Specific Review Standard is met, since individual modules may not include sequenced or varied assessments.</p><p>The assessments are sequenced so as to promote the learning process and to build on previously mastered knowledge and skills gained in this course and prerequisite courses. Assessments are paced to give learners adequate time to achieve mastery and complete the work in a thoughtful manner.</p><p>Assessments are varied in order to provide multiple ways for learners to demonstrate progress and mastery, and to accommodate diverse learners. Examples of various assessment types include exams, essays, discussions, reflective journals, group projects, portfolios, written papers, presentations, multimedia projects, and interviews.</p><p>To determine whether the assessments are suited to the level of the course, refer to Specific Review Standard 2.5, as the cognitive level of an action verb used in a learning objective or competency is determined by the type of assessment that is aligned with it. &quot;Choose,&quot; for example, could be used in a learning objective or competency for a low-level or a high-level assessment. Assessments may reflect varying levels of cognitive engagement, but assessments in upper-level courses, for example, should include some assessments that are at the application level or above.</p><p>Examples of assessments that meet the Specific Review Standard:</p><ol><li>A series of assessments progress from the definition of terms, to a short paper explaining the relationship between various theoretical constructs, to a term paper that includes the application of theoretical constructs and critical analysis of a journal article.</li><li>Assessments in a public speaking course include first submitting an outline of a speech and next a draft of the speech; and, finally, delivering the speech.</li><li>An upper-level course in world history has multiple-choice quizzes and discussions, and it also includes a term paper and final presentation that ask students to analyze and evaluate the various events leading up to World War II.</li></ol><p>Examples of assessments that may not meet the Specific Review Standard:</p><ol><li>The assessments consist of only multiple-choice tests.</li><li>In a course in which learners are assumed to not know how to find research materials, the first assessment requires learners to locate research materials, while library research skills and methods are not covered until later in the course.</li><li>No assessments are administered during the first 12 weeks of the semester, and an essay, term paper, and final exam are due during the 13th, 14th, and 15th weeks, respectively.</li><li>Assessments in an introductory course consist of only answering the questions at the conclusion of each textbook chapter.</li><li>Assessments in a graduate-level course include only lower-level assessments, such as multiple-choice, &quot;knowledge-check&quot; types of quizzes and short essays asking learners to define terms.</li></ol><p>Circumstances affecting some graduate courses: The grade may be entirely based on a major assignment due at the end of the term. In this case, benchmarks for progress are provided during the term, with feedback from the instructor or peers.</p><p>Examples of benchmark assignments might include submission of:</p><ol><li>An outline or project plan</li><li>A bibliography</li><li>A précis of the paper or project</li><li>One or more preliminary drafts</li></ol><p>If any one of the three parts of Specific Review Standard 3.4 is not met, the Specific Review Standard should be marked &quot;Not Met.&quot;</p><p><span style='font-weight: bold;'>Competency-Based Courses:</span> Assessment of competencies may not follow the pattern of assessment in traditional courses. Reviewers, focus on whether the assessment instruments credibly establish that the learner has demonstrated mastery of the competency.</p>",
+    points: 2,
+    is_active: true
+  };
+  
+  standards.push(data);
+
+  data = {
+    general_standard_ref: db.doc('GeneralStandards/' + docRef.id),
+    number: 5,
+    title: "The course provides learners with multiple opportunities to track their learning progress with timely feedback.",
+    annotation: "<p>Learning is more effective if learners receive frequent, substantive, and timely feedback. The feedback may come from the instructor directly, from assignments and assessments that have feedback built into them, or from other learners.</p><p>Look at the course schedule or list of due dates in conjunction with the turnaround time specified for feedback in order to determine if timely feedback is incorporated into the course design (refer to Specific Review Standard 5.3 for the instructor’s plan for feedback). Look for examples of assignments that provide feedback automatically upon completion or allow for multiple attempts.</p><p>Examples that meet this Specific Review Standard:</p><ol><li>Writing assignments that allow for the submission of a preliminary draft for instructor comment and suggestions for improvement</li><li>Self-mastery tests that include informative feedback with each answer choice</li><li>Interactive games and simulations that have feedback built in</li><li>Self-scoring practice quizzes</li><li>Practice written assignments that receive feedback, such as journals, reflection papers, or portfolios</li><li>Peer reviews and critiques</li><li>The opportunity for learners to compare their work to model papers or essays, sample answers, or answer keys prior to completing an assessment, thereby encouraging reflection and improvement</li></ol><p>Examples that may not meet this Specific Review Standard:</p><ol><li>Feedback on automatically scored or instructor-graded quizzes provides learners with a grade, but does not tell them which questions they got wrong, or provide any additional information that helps them track their learning.</li><li>A preliminary draft of a major paper is due, and three days later the final draft is due.</li><li>The learner receives credit for submitting a preliminary draft of an assignment, but no feedback on the draft is given.</li><li>Assignments (e.g., discussions, brief reflections) are graded as &quot;complete&quot; or &quot;not complete,&quot; and course information indicates that learners will get credit for participating in the assignment but will not receive feedback.</li></ol>",
+    points: 2,
+    is_active: true
+  };
+  
+  standards.push(data);
+
+  standards.forEach(standard => {
+    db.collection("Standards").add(standard)
+    .then(function(docRef) {
+      console.log("Standard written with ID: ", docRef.id);
+    })
+    .catch(function(error) {
+      console.error("Error adding document: ", error);
+    });
+  });  
+};
+
 let data = {
   number: 1,
   title: "Course Overview and Introduction",
@@ -217,6 +286,22 @@ db.collection("GeneralStandards").add(data)
 .then(function(docRef) {  
   console.log("General Standard written with ID: ", docRef.id);
   addStandards2(docRef);
+})
+.catch(function(error) {
+  console.error("Error adding document: ", error);
+});
+
+data = {
+  number: 3,
+  title: "Assessment and Measurement",
+  description: "Assessments are integral to the learning process and are designed to evaluate learner progress in achieving the stated learning objectives or mastering the competencies.",
+  annotation: "Assessment is implemented in a manner that corresponds to the course learning objectives or competencies and not only allows the instructor a broad perspective on the learners’ mastery of content, but also allows learners to track their learning progress throughout the course."
+};
+
+db.collection("GeneralStandards").add(data)
+.then(function(docRef) {  
+  console.log("General Standard written with ID: ", docRef.id);
+  addStandards3(docRef);
 })
 .catch(function(error) {
   console.error("Error adding document: ", error);
