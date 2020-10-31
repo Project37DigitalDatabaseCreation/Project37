@@ -259,6 +259,75 @@ function addStandards3(docRef) {
   });  
 };
 
+function addStandards4(docRef) {
+  let standards = [];
+
+  let data = {
+    general_standard_ref: db.doc('GeneralStandards/' + docRef.id),
+    number: 1,
+    title: "The instructional materials contribute to the achievement of the stated learning objectives or competencies.",
+    annotation: "<span style='font-weight: bold;'>Alignment:</span> The instructional materials used in the course align with the course and module/unit-level learning objectives or competencies (2.1 and 2.2) by contributing to the achievement of those objectives or competencies and by integrating effectively with the tools (6.1), assessments (3.1), and learning activities (5.1) selected for the course.</p><p>Instructional materials may include but are not limited to textbooks, Open Educational Resources, publisher- or instructor-created materials, slide presentations and interactive content (such as simulations), expert lectures, videos, images, diagrams, and websites. The materials align with the learning objectives or competencies in order to provide the information and resources learners need to achieve the stated learning objectives or competencies. Reviewers, consider both the course and module/unit-level learning objectives or competencies in your review. Look for a clear and direct way in which instructional materials are aligned with learning objectives or competencies.</p><p>Decisions on this Specific Review Standard may be difficult for reviewers whose expertise is not in the course discipline. Consult with the team Subject Matter Expert and use professional judgment to determine if the instructional materials support the learning objectives or competencies.</p><p>Reviewers are encouraged to consult a digital version of the textbook, if available, as many publishers provide electronic access. In reviewing the course against this Specific Review Standard, reviewers will work closely with the Subject Matter Expert on the team.</p><p>If the instructional materials are from publishers, review team members must be provided with access to all digital publisher materials to determine whether Specific Review Standard 4.1 is met.</p><p>In some advanced undergraduate courses and graduate courses, no textbook(s) are assigned. Reviewers will need to consider bibliographies, webliographies, or Open Educational Resources provided by the instructor, or, in some cases, developed by learners themselves, following guidelines provided by the instructor. Reviewers, focus on the alignment of the instructional materials with the learning objectives or competencies and assessments rather than attempt to evaluate the content. Confirming this alignment also ensures the instructional materials are suited to the level of the course, if the learning objectives have been determined to be suited to the level of the course (Specific Review Standard 2.5).</p><p><span style='font-weight: bold;'>Special Situations:</span> In some cases (check the Course Worksheet), the course objectives or competencies are institutionally mandated, and the individual instructor does not have the authority to change them. For such cases, consider instead the module/unit-level objectives or competencies in determining whether the course meets Specific Review Standard 4.1.</p>",
+    points: 3,
+    is_active: true
+  };
+  
+  standards.push(data);
+
+  data = {
+    general_standard_ref: db.doc('GeneralStandards/' + docRef.id),
+    number: 2,
+    title: "The relationship between the use of instructional materials in the course and completing learning activities is clearly explained.",
+    annotation: "<p>Learners are provided with an explanation of how the instructional materials and learning activities are used in the course, and how each will help them achieve the stated learning objectives or help them prepare to demonstrate course competencies. If optional instructional materials are provided and their use is recommended in the course, the materials are labeled as optional and their relevance to learning activities is explained.</p><p>Reviewers, confirm that instructional materials are provided in such a way as to be useful to the learner in completing learning activities. An example would be a course that requires learners to use the following materials: a textbook divided into chapters, video segments ordered by topics, a website or simulation activities organized around specific skills, and an internal or external website that has an opening menu consisting of &quot;practice quizzes,&quot; &quot;images,&quot; and &quot;audio examples.&quot; In such a course, consider whether the order in which learners should use these materials is clearly indicated, as well as how each is related to the learning activities and how the materials are related to one another.</p><p>In courses in which learners are expected to find their own learning materials, the instructor posts guidelines that assist the learner in identifying relevant materials and in distinguishing between core and supplementary materials and between scholarly and non-scholarly sources for academic writing.</p><p>Examples that explain the relationship between instructional materials and learning activities:</p><ol><li>A schedule of assigned readings is accompanied by an explanation of how the readings will be used in online discussion forum posting.</li><li>Links to external websites include a description of the site and an explanation of how the information at the site is to be used in the learning activities.</li><li>The purpose of instructional materials such as interactive games, simulations, interactive media, and exercises is clearly explained as well as how the materials are to be used in specific learning activities.</br></br>An explanation is provided for how required or optional publisher materials, including presentation slides, practice quizzes, videos, and other content, are to be used in the learning activities.</li></ol><p><span style='font-weight: bold;'>Blended Courses:</span> Instructions make clear which materials are to be used in the face-to-face classroom and which are specific to the online portion of the course. Competency-Based Courses: In competency-based courses, all materials may be optional. The introduction specifies which materials and activities are required, supplemental, or optional.</p>",
+    points: 3,
+    is_active: true
+  };
+  
+  standards.push(data);
+
+  data = {
+    general_standard_ref: db.doc('GeneralStandards/' + docRef.id),
+    number: 3,
+    title: "The course models the academic integrity expected of learners by providing both source references and permissions for use of instructional materials.",
+    annotation: "<p>Instructional materials include source references, and permission has been obtained to utilize the materials in the course.</p><p>Sources for materials used in the course are clearly identified with references. This requirement applies to previously published, instructor-created materials, journal articles, publisher materials, textbooks, images, graphic materials, tables, videos, audio recordings, websites, slides, and other forms of multimedia.</p><p>Examples of instructional materials for which references are provided:</p><ol><li>Images that appear in a module</li><li>Videos that are linked from a video repository tool</li><li>Journal articles that are linked from a library portal for download</li></ol><p>The format of references in instructional materials follows the style prescribed in a recognized guide, such as APA, MLA, or Chicago. At minimum, a reference includes the author or owner name; date of publication; resource title, if supplied; and URL or source, such as a publisher.</p><p>When an extensive body of material comes from a single source (e.g., instructional materials from a publisher), a single reference suffices. Reviewers might look for reference information in a list of materials, in the course syllabus, or in another course document. For example, under &quot;Instructional Materials&quot; in a syllabus, the instructor may have included &quot;All PowerPoint Files&quot; and then listed an appropriately formatted reference, rather than individually citing each PowerPoint slide set in each module. A course might include a single document that lists the sources of all materials. Reviewers, examine the course to determine whether materials are referenced.</p><p>If permission to copy or download and post digital materials has been received, the permission to use those materials is posted in the course alongside or beneath the material, or in a single location such as a &quot;Permissions&quot; section in the syllabus. In such a case, learners are able to see that the use of the intellectual property in this manner was permitted by the property owner (author, publisher, etc.).</p><p>Examples of how permissions for different types of materials may appear in the course:</p><ol><li>Learners are directed to acquire instructional materials from sources that provide permission for use, such as publishers or book rental organizations for textbooks.</li><li>Permission for use of scholarly journal articles or other materials is provided within the access rights to a library’s databases or sites that host original videos.</li><li>Instructional materials that are open-source include links to the original materials, or a link to a statement designating the materials open-source appears with the materials.</li></ol><p>Examples of instructional materials that require permission for use:</p><ol><li>A PDF of a scholarly journal article downloaded from a library database and posted in the course site</li><li>A chapter from a textbook converted to PDF (or other e-reader format) and posted in the course</li><li>A video downloaded from an online source (e.g., YouTube, a publisher’s website) and posted in the course site</li><li>A PDF of an article the instructor has published in a scholarly journal</li></ol>",
+    points: 2,
+    is_active: true
+  };
+  
+  standards.push(data);
+
+  data = {
+    general_standard_ref: db.doc('GeneralStandards/' + docRef.id),
+    number: 4,
+    title: "The instructional materials represent up-to-date theory and practice in the discipline.",
+    annotation: "<p>The instructional materials are current. For example, an introductory computer course might include information on recent trends in data storage; an English writing course might discuss the purpose of Internet research; a chemistry course might include computerized models to demonstrate chemical operations.</p><p>Decisions on whether the course meets this Specific Review Standard may be difficult for reviewers whose expertise is not in the course discipline. Consult with the team Subject Matter Expert and use professional judgment to determine if the materials are current.</p><p>Older works considered “seminal” may meet Specific Review Standard 4.4. The Subject Matter Expert on the team verifies that a work is seminal in the discipline.</p><p>In considering whether or not this Specific Review Standard is met, reviewers examine the Course Worksheet for additional information regarding the currency and selection of instructional materials.</p>",
+    points: 2,
+    is_active: true
+  };
+  
+  standards.push(data);
+
+  data = {
+    general_standard_ref: db.doc('GeneralStandards/' + docRef.id),
+    number: 5,
+    title: "A variety of instructional materials is used in the course.",
+    annotation: "<p>The course presents a variety of relevant instructional materials that may include textbooks and other publications, instructor-created resources, websites, and multimedia. Variety may take the form of different types of media used to deliver content.</p><p>Examples of variety in instructional materials that may meet this Specific Review Standard:</p><ol><li>A text from a single author, multiple videos, and a selection of websites</li><li>Several scholarly journal articles as readings, multiple videos, and a few audio podcasts created by the instructor</li><li>A series of topical videos and a textbook</li></ol><p>Examples that may not meet this Specific Review Standard:</p><ol><li>A single textbook</li><li>Weekly video lectures with no other instructional materials</li></ol><p>In reviewing instructional materials, look for evidence that learners have options for how they consume content, e.g., reading an article or text, viewing a video, listening to a podcast.</p><p>Decisions on this Specific Review Standard may be difficult for reviewers whose expertise is not in the course discipline. In somedisciplines, it may be appropriate for all materials to be from a single author. Consult with the team Subject Matter Expert and useprofessional judgment to determine whether a sufficient variety of materials is used.</p>",
+    points: 2,
+    is_active: true
+  };
+  
+  standards.push(data);
+
+  standards.forEach(standard => {
+    db.collection("Standards").add(standard)
+    .then(function(docRef) {
+      console.log("Standard written with ID: ", docRef.id);
+    })
+    .catch(function(error) {
+      console.error("Error adding document: ", error);
+    });
+  });  
+};
+
 let data = {
   number: 1,
   title: "Course Overview and Introduction",
@@ -302,6 +371,22 @@ db.collection("GeneralStandards").add(data)
 .then(function(docRef) {  
   console.log("General Standard written with ID: ", docRef.id);
   addStandards3(docRef);
+})
+.catch(function(error) {
+  console.error("Error adding document: ", error);
+});
+
+data = {
+  number: 4,
+  title: "Instructional Materials",
+  description: "Instructional materials enable learners to achieve stated learning objectives or competencies.",
+  annotation: "The focus of this Standard is on supporting the course objectives and competencies, rather than on qualitative judgments about the instructional materials."
+};
+
+db.collection("GeneralStandards").add(data)
+.then(function(docRef) {  
+  console.log("General Standard written with ID: ", docRef.id);
+  addStandards4(docRef);
 })
 .catch(function(error) {
   console.error("Error adding document: ", error);
