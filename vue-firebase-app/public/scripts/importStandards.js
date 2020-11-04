@@ -386,6 +386,64 @@ function addStandards5(docRef) {
   });  
 };
 
+function addStandards6(docRef) {
+  let standards = [];
+
+  let data = {
+    general_standard_ref: db.doc('GeneralStandards/' + docRef.id),
+    number: 1,
+    title: "The tools used in the course support the learning objectives or competencies.",
+    annotation: "<p><span style='font-weight: bold;'>Alignment:</span> The tools selected for the course align with the course and module/unit-level objectives or competencies (2.1 and 2.2) by effectively supporting the course’s assessments (3.1), instructional materials (4.1), and learning activities (5.1).</p><p>Reviewers, examine both the course and module/unit-level objectives or competencies in your review of tools.</p><p>Tools are types of software and applications that enable learner interaction and may be used for content delivery or providing feedback in the course; they may be included in or external to the learning management system (LMS).</p><p>Examples of tools include, but are not limited to, discussion boards, chat rooms, gradebooks, social media, games, whiteboards, wikis, blogs, virtual classrooms, web conferencing, announcements, assignment and quiz tools, plagiarism detection tools, video repositories, online proctoring tools, and collaboration tools.</p><p>Clear information and instructions are provided regarding how the tools support the learning objectives or competencies. For example, a course that requires posting to a discussion forum makes it clear how the discussions support a learning objective or competency. Tools are not used simply for their own sake.</p><p>Examples of alignment between tools and objectives or competencies:</p><ol><li>A course objective requires learners to compare and contrast two different periods in U.S. history. The LMS assignment tool is used for learners to submit a short essay comparing and contrasting the two periods.</li><li>A module-level objective is that learners be able to demonstrate the steps of performing CPR. Learners use a simulation tool to demonstrate the steps on a virtual patient.</li></ol><p><span style='font-weight: bold;'>Special Situations:</span> In some cases (check the Course Worksheet), the course objectives or competencies are mandated by the institution, and the individual instructor does not have the authority to change them. For such cases, consider instead the module/unit-level objectives or competencies to assess whether Specific Review Standard 6.1 is met.</p>",
+    points: 3,
+    is_active: true
+  };
+  
+  standards.push(data);
+
+  data = {
+    general_standard_ref: db.doc('GeneralStandards/' + docRef.id),
+    number: 2,
+    title: "Course tools promote learner engagement and active learning.",
+    annotation: "<p>Tools used in the course help learners actively engage in the learning process rather than passively absorb information. The selected course tools help the learner actively engage in the course by facilitating ongoing interactions with the instructor, course materials, and other learners.</p><p>While specific tools are not required for this Specific Review Standard to be met, look for tools that support learner engagement and active learning, such as social media, mobile technologies, games, simulations, wikis, blogs, podcasts, and virtual worlds.</p><p>In some courses, learners cannot access tools that require high bandwidth. Check the Course Worksheet to determine whether the course has such limitations.</p><p>Examples of tools that support engagement and active learning:</p><ol><li>Software that facilitates interaction in real-time (synchronous), such as collaborative tools, webinars, and virtual worlds</li><li>Software that facilitates asynchronous interaction, such as shared documents or wikis</li><li>Animations, simulations, and games that require learner input and allow for faculty feedback (automated or instructor-initiated)</li><li>Discussion tools with automatic notification of new posts</li><li>Automated self-check exercises</li></ol>",
+    points: 3,
+    is_active: true
+  };
+  
+  standards.push(data);
+
+  data = {
+    general_standard_ref: db.doc('GeneralStandards/' + docRef.id),
+    number: 3,
+    title: "A variety of technology is used in the course.",
+    annotation: "<p>The course uses a variety of technology tools, such as videos, discussions, social media, mobile technologies, games, simulations, wikis, blogs, podcasts, and virtual worlds.</p><p>Look for evidence of the use of technologies to ensure the course is not text-based only and evidence that a variety of technology is used.</p><p>Technology includes a wide array of different hardware, software, subscriptions, and plug-ins.</p><p>Examples that illustrate the variety of available technology include:</p><ol><li>Instructor-created videos</li><li>Synchronous web conferencing tools used for orientation, group projects, tutoring, test reviews, etc.</li><li>A mobile application that learners use to identify plants in a botany course</li><li>A wiki used for group collaboration</li><li>Blogs used for student journals</li><li>An animation that demonstrates something not feasible to demonstrate in the physical world, such as a process or procedure that takes place inside a hazardous or inaccessible place</li><li>A simulation replicating laboratory activities that allows manipulations of objects on the screen similar to hands-on lab experiences</li><li>Web-based voice tools used by language instructors and learners to practice pronunciation, vocabulary, etc.</li></ol>",
+    points: 1,
+    is_active: true
+  };
+  
+  standards.push(data);
+
+  data = {
+    general_standard_ref: db.doc('GeneralStandards/' + docRef.id),
+    number: 4,
+    title: "The course provides learners with information on protecting their data and privacy.",
+    annotation: "<p>Course design, tool usage, and settings can enhance student privacy. Steps learners can take to protect their privacy with course activities, tool usage, and interactions with others are provided. Tools used in the course (both faculty-selected and institutionally integrated) include links to the privacy policies provided by the creators of the tools.</p><p>A single statement about institutionally provided tools can identify all of the tools the institution has vetted as compliant with the institution’s policy on student data privacy. For tools not vetted by the institution but chosen by the instructor, links to privacy policies are provided in the course.</p><p>Reviewers, look for links to privacy policies and measures taken to protect student data.</p><p>Consider the distinction between tool-enabled learning activities that require privacy policies and those that do not. For example, a course includes links to videos on YouTube for learners to watch. In this case, a privacy policy is not necessary because learners are watching videos and do not have to log in to do so. In a course that requires learners to create and post videos, learners must create accounts on a video-hosting site (e.g., YouTube or Vimeo), and a link to the privacy policies of the video-hosting sites is provided.</p><p>Examples of privacy provisions reviewers may look for in the course:</p><ol><li>Privacy policies for publisher resources and integrations</li><li>Links to the privacy policies of social media and third-party websites being used</li><li>Links to the privacy policies of external tools integrated into the LMS, such as plagiarism detection tools, messaging tools, collaboration tools, and assistive technology</li><li>Statements noting that a privacy policy does not exist for the tool</li><li>Provisions for the creation and use of a closed group on social media sites</li><li>Permission for students to use pseudonyms instead of real names with any public tools outside the LMS</li><li>Use of texting tool settings that do not allow learners to see one another’s phone numbers</li></ol>",
+    points: 1,
+    is_active: true
+  };
+  
+  standards.push(data);
+
+  standards.forEach(standard => {
+    db.collection("Standards").add(standard)
+    .then(function(docRef) {
+      console.log("Standard written with ID: ", docRef.id);
+    })
+    .catch(function(error) {
+      console.error("Error adding document: ", error);
+    });
+  });  
+};
+
 let data = {
   number: 1,
   title: "Course Overview and Introduction",
@@ -461,6 +519,22 @@ db.collection("GeneralStandards").add(data)
 .then(function(docRef) {  
   console.log("General Standard written with ID: ", docRef.id);
   addStandards5(docRef);
+})
+.catch(function(error) {
+  console.error("Error adding document: ", error);
+});
+
+data = {
+  number: 6,
+  title: "Course Technology",
+  description: "Course technologies support learners’ achievement of course objectives or competencies.",
+  annotation: "The technologies enabling the various tools used in the course facilitate rather than impede the learning process."
+};
+
+db.collection("GeneralStandards").add(data)
+.then(function(docRef) {  
+  console.log("General Standard written with ID: ", docRef.id);
+  addStandards6(docRef);
 })
 .catch(function(error) {
   console.error("Error adding document: ", error);
