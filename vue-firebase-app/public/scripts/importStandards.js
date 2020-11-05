@@ -444,6 +444,64 @@ function addStandards6(docRef) {
   });  
 };
 
+function addStandards7(docRef) {
+  let standards = [];
+
+  let data = {
+    general_standard_ref: db.doc('GeneralStandards/' + docRef.id),
+    number: 1,
+    title: "The course instructions articulate or link to a clear description of the technical support offered and how to obtain it.",
+    annotation: "<p>Technical support for learners differs from institution to institution and includes such information as how to log in; how to use the tools and features of the learning management system; and how to get help desk support. Technical support does not include help with course content or assignments or academic or support services (see Specific Review Standards 7.3 and 7.4).</p><p>Look for evidence that learners have access to technical support services from within the course or the learning management system. The purpose is not to review the adequacy of those services at an institutional level but rather to determine if technical support services are provided for learners and that the course contains information about the services and how to access them.</p><p>Courses with externally provided resources, such as publisher sites or materials, include directions for obtaining assistance if the resources are not supported by the institution’s internal technical support.</p><p>Examples of information about technical support:</p><ol><li>A clear description of the technical support services provided by the institution, including a link to a technical support website</li><li>An email link to the institution's technical support center or help desk</li><li>A phone number for the institution's technical support center or help desk</li><li>Links to tutorials or other resources providing instructions on how to use the tools and features of the learning management system and other course technologies</li><li>A link to &quot;frequently asked questions&quot;</li></ol>",
+    points: 3,
+    is_active: true
+  };
+  
+  standards.push(data);
+
+  data = {
+    general_standard_ref: db.doc('GeneralStandards/' + docRef.id),
+    number: 2,
+    title: "Course instructions articulate or link to the institution’s accessibility policies and services.",
+    annotation: "<p>Accessibility policies or accommodation statements state that services and accommodations are available for learners with disabilities and inform the learner how such services may be obtained.</p><p>Look for evidence that learners have access to accessibility policies and services from within the course or learning management system. The purpose is not to review the adequacy of these services and resources on an institutional level but rather to determine if accessibility support services and resources are provided for learners and if the course contains information about the services and how to access them.</p><p>To meet this Specific Review Standard, the course may include:</p><ol><li>A link to the institution's accessibility policy, if a policy exists</li><li>A statement that informs the learner how to obtain the institution's disability support services, if such services exist; for example, a telephone number or link for the disability services office If the institution does not have a disability policy or disability services, the instructor may provide a policy that will be adhered to in the course to ensure that learners with disabilities will be accommodated.</li></ol>",
+    points: 3,
+    is_active: true
+  };
+  
+  standards.push(data);
+
+  data = {
+    general_standard_ref: db.doc('GeneralStandards/' + docRef.id),
+    number: 3,
+    title: "Course instructions articulate or link to the institution’s academic support services and resources that can help learners succeed in the course.",
+    annotation: "<p>Academic support services and resources, and the scope of what they entail, differ from institution to institution. For the purposes of review, academic support services and resources may include an online orientation; access to library resources; a readiness assessment or survey; testing services; tutoring; non-native language services; writing and/or math centers; tutorials or other forms of guidance on conducting research, writing papers, citing sources, using an online writing lab, and using course-specific technology; supplemental instruction programs; and teaching assistants.</p><p>Look for evidence that learners have access to academic support services and resources from within the course or the learning management system. The purpose is not to review the adequacy of these services and resources on an institutional level but rather to determine if academic support services and resources are provided for learners and if the course contains information about the services and how to access them.</p><p>Examples of features that connect learners with academic support services:</p><ol><li>A description on the institution’s website of academic support services, with information about each service (e.g., location of testing center or proctored test sites, hours of operation, phone numbers and email addresses for key personnel) and links included for each service</li><li>Links to online orientations or demo courses</li><li>A link to the library, including information on how to gain access to library materials and databases, and how to contact a librarian</li><li>A link to tutorials or guides on conducting research, writing papers, and citing sources</li></ol>",
+    points: 3,
+    is_active: true
+  };
+  
+  standards.push(data);
+
+  data = {
+    general_standard_ref: db.doc('GeneralStandards/' + docRef.id),
+    number: 4,
+    title: "Course instructions articulate or link to the institution’s student services and resources that can help learners succeed.",
+    annotation: "<p>Student services and resources differ from institution to institution. For the purposes of this review, support services and resources include advising, registration, financial aid, veterans’ services, student or campus life, counseling, career services, online workshops, and student organizations.</p><p>Look for evidence that learners have access to support services from within the course or the learning management system. The purpose is not to review the adequacy of the services on an institutional level but rather to determine if information about support services and how to obtain them is provided in the course.</p><p>The course may provide the following:</p><ol><li>A description of support services and how to obtain them (including email addresses and phone numbers for key personnel)</li><li>Guidance on when and how learners may obtain a particular support service or resource (for example, when and how to meet with an academic advisor)</li><li>Links to each of the institution’s student support services web pages or a single student support web page detailing each of the institution’s student support services</li></ol>",
+    points: 1,
+    is_active: true
+  };
+  
+  standards.push(data);
+
+  standards.forEach(standard => {
+    db.collection("Standards").add(standard)
+    .then(function(docRef) {
+      console.log("Standard written with ID: ", docRef.id);
+    })
+    .catch(function(error) {
+      console.error("Error adding document: ", error);
+    });
+  });  
+};
+
 let data = {
   number: 1,
   title: "Course Overview and Introduction",
@@ -535,6 +593,22 @@ db.collection("GeneralStandards").add(data)
 .then(function(docRef) {  
   console.log("General Standard written with ID: ", docRef.id);
   addStandards6(docRef);
+})
+.catch(function(error) {
+  console.error("Error adding document: ", error);
+});
+
+data = {
+  number: 7,
+  title: "Learner Support",
+  description: "The course facilitates learner access to institutional support services essential to learner success.",
+  annotation: "It is important to ensure online learners know they have access to and are encouraged to use the services that support learners at the institution. In the Learner Support Standard, four different kinds of support services are addressed: technical support, accessibility support, academic services support and student services support."
+};
+
+db.collection("GeneralStandards").add(data)
+.then(function(docRef) {  
+  console.log("General Standard written with ID: ", docRef.id);
+  addStandards7(docRef);
 })
 .catch(function(error) {
   console.error("Error adding document: ", error);
