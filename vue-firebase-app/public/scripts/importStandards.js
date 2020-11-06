@@ -502,6 +502,86 @@ function addStandards7(docRef) {
   });  
 };
 
+function addStandards8(docRef) {
+  let standards = [];
+
+  let data = {
+    general_standard_ref: db.doc('GeneralStandards/' + docRef.id),
+    number: 1,
+    title: "Course navigation facilitates ease of use.",
+    annotation: "<p>Navigation refers to the process of planning, controlling, and recording the movement of a learner from one place to another in the online course. Navigation throughout the course is consistent, logical, and efficient. Confirm that the course’s navigation strategies facilitate ease of movement through the course and course activities.</p><p>Reviewers, also consider the ownership of the design of course navigation features. Some navigation devices—&quot;next&quot; and &quot;previous&quot; links, for example—are in the learning management system and cannot be modified. The Course Worksheet provides information about navigation features that cannot be changed. Other navigation devices—hypertext links, icons, and window functions, for example—may be within the control of the instructor.</p><p>Examples of strategies that facilitate ease of use:</p><ol><li>Consistent layout and design are employed throughout, making content, instructional materials, tools, and media easy to locate from anywhere in the course. Design elements are used repetitively, increasing predictability and intuitiveness.</li><li>Course pages have links, files, and icons that are labeled with easy-to-understand, self-describing, and meaningful names; for example, the text &quot;Quality Matters website&quot; is the hyperlink rather than www.qualitymatters.org. Icons used as links also have HTML tags or an accompanying text link.</li><li>All links within the course, external and internal, are working properly; there are no broken links.</li><li>The course design enables learners to easily locate where they are within the course and to easily return to the home page from any location.</li><li>Tables are used to organize data and have appropriate table headers. Datacells are associated with their appropriate headers, enabling learners to navigate and understand the data.</li><li>The hierarchy of material in a page or document is clearly indicated through heading styles (Heading 1, Heading 2, etc.). A table of contents can be included that allows learners to move easily throughout documents.</li></ol>",
+    points: 3,
+    is_active: true
+  };
+  
+  standards.push(data);
+
+  data = {
+    general_standard_ref: db.doc('GeneralStandards/' + docRef.id),
+    number: 2,
+    title: "The course design facilitates readability.",
+    annotation: "<p>Course design elements maximize usability by facilitating readability and minimizing distractions.</p><p>For this Specific Review Standard to be met, course content is clearly organized and presented so that learners can easily read and interpret it. Reviewers, determine if the course can be easily read.</p><p>In course materials, editing and proofreading errors (spelling, grammar, punctuation, word choice, syntax) are minimal.</p><p>Examples of strategies that facilitate readability and minimize distraction:</p><p>Layout:</p><ol><li>Content is formatted to serve specific instructional purposes. For example, format and text color are used purposely to communicate key points, group like items, and emphasize relevant relationships. Color alone is not used to convey meaning.</li><li>Similar content is grouped together; headings are used to indicate change of topic.</li><li>White space or negative space is used around content to help increase comprehension and reduce eye fatigue that occurs with large blocks of text or use of many images.</li></ol><p>Text:</p><ol><li>Heading and body styles are consistent throughout the course.</li><li>Font style and size are selected to maximize on-screen legibility; simpler fonts are chosen over more ornate fonts, and the number of font families is limited to one or two.</li><li>Text is in a contrasting color that makes it clearly distinguishable from the background.</li><li>Color coding, e.g., text or highlighting, is used to serve specific instructional purposes. Color alone is not used to convey meaning.</li></ol><p>Examples of when this Specific Review Standard may not be met:</p><ol><li>Colors are used arbitrarily, creating distraction and a lack of readability.</li><li>Grammar and syntax errors are numerous and create distraction.</li><li>Content is composed of large blocks of text without white space or negative space to help differentiate various components of the content.</li></ol>",
+    points: 3,
+    is_active: true
+  };
+  
+  standards.push(data);
+
+  data = {
+    general_standard_ref: db.doc('GeneralStandards/' + docRef.id),
+    number: 3,
+    title: "The course provides accessible text and images in files, documents, LMS pages, and web pages to meet the needs of diverse learners.",
+    annotation: "<p>Text and images used in the course are accessible to all learners. The use of Universal Design for Learning (UDL) guidelines regarding text and images reduces barriers to access so all learners can interact with course content. The international Web Content Accessibility Guidelines (WCAG) provide additional guidance for achieving accessibility.</p><p>The Specific Review Standard is met if the equivalent textual representations for images are located or linked within the course. The course provides alternatives to all images so that all learners have access to equivalent information. In instances in which alternative formats are provided, the general accuracy of the alternate content is verified.</p><p>If a course or website is fully accessible, most learners will be able to access content, complete activities, and interact with others without the need for accommodations.</p><p>If a course or website has barriers to accessibility, learners with disabilities will require accommodations to access content, complete activities, and interact with others. Reviewers, look for evidence of accessible design, not for availability of accommodations.</p><p>Consider the abilities of all learners when you review the course. The review team is expected to determine the accessibility of all text and image content in the course. A strategy for accomplishing the review is to divide the review of text and image content and learning activities among the review team members. Another strategy is to review for accessibility of text and images as part of the review of other Specific Review Standards.</p><p>This Specific Review Standard is met if the text and images presented in the course use accessibility principles in their design.</p><p>Examples include:</p><ol><li>Images and graphs are described via an alt-tag, long description, or audio description.</li><li>All tables are set up as text and not embedded as images. They are not presented as screen captures.</li><li>Tables are set up with headings for columns and rows and are used only for summarizing data, not for formatting. Tables have captions, alt-text or alt-tags, and are formatted so that headings repeat.</li><li>Document or HTML titles, headings, etc., are formatted using styles (Heading 1, Heading 2, etc.) found in the word processing software (such as Word) style gallery; they do not merely utilize a larger or bold or italic font.</li><li>PDFs that contain text are not merely image scans; any text contained in PDFs is selectable and searchable.</li><li>Text colors alone are not relied on to convey meaning. The meaning is also conveyed in another way that does not require perceiving different colors.</li><li>Underlined text is avoided unless used for navigation.</li></ol><p>When alternative formats are provided, check the object properties to confirm alt-text and heading codes are actually present. Verification is important because not all attempts to provide alternate formats meet the goal of providing equivalent access for diverse learners.</p>",
+    points: 3,
+    is_active: true
+  };
+  
+  standards.push(data);
+
+  data = {
+    general_standard_ref: db.doc('GeneralStandards/' + docRef.id),
+    number: 4,
+    title: "The course provides alternative means of access to multimedia content in formats that meet the needs of diverse learners.",
+    annotation: "<p>Multimedia, such as audio and video, are accessible to all learners. Universal Design for Learning (UDL) guidelines regarding multimedia address reducing barriers to access so all learners can interact with course content. The international Web Content Accessibility Guidelines (WCAG) provide additional guidance for achieving accessibility in multimedia.</p><p>The Specific Review Standard is met if equivalent textual representations of multimedia content are located or linked within the course. In instances of alternative formats being provided, verify the accuracy of the alternate content. Verification is important because not all attempts to provide alternate formats meet the goal of providing equivalent access for diverse learners.</p><p>Video and animations are captioned, or text transcripts are readily available. Consider the abilities of all learners when reviewing the course. For example, if the learner had no vision or no hearing, would the learner have access to all meaning and the ability to complete all activities in the course?</p><p>Reviewers are expected to review all multimedia content in the course. A strategy for accomplishing the review is to divide the multimedia content among the review team members.</p><p>Examples of alternative means of access for different types of multimedia content:</p><ol><li>If the audio content corresponds with the visual content in a way that conveys meaning (e.g., a video demonstrating how to operate a Bunsen burner in a chemistry lab), captions provide an equivalent experience. Reviewers review the captions to confirm the captions correctly represent the audio content, the speaker, and non-speech information conveyed through sound, such as meaningful sound effects.</li><li>If the audio content does not correspond with visual content (e.g., a visual of an instructor providing a lecture without visual aids), then a text transcript is sufficient.</li><li>Visual information that is critical to meaning is conveyed through audio description.</li></ol>",
+    points: 2,
+    is_active: true
+  };
+  
+  standards.push(data);
+
+  data = {
+    general_standard_ref: db.doc('GeneralStandards/' + docRef.id),
+    number: 5,
+    title: "Course multimedia facilitate ease of use.",
+    annotation: "<p>Multimedia used as a vehicle for content or feedback (e.g., images, audio, animation, video, and interactive components) are easy to use, intelligible, and interoperable across devices.</p><p>For this Specific Review Standard to be met, course multimedia are easy to view, operate, and interpret.</p><p>Examples of strategies that ensure the usability of multimedia:</p><ol><li>Graphics and animations are used to enhance instructional materials and illustrate ideas without causing distractions.</li><li>Images are appropriately sized and can be viewed in their entirety without scrolling.</li><li>Audio quality is clear.</li><li>A video window can be resized; resolution is sufficient for comprehension.</li><li>Long videos (videos longer than 15 to 20 minutes) are broken into shorter segments or are searchable.</li><li>Movement through presentations can be controlled.</li><li>Video streams smoothly without frequent interruptions. If a video requires high bandwidth, that information is included with the video. Some videos must be of high quality for content to be clearly understood, e.g., a video demonstrating sign language, in which learners need to be able to accurately discern hand shapes and movement.</li></ol><p>Interactive elements integral to the content are cross-platform (PC, Mac) and cross-browser, or guidance is provided about the best browser to use.</p>",
+    points: 2,
+    is_active: true
+  };
+  
+  standards.push(data);
+
+  data = {
+    general_standard_ref: db.doc('GeneralStandards/' + docRef.id),
+    number: 6,
+    title: "Vendor accessibility statements are provided for all technologies required in the course.",
+    annotation: "<p>Learners have access to information on the accessibility of the learning management system and all additional required technologies.</p><p>For this Specific Review Standard to be met, the course includes a link to the vendor accessibility statement for each required technology. If an accessibility statement does not exist for a particular technology, a link to the vendor’s Voluntary Product Accessibility Template (VPAT) statement is provided or a statement is provided that the accessibility statement does not exist.</p><p>Examples of technologies that require an accessibility statement:</p><ol><li>A learning management system, including integrated third-party software</li><li>Plagiarism detection software</li><li>Presentation software</li><li>Web conferencing tools</li><li>Polling tools</li><li>A lecture-capture system</li><li>Media players</li><li>A document-sharing system</li><li>Social media tools</li><li>&quot;Lab in a box&quot; technologies</li><li>Mobile applications</li><li>Publisher materials or platforms</li></ol><p>Examples of where the accessibility statements may be linked or located within the course:</p><ol><li>Course syllabus</li><li>Page on required technology software</li><li>Page on resources</li><li>Institutionally managed web page that includes anchored links to the accessibility statements for technologies used in the course</li></ol>",
+    points: 2,
+    is_active: true
+  };
+  
+  standards.push(data);
+
+  standards.forEach(standard => {
+    db.collection("Standards").add(standard)
+    .then(function(docRef) {
+      console.log("Standard written with ID: ", docRef.id);
+    })
+    .catch(function(error) {
+      console.error("Error adding document: ", error);
+    });
+  });  
+};
+
 let data = {
   number: 1,
   title: "Course Overview and Introduction",
@@ -609,6 +689,22 @@ db.collection("GeneralStandards").add(data)
 .then(function(docRef) {  
   console.log("General Standard written with ID: ", docRef.id);
   addStandards7(docRef);
+})
+.catch(function(error) {
+  console.error("Error adding document: ", error);
+});
+
+data = {
+  number: 8,
+  title: "Accessibility and Usability",
+  description: "The course design reflects a commitment to accessibility and usability for all learners.",
+  annotation: "<p>The course design utilizes the principles of Universal Design for Learning (UDL) and reflects a commitment to accessibility, ensuring all learners can access all course content and activities, and to usability, ensuring all learners can easily navigate and interact with course components.</p><p><span style='font-weight: bold;'>Disclaimer:</span> Meeting QM Specific Review Standards regarding accessibility does not guarantee or imply that the specific accessibility regulations of any country are met.</p>"
+};
+
+db.collection("GeneralStandards").add(data)
+.then(function(docRef) {  
+  console.log("General Standard written with ID: ", docRef.id);
+  addStandards8(docRef);
 })
 .catch(function(error) {
   console.error("Error adding document: ", error);
