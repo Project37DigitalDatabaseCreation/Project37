@@ -1,3 +1,10 @@
+/******************************************************* 
+ * ./store/index.js
+ * 
+ * Description: Implements a vuex store for managing
+ * the applications session state.
+*******************************************************/
+
 import { createStore } from 'vuex'
 
 export default createStore({

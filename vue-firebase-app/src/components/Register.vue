@@ -1,3 +1,10 @@
+<!--
+* Register.vue
+*
+* Description: Provides name, username, and password
+* fields for a new user to register with the application.
+*
+-->
 <template>
   <div class="container">
     <div class="row justify-content-center">

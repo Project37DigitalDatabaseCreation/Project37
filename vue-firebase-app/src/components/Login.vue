@@ -1,3 +1,11 @@
+<!--
+* Login.vue
+*
+* Description: Provides username and password
+* fields for users to login to the firebase
+* application.
+*
+-->
 <template>
   <div class="container">
     <div class="row justify-content-center">

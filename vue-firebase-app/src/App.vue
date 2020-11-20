@@ -1,3 +1,10 @@
+<!--
+* App.vue
+*
+* Description: The main vue file which gets loaded
+* on the application's page load.
+*
+-->
 <template>
   <div>
     <navbar></navbar>

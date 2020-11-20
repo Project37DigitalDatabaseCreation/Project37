@@ -1,3 +1,10 @@
+<!--
+* Login.vue
+*
+* Description: Provides a landing place
+* once a user has logged in.
+*
+-->
 <template>
   <div class="container">
     <div class="row justify-content-center">
