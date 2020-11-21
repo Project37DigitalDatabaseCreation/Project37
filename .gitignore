@@ -140,3 +140,6 @@ dist
 !.vscode/launch.json
 !.vscode/extensions.json
 *.code-workspace
+
+## firebase cache directory ##
+/vue-firebase-app/.firebase/
