@@ -1,10 +1,37 @@
 {
+<<<<<<< HEAD
   "hosting": {
-    "public": "public",
+    "public": "dist",
+=======
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "functions": {
+    "predeploy": [
+      "npm --prefix \"$RESOURCE_DIR\" run lint"
+    ]
+  },
+  "hosting": {
+    "public": "./dist",
+>>>>>>> f088325caaf4f5e16f7e92212a1edf7d0193d4df
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
+<<<<<<< HEAD
     ]
+=======
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  },
+  "storage": {
+    "rules": "storage.rules"
+>>>>>>> f088325caaf4f5e16f7e92212a1edf7d0193d4df
   }
 }
