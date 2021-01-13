@@ -24,10 +24,15 @@
         <ul class="navbar-nav mr-auto"></ul>
         <ul class="navbar-nav ml-auto">
           <template v-if="user.loggedIn">
+            <ul>
             <div class="nav-item">{{user.data.displayName}}</div>
+            <li class="nav-item">
+              <router-link to="/Project">Project</router-link>
+            </li>
             <li class="nav-item">
               <a class="nav-link" @click.prevent="signOut">Sign out</a>
             </li>
+            </ul>
           </template>
           <template v-else>
             <li class="nav-item">
