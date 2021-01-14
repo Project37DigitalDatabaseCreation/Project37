@@ -13,6 +13,7 @@ import Dashboard from '../components/Dashboard'
 import Project from '../components/Project'
 import NewProject from '../components/NewProject'
 import CurrentProjects from '../components/CurrentProjects'
+import ClientEntry from '../components/ClientEntry'
 
 const routes = [
   {
@@ -54,6 +55,11 @@ const routes = [
     path: '/review',
     name: 'Review',
     component: Review
+  },
+  {
+    path: '/clientEntry',
+    name: 'ClientEntry',
+    component: ClientEntry
   }
 ]
 
