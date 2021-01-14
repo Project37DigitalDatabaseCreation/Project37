@@ -25,6 +25,9 @@
         <ul class="navbar-nav ml-auto">
           <template v-if="user.loggedIn">
             <ul>
+            <li class="nav-item">
+              <router-link to="/reviews" class="nav-link">Reviews</router-link>
+            </li>
             <div class="nav-item">{{user.data.displayName}}</div>
             <li class="nav-item">
               <router-link to="/Project">Project</router-link>
