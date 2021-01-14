@@ -1,4 +1,8 @@
 {
+<<<<<<< HEAD
+  "hosting": {
+    "public": "dist",
+=======
   "firestore": {
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
@@ -10,10 +14,14 @@
   },
   "hosting": {
     "public": "./dist",
+>>>>>>> f088325caaf4f5e16f7e92212a1edf7d0193d4df
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
+<<<<<<< HEAD
+    ]
+=======
     ],
     "rewrites": [
       {
@@ -24,5 +32,6 @@
   },
   "storage": {
     "rules": "storage.rules"
+>>>>>>> f088325caaf4f5e16f7e92212a1edf7d0193d4df
   }
 }

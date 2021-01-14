@@ -7,8 +7,12 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Login from '../components/Login'
 import Register from '../components/Register'
+import Review from '../components/Review'
+import Reviews from '../components/Reviews'
 import Dashboard from '../components/Dashboard'
-import ClientEntry from '../components/ClientEntry'
+import Project from '../components/Project'
+import NewProject from '../components/NewProject'
+import CurrentProjects from '../components/CurrentProjects'
 
 const routes = [
   {
@@ -27,9 +31,29 @@ const routes = [
     component: Dashboard
   },
   {
-    path: '/clientEntry',
-    name: 'ClientEntry',
-    component: ClientEntry
+    path: '/project',
+    name: 'Project',
+    component: Project
+  },
+  {
+    path: '/newProject',
+    name: 'NewProject',
+    component: NewProject
+  },
+  {
+    path: '/currentProjects',
+    name: 'CurrentProjects',
+    component: CurrentProjects
+  },
+  {
+    path: '/reviews',
+    name: 'Reviews',
+    component: Reviews
+  },
+  {
+    path: '/review',
+    name: 'Review',
+    component: Review
   }
 ]
 

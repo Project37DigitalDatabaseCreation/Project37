@@ -15,6 +15,7 @@ import firebase from 'firebase/app'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
+
 require("firebase/auth");
 require("firebase/firestore");
 
