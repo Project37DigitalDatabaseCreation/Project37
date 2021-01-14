@@ -10,6 +10,7 @@ import Register from '../components/Register'
 import Review from '../components/Review'
 import Reviews from '../components/Reviews'
 import Dashboard from '../components/Dashboard'
+import AddReviewer from '../components/AddReviewer'
 
 const routes = [
   {
@@ -36,6 +37,11 @@ const routes = [
     path: '/review',
     name: 'Review',
     component: Review
+  },
+  {
+    path: '/addreviewer',
+    name: 'AddReviewer',
+    component: AddReviewer
   }
 ]
 
