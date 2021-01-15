@@ -11,6 +11,9 @@ import Review from '../components/Review'
 import Reviews from '../components/Reviews'
 import Dashboard from '../components/Dashboard'
 import AddReviewer from '../components/AddReviewer'
+import Project from '../components/Project'
+import NewProject from '../components/NewProject'
+import CurrentProjects from '../components/CurrentProjects'
 
 const routes = [
   {
@@ -27,6 +30,21 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard
+  },
+  {
+    path: '/project',
+    name: 'Project',
+    component: Project
+  },
+  {
+    path: '/newProject',
+    name: 'NewProject',
+    component: NewProject
+  },
+  {
+    path: '/currentProjects',
+    name: 'CurrentProjects',
+    component: CurrentProjects
   },
   {
     path: '/reviews',
