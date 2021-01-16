@@ -35,9 +35,9 @@
                 <label for="project" class="col-md-4 col-form-label text-md-right">Project</label>
 
                 <div class="col-md-6">
+                  <Multiselect v-model="value" :options="options" />
                   <input
                     id="project"
-                    type="text"
                     class="form-control"
                     name="project"
                     required
@@ -76,14 +76,27 @@
 
 <script>
 import firebase from "firebase";
+import Multiselect from '@vueform/multiselect'
 
 export default {
+  components: {
+      Multiselect,
+    },
   data() {
     return {
       form: {
-        email: "",
-        password: ""
+        project: "myProject",
+        reviewer: ""
       },
+      value: "",
+       options: {
+    value: [],
+    options: [
+      { value: "batman", label: "Batman" },
+      { value: "robin", label: "Robin" },
+      { value: "joker", label: "Joker" }
+    ]
+  },
       error: null
     };
   },
@@ -102,3 +115,4 @@ export default {
   }
 };
 </script>
+<style src="@vueform/multiselect/themes/default.css"></style>

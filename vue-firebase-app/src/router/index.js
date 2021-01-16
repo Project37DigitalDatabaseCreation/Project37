@@ -35,7 +35,9 @@ const routes = [
   {
     path: '/edit-review',
     name: 'EditReview',
-    component: EditReview,
+    component: EditReview
+  },
+  {
     path: '/project',
     name: 'Project',
     component: Project
