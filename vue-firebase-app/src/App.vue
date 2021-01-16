@@ -13,8 +13,10 @@
     </main>
   </div>
 </template>
+
 <script>
 import navbar from "./components/Navbar";
+import './assets/styles/styles.css';
 
 export default {
   components: {

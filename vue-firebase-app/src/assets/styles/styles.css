@@ -1,0 +1,31 @@
+/* Background color for top navigation */
+.topnav {
+    position: relative;
+    background-color: rgb(2, 2, 2);
+    overflow: hidden;
+  }
+
+  /* Style links inside navigation bar */
+.topnav li {
+    list-style-type:none;
+    float: right;
+    padding: 10px;
+    margin: 0;
+    border-radius: 25px;
+    background-color: black;    
+    font-size: 30px;
+    color: rgb(235, 245, 243);
+    
+  }
+
+  /* Hover Color*/
+.topnav a:hover {
+    background-color: rgb(57, 63, 51);
+    color: #f2f2f2;
+  }
+
+  /* Color for the active link */
+.topnav a.active {
+    background-color: #4f6450;
+    color: white;
+  }
