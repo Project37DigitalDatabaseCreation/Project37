@@ -14,9 +14,11 @@ import router from './router'
 import firebase from 'firebase/app'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import { globalMixin } from '@/mixins/global-mixin'
 
 require("firebase/auth");
 require("firebase/firestore");
+require('lodash')
 
 firebase.initializeApp({
     apiKey: "AIzaSyCfqZoAkpuSBfp9n9sN3RCyHPV5wmA6cxs",
@@ -31,5 +33,16 @@ firebase.initializeApp({
 firebase.auth().onAuthStateChanged(user => {
     store.dispatch("fetchUser", user);
   });
+
   
-createApp(App).use(router).use(store).mount('#app')
+//  Try to fetch all standards so they are ready for us to use
+// store.dispatch('fetchGeneralStandards')
+// store.dispatch('fetchStandards')
+//  Then sort all of these standards
+store.dispatch('sortStandards')
+
+const app = createApp(App)
+
+app.mixin(globalMixin())
+
+app.use(router).use(store).mount('#app')

@@ -7,19 +7,28 @@
 
 import { createStore } from 'vuex'
 import firebase from 'firebase'
+import _ from 'lodash'
 
 export default createStore({
   state: {
     generalStandards: null,
     standards: null,
+    loading: false,
     user: {
       loggedIn: false,
       data: null
-    }
+    },
+    sortedStandards: null
   },
   getters: {
     generalStandards(state) {
       return state.generalStandards
+    },
+    loading(state) {
+      return state.loading
+    },
+    sortedStandards(state) {
+      return state.sortedStandards
     },
     standards(state) {
       return state.standards
@@ -31,12 +40,21 @@ export default createStore({
   mutations: {
     SET_GENERAL_STANDARDS(state, value) {
       state.generalStandards = value
+      console.log("general standards set")
+    },
+    SET_LOADING(state, value) {
+      state.loading = value
     },
     SET_LOGGED_IN(state, value) {
       state.user.loggedIn = value;
     },
+    SET_SORTED_STANDARDS(state, value) {
+      state.sortedStandards = value
+      console.log('sorted set')
+    },
     SET_STANDARDS(state, value) {
       state.standards = value
+      console.log('standards set')
     },
     SET_USER(state, data) {
       state.user.data = data;
@@ -54,19 +72,25 @@ export default createStore({
         commit("SET_USER", null);
       }
     },
-    async fetchGeneralStandards({ dispatch }) {
+    async fetchGeneralStandards({ commit, dispatch }) {
+      //  Start loading
+      commit('SET_LOADING', true)
+
       //  Our collection of general Standards
       const generalStandards = firebase.firestore().collection('GeneralStandards');
 
       //  Dispatch the mapstandards request with our constructed payload
-      dispatch('mapStandards', { snapshot: await generalStandards.orderBy('number').get(), type: 'GENERAL_STANDARDS', discover: false })
+      await dispatch('mapStandards', { snapshot: await generalStandards.orderBy('number').get(), type: 'GENERAL_STANDARDS', discover: false })
     },
-    async fetchStandards({ dispatch }) {
+    async fetchStandards({ commit, dispatch }) {
+      //  Start loading
+      commit('SET_LOADING', true)
+
       //  Our collection of general Standards
       const standards = firebase.firestore().collection('Standards');
 
       //  Dispatch the mapstandards request with our constructed payload
-      dispatch('mapStandards', { snapshot: await standards.orderBy('number').get(), type: 'STANDARDS', discover: true })
+      await dispatch('mapStandards', { snapshot: await standards.orderBy('number').get(), type: 'STANDARDS', discover: true })
     },
 
     async mapStandards({ commit }, obj) {
@@ -92,6 +116,36 @@ export default createStore({
 
       //  Commit this array to the corresponding array
       commit(`SET_${obj.type}`, standards)
+
+      //  Stop loading
+      commit('SET_LOADING', false)
+    },
+    async sortStandards({ commit, getters }) {
+      //  Fetch our general standards and regular standards and await their execution
+      await this.dispatch('fetchGeneralStandards')
+      await this.dispatch('fetchStandards')
+
+      //  Array to hold the sorted array
+      const sorted = []
+
+      //  Create an array of objects with the titles corresponding to the general standard
+      for (let i = 0; i < getters.generalStandards.length; i++) {
+          sorted[i] = { genStandard: getters.generalStandards[i], standards: [] }
+          // console.log('sorted', sorted[i])
+      }
+
+      for (let i = 0; i < getters.standards.length; i++) {
+          //  Add an additional met flag on each standard
+          getters.standards[i].met = false
+          //  Remove the general standard ref from each standard as it is unneeded in this context
+          delete getters.standards[i].general_standard_ref
+          //  For each standard, slot it into the correct position in our sorted standards
+          //  We determine this based on the generalStandard.number, which is +1 of the index
+          sorted[getters.standards[i].generalStandard.number - 1].standards.push(getters.standards[i])
+      }
+
+      //  Set our sorted standards (we use lodash to deep clone and remove proxies)
+      commit('SET_SORTED_STANDARDS', _.cloneDeep(sorted))
     }
   }
 })
