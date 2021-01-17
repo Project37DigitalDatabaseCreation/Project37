@@ -11,6 +11,7 @@ import Review from '../components/Review'
 import Reviews from '../components/Reviews'
 import Dashboard from '../components/Dashboard'
 import AddReviewer from '../components/AddReviewer'
+import ModifyReviewer from '../components/ModifyReviewer'
 import Project from '../components/Project'
 import NewProject from '../components/NewProject'
 import CurrentProjects from '../components/CurrentProjects'
@@ -60,6 +61,11 @@ const routes = [
     path: '/addreviewer',
     name: 'AddReviewer',
     component: AddReviewer
+  },
+  {
+    path: '/modifyreviewer',
+    name: 'ModifyReviewer',
+    component: ModifyReviewer
   }
 ]
 
