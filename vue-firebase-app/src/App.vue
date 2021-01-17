@@ -6,9 +6,9 @@
 *
 -->
 <template>
-  <div>
+  <div id="content">
     <navbar></navbar>
-    <main class="py-4">
+    <main>
       <router-view></router-view>
     </main>
   </div>
@@ -22,3 +22,17 @@ export default {
   }
 };
 </script>
+<style>
+html, body {
+  overflow: auto;
+  min-height:100%;
+}
+body {
+  height:100vh;
+}
+#app {
+  overflow:hidden;
+  height:100vh;
+
+}
+</style>
