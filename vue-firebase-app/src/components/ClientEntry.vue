@@ -13,13 +13,16 @@ Organization is a drop down: relies on project being created.
     <div class="row justify-content-center">
       <div class="col-md-8">
         <div class="card">
-          <div class="card-header">Clients:</div>
+          <div class="card-header">
+            Add Clients:
+          </div>
           <div class="card-body">
             <form>
               <div class="form-group row">
                 <label class="col-md-4 col-form-label text-md-right"
                   >First Name</label
                 >
+
                 <div class="col-md-6">
                   <input
                     type="text"
@@ -29,10 +32,12 @@ Organization is a drop down: relies on project being created.
                   />
                 </div>
               </div>
+
               <div class="form-group row">
                 <label class="col-md-4 col-form-label text-md-right"
                   >Last Name</label
                 >
+
                 <div class="col-md-6">
                   <input
                     type="text"
@@ -42,10 +47,12 @@ Organization is a drop down: relies on project being created.
                   />
                 </div>
               </div>
+
               <div class="form-group row">
                 <label class="col-md-4 col-form-label text-md-right"
                   >Email</label
                 >
+
                 <div class="col-md-6">
                   <input
                     type="email"
@@ -55,14 +62,27 @@ Organization is a drop down: relies on project being created.
                   />
                 </div>
               </div>
+
               <div class="form-group row">
                 <label class="col-md-4 col-form-label text-md-right"
                   >Organization</label
                 >
-                <b-form-select
-                  v-model="selected"
-                  :options="options"
-                ></b-form-select>
+
+                <div class="col-md-6">
+                  <select v-model="selected">
+                    <option v-for="option in options" v-bind:key="option.value">
+                      {{ option.text }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group row mb-0">
+                <div class="col-md-8 offset-md-4">
+                  <button type="submit" class="btn btn-primary">
+                    Add Client
+                  </button>
+                </div>
               </div>
             </form>
           </div>
@@ -78,8 +98,9 @@ Organization is a drop down: relies on project being created.
       return {
         selected: null,
         options: [
-          { value: null, text: 'Select and Organization' },
+          { value: null, text: 'Select an Organization' },
           { value: 'a', text: 'ASU' },
+          { value: 'b', text: 'Project37' },
         ],
       }
     },
