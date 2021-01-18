@@ -28,7 +28,7 @@
             <li class="nav-item">
               <router-link to="/reviews" class="nav-link">Reviews</router-link>
             </li>
-            <div class="nav-item">{{user.data.displayName}}</div>
+            <div class="nav-item" style="display:flex; justify-content:center; align-items:center;">{{user.data.displayName}}</div>
             <li class="nav-item">
               <router-link to="/Project">Project</router-link>
             </li>
@@ -72,3 +72,8 @@ export default {
   }
 };
 </script>
+<style>
+.navbar {
+  height:56px !important;
+}
+</style>

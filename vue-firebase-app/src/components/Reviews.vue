@@ -9,6 +9,9 @@
 </template>
 <script>
 export default {
-    
+    async mounted() {
+        //  TODO: Store all of our standards in local JSON file so it's easy to access, and only fetch again if they get updated
+        
+    }
 }
 </script>

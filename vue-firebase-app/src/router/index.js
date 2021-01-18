@@ -15,6 +15,7 @@ import AddReviewer from '../components/AddReviewer'
 import Project from '../components/Project'
 import NewProject from '../components/NewProject'
 import CurrentProjects from '../components/CurrentProjects'
+import ClientEntry from '../components/ClientEntry'
 
 const routes = [
   {
@@ -66,6 +67,11 @@ const routes = [
     path: '/addreviewer',
     name: 'AddReviewer',
     component: AddReviewer
+  },
+  {
+    path: '/clientEntry',
+    name: 'ClientEntry',
+    component: ClientEntry
   }
 ]
 
