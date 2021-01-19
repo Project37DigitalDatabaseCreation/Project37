@@ -29,3 +29,8 @@
     background-color: #4f6450;
     color: white;
   }
+
+/* spacing for UI */
+#p {
+  word-spacing: 5em;
+}

@@ -28,7 +28,7 @@
                     <!-- Organization label and dropdown menu -->
                     <div class="form-check row">
                         <label for="organization" class="col-md-4 col-form-label text-md-right">Organization</label>
-                          <select name="organizations" id="organizations" value required v-model="form.organization">
+                          <select class="selectpicker" name="organizations" id="organizations" value required v-model="form.organization">
                             <option disabled value="">Choose Organization</option>
                             <option value="asu">Arizona State University</option>
                             <option value="gcu">Grand Canyon University</option>
@@ -86,7 +86,3 @@
       //implement submit/firebase logic 
     }
 </script>
-
-<style lang="scss" scoped>
-
-</style>
