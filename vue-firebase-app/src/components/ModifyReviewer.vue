@@ -87,6 +87,7 @@
                 <div class="col-md-8 offset-md-4">
                 <button type="button" class="btn btn-primary"  @click.prevent="cancelClicked">Cancel</button>
                 <button type="submit" class="btn btn-primary">Update reviewer</button>
+                <button type="submit" class="btn btn-primary">Reset password</button>
                 </div>
               </div>
             </form>
