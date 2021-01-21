@@ -14,6 +14,38 @@
           <div class="card-body">
             <div v-if="error" class="alert alert-danger">{{error}}</div>
             <form action="#" @submit.prevent="submit">
+                <div class="form-group row">
+                <label for="organization" class="col-md-4 col-form-label text-md-right">Organization</label>
+
+                <div class="col-md-6">
+                  <select
+                    id="organization"
+                    class="form-control"
+                    name="organization"
+                    required
+                    v-model="form.organization"
+                  >
+                    <option v-for="organization in organizations" :value="organization.id" :key="organization.id">{{ organization.title }}</option>                
+                  </select>
+                </div>
+              </div>
+
+                <div class="form-group row">
+                <label for="project" class="col-md-4 col-form-label text-md-right">Project</label>
+
+                <div class="col-md-6">
+                  <select
+                    id="project"
+                    class="form-control"
+                    name="project"
+                    required
+                    v-model="form.project"
+                  >
+                    <option v-for="project in projects" :value="project.id" :key="project.id">{{ project.name }}</option>                
+                  </select>
+                </div>
+              </div>
+
               <div class="form-group row">
                 <label for="course_name" class="col-md-4 col-form-label text-md-right">Course Name</label>
 
@@ -28,22 +60,6 @@
                     autofocus
                     v-model="form.course_name"
                   />
-                </div>
-              </div>
-
-              <div class="form-group row">
-                <label for="project" class="col-md-4 col-form-label text-md-right">Project</label>
-
-                <div class="col-md-6">
-                  <select
-                    id="project"
-                    class="form-control"
-                    name="project"
-                    required
-                    v-model="form.project"
-                  >
-                    <option v-for="project in projects" :value="project.id" :key="project.id">{{ project.name }}</option>                
-                  </select>
                 </div>
               </div>
 
@@ -82,25 +98,30 @@ export default {
   data() {
     return {
       form: {
+        organization: 3,
         project: 2,
         reviewer: "myReviewer"
       },
+      organizations: [],
       projects: [
-        {name: "Option 1", id: 1},
-        {name: "Option 2", id: 2},
-        {name: "Option 3", id: 3}
+        {name: "Project 1", id: 1},
+        {name: "Project 2", id: 2},
+        {name: "Project 3", id: 3}
       ],
       error: null
     };
   },
   mounted() {
-    /*var selProject = document.querySelector('#project');
-    var option = document.createElement('option');
+    firebase.firestore().collection("Organizations").orderBy("title", "asc").get()
+    .then(result => {
+      result.forEach(doc => {
+        let org = doc.data();
+        let orgId = doc.id;
 
-    option.value = "val1";
-    option.text = "Option 1";
-
-    selProject.appendChild(option);*/
+        this.organizations.push({id: orgId, title: org.title});
+      });
+})
+.catch(err => { console.error(err) });
   },
   methods: {
     submit() {
