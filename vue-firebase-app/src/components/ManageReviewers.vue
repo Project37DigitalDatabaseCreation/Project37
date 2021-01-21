@@ -12,8 +12,9 @@
 
 <template>
   <div class="container">
-    <div class="card">
-      <table>
+    
+      <h4>Reviewers</h4>
+      <table id="reviewers_table">
         <thead>
           <tr>
             <th>Name</th>
@@ -23,7 +24,7 @@
           </tr>
         </thead>
         <tbody v-for="(reviewer, index) in getReviewers" :key="index">
-          <tr>
+          <tr >
             <td>{{ reviewer.name }}</td>
             <td>{{ reviewer.email }}</td>
             <td>{{ reviewer.status }}</td>
@@ -32,7 +33,7 @@
         </tbody>
       </table>
     </div>
-  </div>
+
 </template>
 
 
@@ -80,17 +81,33 @@ export default {
   methods: {},
 };
 </script>
+
 <style scoped>
+
+
+h4 {
+  text-align: center;
+}
 th {
   padding-top: 12px;
+  text-align: center;
   padding-bottom: 12px;
-  text-align: left;
   background-color: #f2f2f2;
   color: black;
 }
 
-table td th {
-  border: 1px solid #ddd;
-  padding: 8px;
+td {
+  text-align: center;
+  padding: 10px;
 }
+
+table {
+
+  padding: 12px;
+  width: 100%;
+  border: 1px solid #ddd;
+}
+
+
+
 </style>
