@@ -12,28 +12,36 @@
 
 <template>
   <div class="container">
-    
-      <h4>Reviewers</h4>
-      <table id="reviewers_table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email Address</th>
-            <th>Account Status</th>
-            <th>Last Login</th>
-          </tr>
-        </thead>
-        <tbody v-for="(reviewer, index) in getReviewers" :key="index">
-          <tr >
-            <td>{{ reviewer.name }}</td>
-            <td>{{ reviewer.email }}</td>
-            <td>{{ reviewer.status }}</td>
-            <td>{{ reviewer.lastLogin }}</td>
-          </tr>
-        </tbody>
-      </table>
+    <h4>Reviewers</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email Address</th>
+          <th>Account Status</th>
+          <th>Last Login</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="(reviewer, index) in getReviewers"
+          :key="index"
+          @click="edit(reviewer.email)"
+        >
+          <td>{{ reviewer.name }}</td>
+          <td>{{ reviewer.email }}</td>
+          <td>{{ reviewer.status }}</td>
+          <td>{{ reviewer.lastLogin }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="paginationContainer">
+      <p>
+        <button class="btn" @click="prevPage">Previous</button>
+        <button class="btn" @click="nextPage">Next</button>
+      </p>
     </div>
-
+  </div>
 </template>
 
 
@@ -43,7 +51,7 @@
 export default {
   data() {
     return {
-      //Temp data object for testing. Future iteration will read from database
+      //TODO - Temp data object for testing. Future iteration will read from database
       getReviewers: {
         1: {
           name: "Ben McElyea",
@@ -78,13 +86,23 @@ export default {
       },
     };
   },
-  methods: {},
+  methods: {
+    edit(reviewer) {
+      // TODO Temp method for testing. Future iteration will load the edit user page
+      alert(`TODO - Edit user ${reviewer}`);
+    },
+
+    prevPage() {
+      alert("TODO - previous page");
+    },
+    nextPage() {
+      alert("TODO - next page");
+    },
+  },
 };
 </script>
 
 <style scoped>
-
-
 h4 {
   text-align: center;
 }
@@ -95,6 +113,9 @@ th {
   background-color: #f2f2f2;
   color: black;
 }
+tr:hover {
+  background-color: #ddd;
+}
 
 td {
   text-align: center;
@@ -102,12 +123,19 @@ td {
 }
 
 table {
-
   padding: 12px;
   width: 100%;
   border: 1px solid #ddd;
 }
 
+button {
+   margin:0 auto;
+   
+}
+.paginationContainer {
 
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 </style>
