@@ -45,6 +45,8 @@
   </div>
 </template>
 <script>
+import firebase from 'firebase'
+import _ from 'lodash'
 export default {
   props: {
     currentLink: {
@@ -78,8 +80,28 @@ export default {
       console.log('std', std, i, j)
 
     },
-    submit() {
-      console.log('yee')
+    async submit() {
+      //  Create a clone of our sorted standards so we can operate on it
+      const sorted = _.cloneDeep(this.sortedStandards)
+
+      const timestamp = firebase.firestore.Timestamp.fromDate(new Date()).toDate()
+
+      console.log('timestamp', timestamp)
+
+      const payload = {
+        body: JSON.stringify(sorted),
+        course_name: "SER401",
+        status: "INCOMPLETE",
+        created: timestamp,
+        updated: timestamp
+      }
+
+      console.log('yee', payload)
+
+      //  For now, lets just store these as documents in a collection called "savedReviews"
+      const res = await firebase.firestore().collection('Reviews').add(payload)
+
+      console.log("Added document with id: ", res.id)
     }
   },
   watch: {
