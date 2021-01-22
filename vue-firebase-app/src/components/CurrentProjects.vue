@@ -14,9 +14,8 @@
           <div class="col-md-10" style="padding:0 !important;">
             <div class="card">
             <div class="card-header text-center" style="font-size: 1.5em">Current Projects</div>
-            <h5 id= "p" class="text-center"> Projects Reviewers Clients Organization Completion</h5>
+            <h5 id= "p" class="text-center"> Project Reviewers Clients Organization Completion</h5>
             <div class="card-body">
-            <div v-if="error" class="alert alert-danger">{{error}}</div>
             </div>
             </div>
           </div>
@@ -26,19 +25,16 @@
 </template>
 
 <script>
-    export default {
-      data() {
-        return {
-          form: {
-            title: "",
-            organization: "",
-            description: "",
-            client: ""
-          },
-        error: null
-        };
-      },
 
-      //implement submit/firebase logic 
-    }
+export default {
+  data() {
+    return {
+    };
+  },
+  methods: {
+
+  },
+  mounted() {
+  },
+};
 </script>
