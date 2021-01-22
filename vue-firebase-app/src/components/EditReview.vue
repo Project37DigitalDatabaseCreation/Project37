@@ -24,8 +24,9 @@
                     name="organization"
                     required
                     v-model="form.organization"
+                    v-on:change="populateProjects"
                   >
-                    <option v-for="organization in organizations" :value="organization.id" :key="organization.id">{{ organization.title }}</option>                
+                    <option v-for="organization in organizations" :value="organization.id" :key="organization.id">{{ organization.data().title }}</option>                
                   </select>
                 </div>
               </div>
@@ -38,10 +39,11 @@
                     id="project"
                     class="form-control"
                     name="project"
+                    :disabled="projectSelectEnabled == 0"
                     required
                     v-model="form.project"
                   >
-                    <option v-for="project in projects" :value="project.id" :key="project.id">{{ project.name }}</option>                
+                    <option v-for="project in projects" :value="project.id" :key="project.id">{{ project.data().title }}</option>                
                   </select>
                 </div>
               </div>
@@ -67,14 +69,17 @@
                 <label for="reviewer" class="col-md-4 col-form-label text-md-right">Reviewer</label>
 
                 <div class="col-md-6">
-                  <input
+                  <select
                     id="reviewer"
-                    type="text"
                     class="form-control"
                     name="reviewer"
                     required
                     v-model="form.reviewer"
-                  />
+                  >
+                    <option v-for="reviewer in reviewers" :value="reviewer.id" :key="reviewer.id">
+                      {{ reviewer.data().last_name + ", " + reviewer.data().first_name}}
+                    </option>                
+                  </select>
                 </div>
               </div>
 
@@ -97,31 +102,28 @@ import firebase from "firebase";
 export default {
   data() {
     return {
-      form: {
-        organization: 3,
-        project: 2,
-        reviewer: "myReviewer"
-      },
+      form: {},
+      projectSelectEnabled: 0,
       organizations: [],
-      projects: [
-        {name: "Project 1", id: 1},
-        {name: "Project 2", id: 2},
-        {name: "Project 3", id: 3}
-      ],
+      projects: [],
+      reviewers: [],
       error: null
     };
   },
   mounted() {
+    // Get all of the organizations    
     firebase.firestore().collection("Organizations").orderBy("title", "asc").get()
     .then(result => {
       result.forEach(doc => {
-        let org = doc.data();
-        let orgId = doc.id;
+        this.organizations.push(doc);
+      })}).catch(err => { console.error(err) });
 
-        this.organizations.push({id: orgId, title: org.title});
-      });
-})
-.catch(err => { console.error(err) });
+    // Get all of the reviewers
+    firebase.firestore().collection("Reviewers").orderBy("last_name", "asc").get()
+    .then(result => {
+      result.forEach(doc => {
+        this.reviewers.push(doc);
+      })}).catch(err => { console.error(err) });
   },
   methods: {
     submit() {
@@ -134,6 +136,18 @@ export default {
         .catch(err => {
           this.error = err.message;
         });
+    },
+    populateProjects() {
+      this.projects = [];      
+  
+      firebase.firestore().collection("Projects")
+        .where("org_ref", "==", this.form.organization).get()
+      .then(result => {
+        result.forEach(doc => {            
+          this.projects.push(doc);
+          console.log(doc.data().title);
+          this.projectSelectEnabled = 1;
+      })}).catch(err => { console.error(err) });
     }
   }
 };
