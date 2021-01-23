@@ -18,6 +18,7 @@ export default createStore({
       loggedIn: false,
       data: null
     },
+    reviews: null,
     sortedStandards: null
   },
   getters: {
@@ -26,6 +27,9 @@ export default createStore({
     },
     loading(state) {
       return state.loading
+    },
+    reviews(state) {
+      return state.reviews
     },
     sortedStandards(state) {
       return state.sortedStandards
@@ -47,6 +51,10 @@ export default createStore({
     },
     SET_LOGGED_IN(state, value) {
       state.user.loggedIn = value;
+    },
+    SET_REVIEWS(state, value) {
+      console.log('VALUE', value)
+      state.reviews = value
     },
     SET_SORTED_STANDARDS(state, value) {
       state.sortedStandards = value
@@ -81,6 +89,16 @@ export default createStore({
 
       //  Dispatch the mapstandards request with our constructed payload
       await dispatch('mapStandards', { snapshot: await generalStandards.orderBy('number').get(), type: 'GENERAL_STANDARDS', discover: false })
+    },
+    async fetchReviews({commit}) {
+      //  Start loading
+      commit('SET_LOADING', true)
+
+      //  Our collection of reviews
+      const reviews = firebase.firestore().collection('Reviews')
+
+      //  WE don't need to do anything special so we can just set reviews to our new reviews dispatch
+      await commit('SET_REVIEWS', await reviews.get());
     },
     async fetchStandards({ commit, dispatch }) {
       //  Start loading
