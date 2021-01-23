@@ -10,12 +10,15 @@ import Register from '../components/Register'
 import Review from '../components/Review'
 import Reviews from '../components/Reviews'
 import Dashboard from '../components/Dashboard'
+import EditReview from '../components/EditReview'
 import AddReviewer from '../components/AddReviewer'
 import ModifyReviewer from '../components/ModifyReviewer'
 import Project from '../components/Project'
 import NewProject from '../components/NewProject'
 import CurrentProjects from '../components/CurrentProjects'
+import ManageReviewers from '../components/ManageReviewers'
 import ClientEntry from '../components/ClientEntry'
+
 
 const routes = [
   {
@@ -32,6 +35,11 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard
+  },
+  {
+    path: '/edit-review',
+    name: 'EditReview',
+    component: EditReview
   },
   {
     path: '/project',
@@ -64,6 +72,12 @@ const routes = [
     component: AddReviewer
   },
   {
+    path: '/managereviewers',
+    name: 'ManageReviewers',
+    component: ManageReviewers
+  },
+  {
+
     path: '/modifyreviewer',
     name: 'ModifyReviewer',
     component: ModifyReviewer
