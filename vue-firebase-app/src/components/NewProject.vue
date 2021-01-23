@@ -28,23 +28,15 @@
                     <!-- Organization label and dropdown menu -->
                     <div class="form-check row">
                         <label for="organization" class="col-md-4 col-form-label text-md-right">Organization</label>
-                          <select name="organizations" id="organizations" value required v-model="form.organization">
-                            <option disabled value="">Choose Organization</option>
-                            <option value="asu">Arizona State University</option>
-                            <option value="gcu">Grand Canyon University</option>
-                            <option value="mcc">Mesa Community College</option>
-                            <option value="scc">Scottsdale Community College</option>
+                          <select>
+                          <option v-for="organization in organizations" :key="organization.key"> {{organization.title}}</option>
                           </select>
                     </div>
                     <!-- Clients label and dropdown menu -->
                     <div class="form-check row">
-                        <label for="clients" class="col-md-4 col-form-label text-md-right">Clients</label>
-                          <select name="client" id="client" value required v-model="form.client">
-                            <option disabled value="">Choose client(s)</option>
-                            <option value="asu">Client 1</option>
-                            <option value="gcu">Client 2</option>
-                            <option value="mcc">Client 3</option>
-                            <option value="scc">Client 4</option>
+                        <label for="client" class="col-md-4 col-form-label text-md-right">Clients</label>
+                          <select>
+                          <option v-for="client in clients" :key="client.key"> {{client.title}}</option>
                           </select>
                     </div>
                     <!-- Description label and textbox -->
@@ -70,23 +62,61 @@
 </template>
 
 <script>
-    export default {
-      data() {
-        return {
-          form: {
+
+import firebase from 'firebase'
+
+export default {
+  data() {
+    return {
+      organizations: [],
+      clients: [],
+      form: {
             title: "",
             organization: "",
             description: "",
             client: ""
           },
         error: null
-        };
-      },
-
-      //implement submit/firebase logic 
-    }
+    };
+  },
+  methods: {
+    readOrganizations() {
+      let organizations = [];
+      firebase.firestore().collection("Organizations")
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+           this.organizations.push({
+              title: doc.data().title,
+            });
+          });
+          return organizations
+        })
+        .catch((error) => {
+          console.log("Error retrieving documents: ", error);
+        });
+    },
+    readClients() {
+      let clients = [];
+      firebase.firestore().collection("Clients")
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+           this.clients.push({
+              title: doc.data().name,
+            });
+          });
+          return clients
+        })
+        .catch((error) => {
+          console.log("Error retrieving documents: ", error);
+        });
+    },
+  },
+  mounted() {
+    this.readOrganizations(),
+    this.readClients();
+  },
+  //finish submit logic for database to save new project
+};
 </script>
-
-<style lang="scss" scoped>
-
-</style>
