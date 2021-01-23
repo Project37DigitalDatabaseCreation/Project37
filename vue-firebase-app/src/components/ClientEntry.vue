@@ -22,7 +22,6 @@ Organization is a drop down: relies on project being created.
                 <label class="col-md-4 col-form-label text-md-right"
                   >First Name</label
                 >
-
                 <div class="col-md-6">
                   <input
                     type="text"
@@ -32,12 +31,10 @@ Organization is a drop down: relies on project being created.
                   />
                 </div>
               </div>
-
               <div class="form-group row">
                 <label class="col-md-4 col-form-label text-md-right"
                   >Last Name</label
                 >
-
                 <div class="col-md-6">
                   <input
                     type="text"
@@ -47,12 +44,10 @@ Organization is a drop down: relies on project being created.
                   />
                 </div>
               </div>
-
               <div class="form-group row">
                 <label class="col-md-4 col-form-label text-md-right"
                   >Email</label
                 >
-
                 <div class="col-md-6">
                   <input
                     type="email"
@@ -62,7 +57,6 @@ Organization is a drop down: relies on project being created.
                   />
                 </div>
               </div>
-
               <div class="form-group row">
                 <label class="col-md-4 col-form-label text-md-right"
                   >Organization</label
