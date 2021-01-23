@@ -7,7 +7,7 @@ const getOrganizations = () => {
     const organizations = ref([])
     const error = ref(null)
 
-    const load = async () => {
+    const loadOrganizations = async () => {
         try {
             const res = await firebase.firestore().collection('Organizations').get()
 
@@ -19,7 +19,7 @@ const getOrganizations = () => {
         }
     }
 
-    return { organizations, error, load }
+    return { organizations, error, loadOrganizations }
 }
 
 export default getOrganizations

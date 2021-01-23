@@ -108,10 +108,10 @@ Organization is a drop down: relies on project being created.
       const email = ref('')
       const organization = ref('')
 
-      const { organizations, error, load } = getOrganizations()
+      const { organizations, error, loadOrganizations } = getOrganizations()
 
       // loads the current organizations from firebase for the dropdown menu
-      load()
+      loadOrganizations()
 
       // creates the client document in firebase on submitting the form
       const handleSubmit = async () => {
