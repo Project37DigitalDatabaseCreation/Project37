@@ -127,15 +127,21 @@ export default {
   },
   methods: {
     submit() {
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(this.form.email, this.form.password)
-        .then(() => {
-          this.$router.replace({ name: "Dashboard" });
+      var navigate = this.$router;
+      firebase.firestore().collection("Reviews").add({
+        created: firebase.firestore.FieldValue.serverTimestamp(),
+        course_name: this.form.course_name,
+        reviewer_ref: firebase.firestore().doc('Reviewers/' + this.form.reviewer),
+        project: firebase.firestore().doc('Projects/' + this.form.project),
+        status: "In Progress"
         })
-        .catch(err => {
-          this.error = err.message;
-        });
+      .then(function() {
+        console.log("Document successfully written!");
+        navigate.replace({ name: "Dashboard" });
+      })
+      .catch(function(error) {
+        console.error("Error writing document: ", error);
+      });
     },
     populateProjects() {
       this.projects = [];      
