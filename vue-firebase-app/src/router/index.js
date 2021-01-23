@@ -10,6 +10,7 @@ import Register from '../components/Register'
 import Review from '../components/Review'
 import Reviews from '../components/Reviews'
 import Dashboard from '../components/Dashboard'
+import EditReview from '../components/EditReview'
 import AddReviewer from '../components/AddReviewer'
 import ModifyReviewer from '../components/ModifyReviewer'
 import Project from '../components/Project'
@@ -32,6 +33,11 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard
+  },
+  {
+    path: '/edit-review',
+    name: 'EditReview',
+    component: EditReview
   },
   {
     path: '/project',
