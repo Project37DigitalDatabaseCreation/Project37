@@ -8,7 +8,9 @@
 <template>
   <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
     <div class="container">
-      <router-link to="/" class="navbar-brand">eLM Academic Consultants</router-link>
+      <router-link to="/" class="navbar-brand"
+        >eLM Academic Consultants</router-link
+      >
       <button
         class="navbar-toggler"
         type="button"
@@ -24,14 +26,39 @@
         <ul class="navbar-nav mr-auto"></ul>
         <ul class="navbar-nav ml-auto">
           <template v-if="user.loggedIn">
-            <ul style="list-style:none; display:flex; justify-content:space-between;">
+            <ul
+              style="list-style:none; display:flex; justify-content:space-between;"
+            >
               <li class="nav-item">
-                <router-link to="/reviews" class="nav-link">Reviews</router-link>
+                <router-link to="/clientEntry" class="nav-link"
+                  >Add Client</router-link
+                >
               </li>
-              <div class="nav-item">{{user.data.displayName}}</div>
+              <li class="nav-item">
+                <router-link to="/addreviewer" class="nav-link"
+                  >Add Reviewer</router-link
+                >
+              </li>
+              <li class="nav-item">
+                <router-link to="/modifyreviewer" class="nav-link"
+                  >Modify Reviewer</router-link
+                >
+              </li>
+              <li class="nav-item">
+                <router-link to="/managereviewers" class="nav-link"
+                  >Manage Reviewer</router-link
+                >
+              </li>
+              <li class="nav-item">
+                <router-link to="/reviews" class="nav-link"
+                  >Reviews</router-link
+                >
+              </li>
               <li class="nav-item">
                 <router-link to="/Project">Project</router-link>
               </li>
+              <div class="nav-item">{{ user.data.displayName }}</div>
+
               <li class="nav-item">
                 <a class="nav-link" @click.prevent="signOut">Sign out</a>
               </li>
@@ -51,36 +78,36 @@
   </nav>
 </template>
 <script>
-import { mapGetters } from "vuex";
-import firebase from "firebase";
-export default {
-  computed: {
-    ...mapGetters({
-// map `this.user` to `this.$store.getters.user`
-      user: "user"
-    })
-  },
-  methods: {
-    signOut() {
-      firebase
-        .auth()
-        .signOut()
-        .then(() => {
-          this.$router.push({ path: 'login'});
-        });
-    }
+  import { mapGetters } from 'vuex'
+  import firebase from 'firebase'
+  export default {
+    computed: {
+      ...mapGetters({
+        // map `this.user` to `this.$store.getters.user`
+        user: 'user',
+      }),
+    },
+    methods: {
+      signOut() {
+        firebase
+          .auth()
+          .signOut()
+          .then(() => {
+            this.$router.push({ path: 'login' })
+          })
+      },
+    },
   }
-};
 </script>
 <style>
-.navbar {
-  height:56px !important;
-}
-.nav-item {
-  margin-left:6px;
-  margin-right:6px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
+  .navbar {
+    height: 56px !important;
+  }
+  .nav-item {
+    margin-left: 6px;
+    margin-right: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 </style>
