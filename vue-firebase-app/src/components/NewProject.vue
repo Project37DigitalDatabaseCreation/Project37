@@ -25,20 +25,26 @@
                             <input id="title" type="text" class="form-control" name="title" value required v-model="form.title" />
                           </div>
                     </div>
+
+
                     <!-- Organization label and dropdown menu -->
                     <div class="form-check row">
                         <label for="organization" class="col-md-4 col-form-label text-md-right">Organization</label>
-                          <select>
-                          <option v-for="organization in organizations" :key="organization.key"> {{organization.title}}</option>
+
+                          <select id="organization" class="form-control" name="organization" required v-model="form.organization" v-on:change="readClients">
+                          <option v-for="organization in organizations" :value="organization.title" :key="organization.key"> {{organization.title}}</option>
                           </select>
                     </div>
+
                     <!-- Clients label and dropdown menu -->
                     <div class="form-check row">
                         <label for="client" class="col-md-4 col-form-label text-md-right">Clients</label>
-                          <select>
-                          <option v-for="client in clients" :key="client.key"> {{client.title}}</option>
+                          <select id="client" class="form-control" name="client" :disabled="projectSelectEnabled == 0" required v-model="form.client">
+                          <option v-for="client in clients" :value="client.id" :key="client.key"> {{client.firstName}}</option>
                           </select>
                     </div>
+
+                    
                     <!-- Description label and textbox -->
                     <div class="form-group row">
                         <label for="description" class="col-md-4 col-form-label text-md-right">Description</label>
@@ -62,9 +68,7 @@
 </template>
 
 <script>
-
 import firebase from 'firebase'
-
 export default {
   data() {
     return {
@@ -97,16 +101,18 @@ export default {
         });
     },
     readClients() {
-      let clients = [];
+      this.clients = [];
       firebase.firestore().collection("Clients")
-        .get()
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
+        .where("organization", "==", this.form.organization).get()
+        .then((result) => {
+          result.forEach((doc) => {
            this.clients.push({
-              title: doc.data().name,
+              email: doc.data().email,
+              firstName: doc.data().firstName,
+              lastName: doc.data().lastName,
+              organization: doc.data().organization,
             });
           });
-          return clients
         })
         .catch((error) => {
           console.log("Error retrieving documents: ", error);
