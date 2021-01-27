@@ -50,8 +50,8 @@
 
 import firebase from "firebase";
 import "firebase/firestore";
-const db = firebase.firestore();
-const reviewersRef = db.collection("Reviewers");
+// const db = firebase.firestore();
+// const reviewersRef = db.collection("Reviewers");
 
 export default {
   data() {
@@ -104,7 +104,7 @@ export default {
     },
 
     async readReviewersFromDb() {
-      const snapshot = await reviewersRef.get();
+      const snapshot = await firebase.firestore().collection("Reviewers").get();
 
       if (snapshot.empty) {
         console.log("No matching documents.");
