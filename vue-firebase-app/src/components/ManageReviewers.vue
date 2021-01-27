@@ -26,7 +26,7 @@
         <tr
           v-for="(reviewer, index) in getReviewers"
           :key="index"
-          @click="edit(reviewer.email)"
+          @click="readReviewersFromDb()"
         >
           <td>{{ reviewer.name }}</td>
           <td>{{ reviewer.email }}</td>
@@ -47,6 +47,11 @@
 
 <script>
 //import firebase from "firebase";
+
+import firebase from "firebase";
+import "firebase/firestore";
+const db = firebase.firestore();
+const reviewersRef = db.collection("Reviewers");
 
 export default {
   data() {
@@ -87,16 +92,28 @@ export default {
     };
   },
   methods: {
-    edit(reviewer) {
-      // TODO Temp method for testing. Future iteration will load the edit user page
-      alert(`TODO - Edit user ${reviewer}`);
-    },
+    // edit(reviewer) {
+    //   db.collection("Reviewers").get();
+    // },
 
     prevPage() {
       alert("TODO - previous page");
     },
     nextPage() {
       alert("TODO - next page");
+    },
+
+    async readReviewersFromDb() {
+      const snapshot = await reviewersRef.get();
+
+      if (snapshot.empty) {
+        console.log("No matching documents.");
+        return;
+      }
+
+      snapshot.forEach((doc) => {
+        console.log(doc.id, "=>", doc.data());
+      });
     },
   },
 };
@@ -129,11 +146,9 @@ table {
 }
 
 button {
-   margin:0 auto;
-   
+  margin: 0 auto;
 }
 .paginationContainer {
-
   display: flex;
   align-items: center;
   justify-content: center;
