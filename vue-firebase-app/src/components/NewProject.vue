@@ -18,6 +18,7 @@
                 <div v-if="error" class="alert alert-danger">{{error}}</div>
                 <!-- Input fields for form -->
                 <form action="#" @submit.prevent="submit">
+
                     <!-- Title label and textbox -->
                     <div class="form-group row">
                         <label for="title" class="col-md-4 col-form-label text-md-right">Title</label>
@@ -26,22 +27,24 @@
                           </div>
                     </div>
 
-
                     <!-- Organization label and dropdown menu -->
-                    <div class="form-check row">
+                    <div class="form-group row">
                         <label for="organization" class="col-md-4 col-form-label text-md-right">Organization</label>
-
+                          <div class="col-md-8">
                           <select id="organization" class="form-control" name="organization" required v-model="form.organization" v-on:change="readClients">
                           <option v-for="organization in organizations" :value="organization.title" :key="organization.key"> {{organization.title}}</option>
                           </select>
+                          </div>
                     </div>
 
                     <!-- Clients label and dropdown menu -->
-                    <div class="form-check row">
+                    <div class="form-group row">
                         <label for="client" class="col-md-4 col-form-label text-md-right">Clients</label>
-                          <select id="client" class="form-control" name="client" :disabled="projectSelectEnabled == 0" required v-model="form.client">
-                          <option v-for="client in clients" :value="client.id" :key="client.key"> {{client.firstName}}</option>
+                          <div class="col-md-8">
+                          <select id="client" class="form-control" name="client" required v-model="form.client">
+                          <option v-for="client in clients" :value="client.firstName" :key="client.key"> {{client.firstName}}</option>
                           </select>
+                          </div>
                     </div>
 
                     
@@ -49,7 +52,7 @@
                     <div class="form-group row">
                         <label for="description" class="col-md-4 col-form-label text-md-right">Description</label>
                           <div class="col-md-8">
-                            <input id="title" type="text" class="form-control" name="title" value required v-model="form.description" />
+                            <input id="description" type="text" class="form-control" name="description" value required v-model="form.description" />
                           </div>
                     </div>
                     <!-- Submit new project -->
@@ -68,6 +71,9 @@
 </template>
 
 <script>
+  
+  
+
 import firebase from 'firebase'
 export default {
   data() {
@@ -78,12 +84,30 @@ export default {
             title: "",
             organization: "",
             description: "",
-            client: ""
+            client: "",
+            org_ref: ""
           },
         error: null
     };
   },
   methods: {
+    submit() {
+      var navigate = this.$router;
+      firebase.firestore().collection("Projects").add({
+        description: this.form.description,
+        num_reviews: 0,
+        org_ref: this.form.org_ref,
+        status: "In Progress",
+        title: this.form.title,
+        client: this.form.client
+        })
+      .then(function() {
+        navigate.replace({ name: "NewProject" });
+      })
+      .catch(function(error) {
+        console.error("Error writing document: ", error);
+      });
+    },
     readOrganizations() {
       let organizations = [];
       firebase.firestore().collection("Organizations")
@@ -91,8 +115,10 @@ export default {
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
            this.organizations.push({
+              id: doc.id,
               title: doc.data().title,
             });
+            this.form.org_ref = doc.id
           });
           return organizations
         })
@@ -107,6 +133,7 @@ export default {
         .then((result) => {
           result.forEach((doc) => {
            this.clients.push({
+              id: doc.id,
               email: doc.data().email,
               firstName: doc.data().firstName,
               lastName: doc.data().lastName,
@@ -117,12 +144,12 @@ export default {
         .catch((error) => {
           console.log("Error retrieving documents: ", error);
         });
+        
     },
   },
   mounted() {
     this.readOrganizations(),
     this.readClients();
   },
-  //finish submit logic for database to save new project
 };
 </script>
