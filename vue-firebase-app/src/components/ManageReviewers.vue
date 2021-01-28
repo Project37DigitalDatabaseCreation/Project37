@@ -60,7 +60,7 @@ export default {
           lastLogin: "1/18/2020",
         },
         2: {
-          name: "Issac Landis",
+          name: "Isaac Landis",
           email: "ilandis@asu.edu",
           status: "Active",
           lastLogin: "1/17/2020",
