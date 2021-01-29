@@ -18,20 +18,20 @@
         <tr>
           <th>Name</th>
           <th>Email Address</th>
-          <th>Account Status</th>
-          <th>Last Login</th>
+          <th>Administrator</th>
+          <!-- <th>Last Login</th> -->
         </tr>
       </thead>
       <tbody>
         <tr
-          v-for="(reviewer, index) in getReviewers"
+          v-for="(reviewer, index) in reviewerData"
           :key="index"
-          @click="readReviewersFromDb()"
-        >
-          <td>{{ reviewer.name }}</td>
+          @click="modifyReviewer(reviewer.email)"
+          >
+          <td>{{ reviewer.first_name + ' ' + reviewer.last_name }}</td>
           <td>{{ reviewer.email }}</td>
-          <td>{{ reviewer.status }}</td>
-          <td>{{ reviewer.lastLogin }}</td>
+          <td>{{ reviewer.is_admin }}</td>
+          
         </tr>
       </tbody>
     </table>
@@ -57,38 +57,8 @@ export default {
   data() {
     return {
       //TODO - Temp data object for testing. Future iteration will read from database
-      getReviewers: {
-        1: {
-          name: "Ben McElyea",
-          email: "bmcelyea@asu.edu",
-          status: "Active",
-          lastLogin: "1/18/2020",
-        },
-        2: {
-          name: "Issac Landis",
-          email: "ilandis@asu.edu",
-          status: "Active",
-          lastLogin: "1/17/2020",
-        },
-        3: {
-          name: "Armando Minor",
-          email: "aminor1@asu.edu",
-          status: "Active",
-          lastLogin: "1/12/2020",
-        },
-        4: {
-          name: "Andrew Massart",
-          email: "amassart@asu.edu",
-          status: "disabled",
-          lastLogin: "1/12/2020",
-        },
-        5: {
-          name: "Stephen Kizer",
-          email: "kizerste@asu.edu",
-          status: "disabled",
-          lastLogin: "1/12/2020",
-        },
-      },
+      reviewerData: [],
+      
     };
   },
   methods: {
@@ -103,18 +73,38 @@ export default {
       alert("TODO - next page");
     },
 
-    async readReviewersFromDb() {
-      const snapshot = await firebase.firestore().collection("Reviewers").get();
-
-      if (snapshot.empty) {
-        console.log("No matching documents.");
-        return;
-      }
-
-      snapshot.forEach((doc) => {
-        console.log(doc.id, "=>", doc.data());
-      });
+    modifyReviewer(reviewer){
+       console.log(`TODO - Edit user ${reviewer}`)   
     },
+
+
+    getReviewers(){
+
+    this.reviewerData = [];
+      firebase.firestore().collection("Reviewers")
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            this.reviewerData.push({
+              email: doc.data().email,
+              first_name: doc.data().first_name,
+              last_name: doc.data().last_name,
+              is_admin: doc.data().is_admin,
+            });
+            console.log(doc.id, " => ", doc.data());
+          });
+        })
+        .catch((error) => {
+          console.log("Error getting documents: ", error);
+        });
+        console.log(this.reviewerData)
+
+    },
+
+  
+  },
+    mounted() {
+    this.getReviewers();
   },
 };
 </script>
