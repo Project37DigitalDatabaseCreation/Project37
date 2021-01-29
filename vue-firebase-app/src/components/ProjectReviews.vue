@@ -95,10 +95,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(entry, i) in sortedList" :key="i">
-          <th scope="row">{{ ++i }}</th>
-          <td>{{ entry.name }}</td>
-          <td>{{ entry.score }}</td>
+        <tr v-for="review in reviews" :key="review.id">
+          <td>{{ review.course_name }}</td>
+          <td>{{ review.reviewer.last_name + ", " + review.reviewer.first_name}}</td>
+          <td>{{ review.status }}</td>
         </tr>
       </tbody>
     </table>
@@ -116,6 +116,7 @@ export default {
       projectSelectEnabled: 0,
       organizations: [],
       projects: [],
+      reviews: [],
       reviewers: [],
       error: null
     };
@@ -162,28 +163,34 @@ export default {
       .then(result => {
         result.forEach(doc => {            
           this.projects.push(doc);
-          console.log(doc.data().title);
           this.projectSelectEnabled = 1;
       })}).catch(err => { console.error(err) });
     },
     populateReviews() {
+        this.reviews = [];
+        let reviews = this.reviews;
         var projectRef = firebase.firestore().doc("/Projects/" + this.form.project);
         
         firebase.firestore().collection("Reviews")
         .where("project", "==", projectRef).get()
         .then(result => {
-            result.forEach(doc => {                            
-                console.log(doc.data().course_name);
+            result.forEach(doc => {
+              let review = doc.data();
+              review.id = doc.id;
+
+              if(review.reviewer_ref) {
+                review.reviewer_ref.get()
+                .then(rDoc => {
+                  review.reviewer = rDoc.data();
+                  review.reviewer.id = rDoc.id;
+                  reviews.push(review);
+                })
+                .catch(err => console.error(err));
+              } else {
+                reviews.push(review);
+              }              
       })}).catch(err => { console.error(err) });
-    },
-    onSubmit() {
-      this.allScores.push({ name: this.name, score: this.score });
-      this.clearForm();
-    },
-    clearForm() {
-      this.name = "";
-      this.score = "";
-    },
+    }
   },
 };
 </script>
