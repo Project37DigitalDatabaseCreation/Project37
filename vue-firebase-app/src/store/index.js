@@ -55,6 +55,7 @@ export default createStore({
     SET_REVIEWS(state, value) {
       console.log('VALUE', value)
       state.reviews = value
+      console.log('NEW',state.reviews)
     },
     SET_SORTED_STANDARDS(state, value) {
       state.sortedStandards = value
@@ -97,8 +98,33 @@ export default createStore({
       //  Our collection of reviews
       const reviews = firebase.firestore().collection('Reviews')
 
-      //  WE don't need to do anything special so we can just set reviews to our new reviews dispatch
-      await commit('SET_REVIEWS', await reviews.get());
+      //  Container for our reviews
+      const response = []
+
+      //  We have to get all of our reviews, and look at the docs from it
+      const obj = await reviews.get()
+
+      //  Iterate through each document, parsing appropriately
+      for (let i = 0; i < obj.docs.length; i++) {
+        //  The document we want
+        let rev = obj.docs[i].data()
+
+        //  Parse the project for this document
+        let proj = await rev.project.get()
+
+        //  Parse the reviewer for this document
+        let reviewer = await rev.reviewer_ref.get()
+
+        //  Attach to our reviewer
+        rev.project = proj.data()
+        rev.reviewer_ref = reviewer.data()
+
+        //  Push the document onto the container
+        response.push(rev)
+      }
+
+      //  We have our documents, now we can set our reviews
+      commit('SET_REVIEWS', response);
     },
     async fetchStandards({ commit, dispatch }) {
       //  Start loading
