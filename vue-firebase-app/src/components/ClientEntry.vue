@@ -63,7 +63,7 @@
                 >
 
                 <div class="col-md-6">
-                  <select required v-model="organization">
+                  <select required>
                     <option
                       v-for="organization in organizations"
                       v-bind:key="organization.title"
