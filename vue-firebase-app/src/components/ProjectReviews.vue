@@ -155,9 +155,10 @@ export default {
     },
     populateProjects() {
       this.projects = [];
-      
+      var orgRef = firebase.firestore().doc("/Organizations/" + this.form.organization);
+
       firebase.firestore().collection("Projects")
-      .where("org_ref", "==", this.form.organization).get()
+      .where("org_ref", "==", orgRef).get()
       .then(result => {
         result.forEach(doc => {            
           this.projects.push(doc);
