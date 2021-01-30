@@ -41,7 +41,7 @@
                     <div class="form-group row">
                         <label for="client" class="col-md-4 col-form-label text-md-right">Clients</label>
                           <div class="col-md-8">
-                          <select id="client" class="form-control" name="client" required v-model="form.client">
+                          <select id="client" class="form-control" name="client" required v-model="form.client" v-on:change="getOrganizationId">
                           <option v-for="client in clients" :value="client.firstName" :key="client.key"> {{client.firstName}}</option>
                           </select>
                           </div>
@@ -58,7 +58,7 @@
                     <!-- Submit new project -->
                     <div class="form-group row mb-0">
                         <div class="col-md-8 offset-md-4">
-                          <button type="submit" class="btn btn-primary">Create New Project</button>
+                          <button type="submit" class="btn btn-primary" @click="validateForm">Create New Project</button>
                         </div>
                     </div>
                 </form>
@@ -71,14 +71,13 @@
 </template>
 
 <script>
-  
-  
-
+var submission = false
 import firebase from 'firebase'
 export default {
   data() {
     return {
       organizations: [],
+      updateOrganizationId: [],
       clients: [],
       form: {
             title: "",
@@ -92,6 +91,7 @@ export default {
   },
   methods: {
     submit() {
+     submission = true
       var navigate = this.$router;
       firebase.firestore().collection("Projects").add({
         description: this.form.description,
@@ -103,6 +103,9 @@ export default {
         })
       .then(function() {
         navigate.replace({ name: "NewProject" });
+        if (submission){
+          alert("New Project added successfully!");
+        }
       })
       .catch(function(error) {
         console.error("Error writing document: ", error);
@@ -118,7 +121,6 @@ export default {
               id: doc.id,
               title: doc.data().title,
             });
-            this.form.org_ref = doc.id
           });
           return organizations
         })
@@ -144,8 +146,36 @@ export default {
         .catch((error) => {
           console.log("Error retrieving documents: ", error);
         });
-        
     },
+    getOrganizationId() {
+      let updateOrganizationId = [];
+      firebase.firestore().collection("Organizations")
+        .where("title", "==", this.form.organization).get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+           this.updateOrganizationId.push({
+              id: doc.id,
+              title: doc.data().title,
+            });
+            this.form.org_ref = doc.id
+          });
+          return updateOrganizationId
+        })
+        .catch((error) => {
+          console.log("Error retrieving documents: ", error);
+        });
+    },
+    resetForm() {
+        console.log('Reseting the form')
+        this.form.title = ""
+        this.form.description = ""
+        this.from.organization.title = ""
+        this.form.client = ""
+    },
+    validateForm(){
+      this.submit(),
+      this.resetForm();
+    }
   },
   mounted() {
     this.readOrganizations(),
