@@ -18,6 +18,7 @@ import NewProject from '../components/NewProject'
 import CurrentProjects from '../components/CurrentProjects'
 import ManageReviewers from '../components/ManageReviewers'
 import ClientEntry from '../components/ClientEntry'
+import ManageClients from '../components/ManageClients'
 
 
 const routes = [
@@ -75,6 +76,11 @@ const routes = [
     path: '/managereviewers',
     name: 'ManageReviewers',
     component: ManageReviewers
+  },
+  {
+    path: '/manage-clients',
+    name: 'ManageClients',
+    component: ManageClients
   },
   {
 
