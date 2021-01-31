@@ -17,7 +17,7 @@
             <div class="card-body">
                 <div v-if="error" class="alert alert-danger">{{error}}</div>
                 <!-- Input fields for form -->
-                <form action="#" @submit.prevent="submit">
+                <form ref="OrgForm" action="#" @submit.prevent="submit">
 
                     <!-- Title label and textbox -->
                     <div class="form-group row">
@@ -32,7 +32,8 @@
                         <label for="organization" class="col-md-4 col-form-label text-md-right">Organization</label>
                           <div class="col-md-8">
                           <select id="organization" class="form-control" name="organization" required v-model="form.organization" v-on:change="readClients">
-                          <option v-for="organization in organizations" :value="organization.title" :key="organization.key"> {{organization.title}}</option>
+                            <option disabled selected value="default"> Select Organization </option>
+                            <option v-for="organization in organizations" :value="organization.title" :key="organization.key"> {{organization.title}}</option>
                           </select>
                           </div>
                     </div>
@@ -42,12 +43,12 @@
                         <label for="client" class="col-md-4 col-form-label text-md-right">Clients</label>
                           <div class="col-md-8">
                           <select id="client" class="form-control" name="client" required v-model="form.client" v-on:change="getOrganizationId">
-                          <option v-for="client in clients" :value="client.firstName" :key="client.key"> {{client.firstName}}</option>
+                            <option disabled selected value="default"> Select Client </option>
+                            <option v-for="client in clients" :value="client.firstName" :key="client.key"> {{client.firstName}}</option>
                           </select>
                           </div>
                     </div>
 
-                    
                     <!-- Description label and textbox -->
                     <div class="form-group row">
                         <label for="description" class="col-md-4 col-form-label text-md-right">Description</label>
@@ -58,7 +59,7 @@
                     <!-- Submit new project -->
                     <div class="form-group row mb-0">
                         <div class="col-md-8 offset-md-4">
-                          <button type="submit" class="btn btn-primary" @click="validateForm">Create New Project</button>
+                          <button type="submit" class="btn btn-primary">Create New Project</button>
                         </div>
                     </div>
                 </form>
@@ -104,12 +105,16 @@ export default {
       .then(function() {
         navigate.replace({ name: "NewProject" });
         if (submission){
-          alert("New Project added successfully!");
+          alert("New Project added successfully!")
         }
       })
       .catch(function(error) {
         console.error("Error writing document: ", error);
       });
+      this.form.organization = "default"
+      this.form.client = "default"
+      this.form.title = ""
+      this.form.description = ""
     },
     readOrganizations() {
       let organizations = [];
@@ -165,17 +170,6 @@ export default {
           console.log("Error retrieving documents: ", error);
         });
     },
-    resetForm() {
-        console.log('Reseting the form')
-        this.form.title = ""
-        this.form.description = ""
-        this.from.organization.title = ""
-        this.form.client = ""
-    },
-    validateForm(){
-      this.submit(),
-      this.resetForm();
-    }
   },
   mounted() {
     this.readOrganizations(),
