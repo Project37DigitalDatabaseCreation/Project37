@@ -12,6 +12,9 @@ on:
 jobs:
   build_and_preview:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./vue-firebase-app
     steps:
         # checks out to the master branch
       - uses: actions/checkout@master
