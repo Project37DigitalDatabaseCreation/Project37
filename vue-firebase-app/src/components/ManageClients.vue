@@ -8,15 +8,8 @@
 
 <template>
   <div class="container">
-    <div class="row">
-      <div class="col-md-1">
-        <h4>Clients</h4>
-      </div>
-      <div class="col">
-        <button class="btn btn-primary">+ Add Client</button>
-      </div>
-    </div>
-    <table class="table table-hover table-bordered table-striped">
+    <ClientEntry />
+    <table class="table table-hover table-borderless table-striped">
       <thead>
         <tr>
           <th>First Name</th>
@@ -52,7 +45,10 @@
 
 <script>
   import getClients from '../composables/getClients'
+  import ClientEntry from '../components/ClientEntry'
+
   export default {
+    components: { ClientEntry },
     setup() {
       const { clients, error, loadClients } = getClients()
 
