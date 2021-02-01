@@ -60,7 +60,14 @@
                 >
               </li>
               <li class="nav-item">
-                <router-link to="/Project">Project</router-link>
+                <router-link to="/newProject" class="nav-link"
+                  >New Project</router-link
+                >
+              </li>
+              <li class="nav-item">
+                <router-link to="/currentProjects" class="nav-link"
+                  >Current Projects</router-link
+                >
               </li>
               <div class="nav-item">{{ user.data.displayName }}</div>
 
