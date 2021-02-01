@@ -95,6 +95,7 @@
         </div>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -103,17 +104,24 @@
 //import firebase from "firebase";
 
 export default {
+  
+  props:{
+
+    emailAddress: String,
+ 
+  },
   data() {
     return {
       form: {
-        name: "",
-        email: "",
-        isAdmin: false
+        name: this.name,
+        email: this.emailAddress,
+        isAdmin: this.isAdmin,
       },
   
       error: null
     };
   },
+
   methods: {
     submit() {
 

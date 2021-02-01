@@ -19,6 +19,7 @@ import CurrentProjects from '../components/CurrentProjects'
 import ManageReviewers from '../components/ManageReviewers'
 import ClientEntry from '../components/ClientEntry'
 import ManageClients from '../components/ManageClients'
+import ReviewerList from '../components/ReviewerList'
 
 
 const routes = [
@@ -75,19 +76,24 @@ const routes = [
   {
     path: '/managereviewers',
     name: 'ManageReviewers',
-    component: ManageReviewers
+    component: ManageReviewers, children: [
+
+      { path: '', name: 'ReviewerList', component: ReviewerList },
+      { path: '/modifyreviewer', name: 'ModifyReviewer', component: ModifyReviewer, props:true }
+
+    ]
   },
   {
     path: '/manage-clients',
     name: 'ManageClients',
     component: ManageClients
   },
-  {
+  // {
 
-    path: '/modifyreviewer',
-    name: 'ModifyReviewer',
-    component: ModifyReviewer
-  },
+  //   path: '/modifyreviewer',
+  //   name: 'ModifyReviewer',
+  //   component: ModifyReviewer
+  // },
   {
     path: '/clientEntry',
     name: 'ClientEntry',
