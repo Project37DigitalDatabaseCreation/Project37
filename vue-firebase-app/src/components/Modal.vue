@@ -12,7 +12,46 @@
 
           <div class="modal-body">
             <slot name="body">
-              default body
+              <div class="form-group row">
+                <label for="course_name" class="col-md-4 col-form-label text-md-right">Course Name</label>
+
+                <div class="col-md-6">
+                    <input
+                    id="course_name"
+                    type="text"
+                    class="form-control"
+                    name="course_name"
+                    value
+                    required
+                    autofocus
+                    v-model="modal_course_name"
+                    />
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="reviewer" class="col-md-4 col-form-label text-md-right">Reviewer</label>
+
+                <div class="col-md-6">
+                    <select
+                    id="reviewer"
+                    class="form-control"
+                    name="reviewer"
+                    required
+                    v-model="reviewer"
+                    >
+                    <option v-for="reviewer in modal_reviewers" :value="reviewer.id" :key="reviewer.id">
+                        {{ reviewer.data().last_name + ", " + reviewer.data().first_name}}
+                    </option>                
+                    </select>
+                </div>
+              </div>
+
+              <div class="form-group row mb-0">
+                <div class="col-md-8 offset-md-4">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+              </div>
             </slot>
           </div>
 
@@ -31,11 +70,15 @@
 </template>
 <script>
 export default {
-    data() {
-        return {
-        showModal: false
-        }
-    }
+  name: "modal",
+  props: ["course_name_prop", "reviewers_prop"],
+  data() {
+      return {
+        showModal: false,
+        modal_course_name: this.course_name_prop,
+        modal_reviewers: this.reviewers_prop
+      }
+  }
 };
 </script>
 <style scoped>
@@ -57,7 +100,7 @@ export default {
 }
 
 .modal-container {
-  width: 300px;
+  width: 600px;
   margin: 0px auto;
   padding: 20px 30px;
   background-color: #fff;
