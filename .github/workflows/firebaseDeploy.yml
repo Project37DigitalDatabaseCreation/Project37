@@ -13,9 +13,15 @@ jobs:
   build_and_preview:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      # Add any build steps here. For example:
-      # - run: npm ci && npm run build
+        # checks out to the master branch
+      - uses: actions/checkout@master
+        # sets up node 
+      - uses: actions/setup-node@master
+        # installs all dependencies
+      - run: npm install
+        # creates our dist folder
+      - run: npm run build
+        # firebase deployment
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
