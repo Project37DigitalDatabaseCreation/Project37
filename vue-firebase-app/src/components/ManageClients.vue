@@ -8,7 +8,14 @@
 
 <template>
   <div class="container">
-    <h4>Clients</h4>
+    <div class="row">
+      <div class="col-md-1">
+        <h4>Clients</h4>
+      </div>
+      <div class="col">
+        <button class="btn btn-primary">+ Add Client</button>
+      </div>
+    </div>
     <table class="table table-hover table-bordered table-striped">
       <thead>
         <tr>
@@ -27,31 +34,30 @@
         </tr>
       </tbody>
     </table>
-    <div class="paginationContainer">
-      <p>
-        <button class="btn" @click="prevPage">Previous</button>
-        <button class="btn" @click="nextPage">Next</button>
-      </p>
+    <div>
+      <ul class="pagination justify-content-end">
+        <li class="page-item disabled">
+          <a class="page-link" href="#" tabindex="-1">Previous</a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+          <a class="page-link" href="#">Next</a>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
 
 <script>
-  // import { ref } from 'vue'
   import getClients from '../composables/getClients'
   export default {
     setup() {
-      // const firstName = ref('')
-      // const lastName = ref('')
-      // const email = ref('')
-      // const organization = ref('')
-
       const { clients, error, loadClients } = getClients()
 
       // Loads the clients for the data table
       loadClients()
-
-      console.log(clients)
 
       return { clients, error }
     },
