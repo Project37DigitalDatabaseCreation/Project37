@@ -4,9 +4,9 @@
 * Description: Provides the necessary fields to allow an admin user
 * to create and edit a client for each organization
 *
-the following fields: First Name, Last Name, Email, and Organization
-
-Organization is a drop down: relies on project being created.
+* the following fields: First Name, Last Name, Email, and Organization
+*
+* Organization is a drop down: relies on project being created.
 -->
 <template>
   <div class="container">
@@ -63,7 +63,7 @@ Organization is a drop down: relies on project being created.
                 >
 
                 <div class="col-md-6">
-                  <select required v-model="organization">
+                  <select required>
                     <option
                       v-for="organization in organizations"
                       v-bind:key="organization.title"

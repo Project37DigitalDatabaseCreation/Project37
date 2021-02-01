@@ -57,8 +57,43 @@ export default {
   data() {
     return {
       //TODO - Temp data object for testing. Future iteration will read from database
+<<<<<<< HEAD
       reviewerData: [],
       
+=======
+      getReviewers: {
+        1: {
+          name: "Ben McElyea",
+          email: "bmcelyea@asu.edu",
+          status: "Active",
+          lastLogin: "1/18/2020",
+        },
+        2: {
+          name: "Isaac Landis",
+          email: "ilandis@asu.edu",
+          status: "Active",
+          lastLogin: "1/17/2020",
+        },
+        3: {
+          name: "Armando Minor",
+          email: "aminor1@asu.edu",
+          status: "Active",
+          lastLogin: "1/12/2020",
+        },
+        4: {
+          name: "Andrew Massart",
+          email: "amassart@asu.edu",
+          status: "disabled",
+          lastLogin: "1/12/2020",
+        },
+        5: {
+          name: "Stephen Kizer",
+          email: "kizerste@asu.edu",
+          status: "disabled",
+          lastLogin: "1/12/2020",
+        },
+      },
+>>>>>>> develop
     };
   },
   methods: {
