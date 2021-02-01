@@ -102,16 +102,24 @@
         </tr>
       </tbody>
     </table>
+    <button id="show-modal" @click="showModal = true">Show Modal</button>
+  <!-- use the modal component, pass in the prop -->
+  <modal v-if="showModal" @close="showModal = false" />
   </div>
 </template>
 
 <script>
 import firebase from "firebase";
+import modal from "@/components/Modal";
 
 export default {
   name: "ProjectReviews",
+  components: {
+    modal
+  },
   data() {
     return {
+      showModal: false,
       form: {},
       projectSelectEnabled: 0,
       organizations: [],
