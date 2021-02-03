@@ -18,7 +18,7 @@
           class="form-control"
           name="organization"
           required
-          v-model="form.organization"
+          v-model="selected_org"
           v-on:change="populateProjects"
           >
           <option v-for="organization in organizations" :value="organization.id" :key="organization.id">{{ organization.data().title }}</option>                
@@ -37,11 +37,20 @@
           :disabled="projectSelectEnabled == 0"
           v-on:change="populateReviews"
           required
-          v-model="form.project"
+          v-model="selected_proj"
           >
           <option v-for="project in projects" :value="project.id" :key="project.id">{{ project.data().title }}</option>                
           </select>
       </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        id="show-modal"
+        :disabled="projectNewReviewEnabled == 0"
+        @click="populatePopOut()">
+          Add Review to Project
+        </button>
     </div>
     <table class="table mt-5">
       <thead>
@@ -56,18 +65,24 @@
           <td>{{ review.course_name }}</td>
           <td>{{ review.reviewer.last_name + ", " + review.reviewer.first_name}}</td>
           <td>{{ review.status }}</td>
+          <td><button class="btn btn-primary" @click="populatePopOut(review)">Edit</button></td>
         </tr>
       </tbody>
-    </table>
-    <button id="show-modal" @click="populatePopOut()">Show Modal</button>
-  <!-- use the modal component, pass in the prop -->
-  <modal v-if="showModal" :course_name_prop="this.course_name" :reviewers_prop="this.reviewers" @close="showModal = false" />
+    </table>    
+    <!-- use the modal component, pass in the prop -->
+    <modal
+      v-if="showModal"
+      v-on:edit-review="submitEdit"
+      :selected_review="this.selected_review"
+      :reviewers="this.reviewers"
+      @close="showModal = false"
+    />
   </div>
 </template>
 
 <script>
 import firebase from "firebase";
-import modal from "@/components/Modal";
+import modal from "@/components/EditProjectReview";
 
 export default {
   name: "ProjectReviews",
@@ -77,14 +92,15 @@ export default {
   data() {
     return {
       showModal: false,
-      form: {},
       projectSelectEnabled: 0,
+      projectNewReviewEnabled: 0,
       organizations: [],
       projects: [],
       reviews: [],
       reviewers: [],
-      course_name: "",
-      selectedReview: {},
+      selected_org: {},
+      selected_proj: {},
+      selected_review: {},
       error: null
     };
   },
@@ -123,7 +139,7 @@ export default {
     },
     populateProjects() {
       this.projects = [];
-      var orgRef = firebase.firestore().doc("/Organizations/" + this.form.organization);
+      var orgRef = firebase.firestore().doc("/Organizations/" + this.selected_org);
 
       firebase.firestore().collection("Projects")
       .where("org_ref", "==", orgRef).get()
@@ -136,7 +152,7 @@ export default {
     populateReviews() {
         this.reviews = [];
         let reviews = this.reviews;
-        var projectRef = firebase.firestore().doc("/Projects/" + this.form.project);
+        var projectRef = firebase.firestore().doc("/Projects/" + this.selected_proj);
         
         firebase.firestore().collection("Reviews")
         .where("project", "==", projectRef).get()
@@ -155,12 +171,26 @@ export default {
                 .catch(err => console.error(err));
               } else {
                 reviews.push(review);
-              }              
+              } 
+              
+              this.projectNewReviewEnabled = 1;
       })}).catch(err => { console.error(err) });
     },
-    populatePopOut() {
+    populatePopOut(review) {
+      if(review) {
+        this.selected_review = review;
+      } else {
+        // pass an empty review object to hold the data
+        this.selected_review = {
+          reviewer: {}
+        }
+      }
+      
       this.showModal = true;
-      this.course_name = "another course name";
+    },
+    submitEdit(review) {
+      console.log("New Course Name: " + review.course_name);
+      console.log("New Review ID: " + review.reviewer.id);
     }
   },
 };

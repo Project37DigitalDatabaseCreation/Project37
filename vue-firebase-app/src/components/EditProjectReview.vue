@@ -6,7 +6,7 @@
 
           <div class="modal-header">
             <slot name="header">
-              default header
+              Update Review
             </slot>
           </div>
 
@@ -24,7 +24,7 @@
                     value
                     required
                     autofocus
-                    v-model="modal_course_name"
+                    v-model="review.course_name"
                     />
                 </div>
               </div>
@@ -38,18 +38,12 @@
                     class="form-control"
                     name="reviewer"
                     required
-                    v-model="reviewer"
+                    v-model="review.reviewer.id"
                     >
-                    <option v-for="reviewer in modal_reviewers" :value="reviewer.id" :key="reviewer.id">
+                    <option v-for="reviewer in reviewers" :value="reviewer.id" :key="reviewer.id">
                         {{ reviewer.data().last_name + ", " + reviewer.data().first_name}}
                     </option>                
                     </select>
-                </div>
-              </div>
-
-              <div class="form-group row mb-0">
-                <div class="col-md-8 offset-md-4">
-                    <button type="submit" class="btn btn-primary">Save</button>
                 </div>
               </div>
             </slot>
@@ -58,9 +52,8 @@
           <div class="modal-footer">
             <slot name="footer">
               default footer
-              <button class="modal-default-button" @click="$emit('close')">
-                OK
-              </button>
+              <button class="btn btn-primary" @click="handleSubmit()">Save</button>
+              <button class="btn btn-primary" @click="$emit('close')">Cancel</button>
             </slot>
           </div>
         </div>
@@ -70,14 +63,22 @@
 </template>
 <script>
 export default {
-  name: "modal",
-  props: ["course_name_prop", "reviewers_prop"],
+  name: "EditProjectReview",
+  props: {
+    selected_review: Object,
+    reviewers: Array
+  },
   data() {
       return {
         showModal: false,
-        modal_course_name: this.course_name_prop,
-        modal_reviewers: this.reviewers_prop
+        review: this.selected_review
       }
+  },
+  methods: {
+    handleSubmit() {
+      this.$emit("edit-review", this.review);
+      this.$emit('close');
+    }
   }
 };
 </script>
