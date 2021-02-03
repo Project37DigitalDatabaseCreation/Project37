@@ -12,21 +12,55 @@
 
 <template>
   <div class="container">
+
      <router-view></router-view>
+    <h4>Reviewers</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email Address</th>
+          <th>Administrator</th>
+          <!-- <th>Last Login</th> -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="(reviewer, index) in reviewerData"
+          :key="index"
+          @click="modifyReviewer(reviewer.email)"
+          >
+          <td>{{ reviewer.first_name + ' ' + reviewer.last_name }}</td>
+          <td>{{ reviewer.email }}</td>
+          <td>{{ reviewer.is_admin ? 'Yes' : 'No' }}</td>
+          
+        </tr>
+      </tbody>
+    </table>
+    <div class="paginationContainer">
+      <p>
+        <button class="btn" @click="prevPage">Previous</button>
+        <button class="btn" @click="nextPage">Next</button>
+      </p>
+    </div>
   </div>
 </template>
 
+
 <script>
+//import firebase from "firebase";
 
 import firebase from "firebase";
 import "firebase/firestore";
+// const db = firebase.firestore();
+// const reviewersRef = db.collection("Reviewers");
 
 export default {
   data() {
     return {
       
       reviewerData: [],
-      
+      reviewer: {},
     };
   },
   methods: {
@@ -34,17 +68,18 @@ export default {
     //   db.collection("Reviewers").get();
     // },
 
-    // prevPage() {
-    //   alert("TODO - previous page");
-    // },
-    // nextPage() {
-    //   alert("TODO - next page");
-    // },
+    prevPage() {
+      alert("TODO - previous page");
+    },
+    nextPage() {
+      alert("TODO - next page");
+    },
 
-    // modifyReviewer(reviewer){
-    //     this.$router.push({ name: 'ModifyReviewer' })
-    //    console.log(`TODO - Edit user ${reviewer}`)   
-    // },
+    modifyReviewer(email){
+        this.$router.push({ name: 'ModifyReviewer', params: { passedReviewer: email} })
+        console.log(email)
+      //  console.log(`TODO - Edit user ${reviewer.email} ${reviewer.first_name} ${reviewer.is_admin}`)   
+    },
 
 
     getReviewers(){

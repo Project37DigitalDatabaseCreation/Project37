@@ -107,14 +107,19 @@ export default {
   
   props:{
 
-    emailAddress: String,
+    // emailAddress: String,
+      passedReviewer: {
+
+        type: String
+        
+      }
  
   },
   data() {
     return {
       form: {
         name: this.name,
-        email: this.emailAddress,
+        email: this.passedReviewer,
         isAdmin: this.isAdmin,
       },
   
