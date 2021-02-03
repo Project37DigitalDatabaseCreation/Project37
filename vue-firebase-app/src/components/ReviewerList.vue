@@ -28,7 +28,7 @@
         <tr
           v-for="(reviewer, index) in reviewerData"
           :key="index"
-          @click="modifyReviewer(reviewer.email)"
+          @click="modifyReviewer(reviewer.id)"
           >
           <td>{{ reviewer.first_name + ' ' + reviewer.last_name }}</td>
           <td>{{ reviewer.email }}</td>
@@ -77,7 +77,6 @@ export default {
 
     modifyReviewer(email){
         this.$router.push({ name: 'ModifyReviewer', params: { passedReviewer: email} })
-        console.log(email)
       //  console.log(`TODO - Edit user ${reviewer.email} ${reviewer.first_name} ${reviewer.is_admin}`)   
     },
 
@@ -94,6 +93,7 @@ export default {
               first_name: doc.data().first_name,
               last_name: doc.data().last_name,
               is_admin: doc.data().is_admin,
+              id: doc.id
             });
             console.log(doc.id, " => ", doc.data());
           });
@@ -101,13 +101,13 @@ export default {
         .catch((error) => {
           console.log("Error getting documents: ", error);
         });
-        console.log(this.reviewerData)
 
     },
 
   
   },
     mounted() {
+    console.log("In mount")
     this.getReviewers();
   },
 };
