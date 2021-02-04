@@ -8,13 +8,14 @@
 
 <template>
     <!-- Card which displays all  -->
-    <div class="container">
+    <div id="project-info" class="container">
       <div style="position:fixed; left:200px; width:90%;">
         <div class="justify-content-center">
           <div class="col-md-10" style="padding:0 !important;">
             <div class="card">
             <div class="card-header text-center" style="font-size: 1.5em">Current Projects</div>
             <table>
+              <thead>
               <tr>
                 <th>Project</th>
                 <th>Client</th>
@@ -22,13 +23,19 @@
                 <th>Status</th>
                 <th>Organization</th>
               </tr>
-              <tr v-for="project in projects" :key="project.key">
+              </thead>
+
+              <tbody>
+              <tr v-for="project in projects" :key="project" v-on:click="clickProject(project)">
+                <project-info projectTitle='this is a test'/>
                 <td>{{project.title}}</td>
                 <td>{{project.client}}</td>
                 <td>{{project.num_reviews}}</td>
                 <td>{{project.status}}</td>
                 <td>{{project.organization}}</td>
               </tr>
+              </tbody>
+              
             </table>
             </div>
           </div>
@@ -71,9 +78,25 @@ export default {
           console.log("Error retrieving documents: ", error);
         });
     },
+    clickProject(project){
+      console.log("clickList fired with " + project.title);
+      this.$router.push({
+    name: 'EditProject',
+    params: {
+        project: project.title
+    }
+});
+
+    }
   },
   mounted() {
     this.readProjects();
   },
 };
 </script>
+
+<style scoped>
+tr:hover {
+  background-color: #ddd;
+}
+</style>
