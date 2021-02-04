@@ -113,11 +113,15 @@
                   <button
                     type="button"
                     class="btn btn-primary"
-                    @click.prevent="cancelClicked"
+                    @click.prevent="returnToPreviousScreen"
                   >
                     Cancel
                   </button>
-                  <button type="submit" class="btn btn-primary">
+                  <button
+                    type="button"
+                    @click.prevent="updateClicked"
+                    class="btn btn-primary"
+                  >
                     Update reviewer
                   </button>
                   <button type="submit" class="btn btn-primary">
@@ -141,25 +145,19 @@ import "firebase/firestore";
 
 export default {
   props: {
-    // emailAddress: String,
-    passedReviewer: {
-      type: String,
+    // The Firestore doc id of the reviewer is passed into this prop
+    // when the user is clicked on in the ReviewerList.vue
+    passedReviewerId: {
+      type: String, //The Firestore doc id of the reviewer
     },
   },
   data() {
     return {
-
       form: {
-        fname: '',
-        name: '',
-        email: this.passedReviewer,
-        isAdmin: this.isAdmin,
-      },
-
-      reviewerData: {
-
-        name: "Ben"
-
+        fname: "",
+        name: "",
+        email: "",
+        isAdmin: "",
       },
 
       error: null,
@@ -167,8 +165,8 @@ export default {
   },
 
   methods: {
-  
-    submit() {
+    async updateClicked() {
+      console.log("Update clicked");
       let modifiedUser = {
         firstName: this.form.fname,
         lastName: this.form.lname,
@@ -176,38 +174,39 @@ export default {
         isAdmin: this.form.isAdmin,
       };
 
+      await firebase
+        .firestore()
+        .collection("Reviewers")
+        .doc(this.passedReviewerId)
+        .set(modifiedUser);
       console.log(modifiedUser);
-
-      //this.$emit('reviewer-created', newUser)
-
-      //TODO create firebase method to modify data
-      (this.form.name = ""),
-        (this.form.email = ""),
-        (this.form.isAdmin = false);
+      this.returnToPreviousScreen();
     },
 
-    cancelClicked() {
-      console.log("Cancel Clicked");
-
-      //TODO handle cancel event
+    //Returns to the previous screen/view
+    returnToPreviousScreen() {
       this.$router.back();
     },
 
-    async getReviewer() { 
-      //this.reviewerData = [];
-
-      const snapshot = await firebase.firestore().collection("Reviewers").doc(this.passedReviewer).get();
-      
+    //This method reads the reviewer from the Firebase Firestore DB and
+    // and loads the data into the form
+    async getReviewer() {
+      const snapshot = await firebase
+        .firestore()
+        .collection("Reviewers")
+        .doc(this.passedReviewerId)
+        .get();
       const reviewer = snapshot.data();
-      console.log(reviewer)
-      this.reviewerData.name = reviewer.first_name
-      this.form.fname = reviewer.first_name
-      console.log(this.reviewerData.name)
-      
 
-     
+      console.log(reviewer);
+      this.form.fname = reviewer.firstName;
+      this.form.lname = reviewer.lastName;
+      this.form.email = reviewer.email;
+      this.form.isAdmin = reviewer.isAdmin;
+    },
   },
-  },
+
+  // This method runs on page load.
   mounted() {
     this.getReviewer();
   },

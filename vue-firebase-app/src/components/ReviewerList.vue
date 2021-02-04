@@ -32,7 +32,7 @@
           >
           <td>{{ reviewer.first_name + ' ' + reviewer.last_name }}</td>
           <td>{{ reviewer.email }}</td>
-          <td>{{ reviewer.is_admin ? 'Yes' : 'No' }}</td>
+          <td>{{ reviewer.is_admin === 'true' ? 'Yes' : 'No' }}</td>
           
         </tr>
       </tbody>
@@ -76,7 +76,7 @@ export default {
     },
 
     modifyReviewer(email){
-        this.$router.push({ name: 'ModifyReviewer', params: { passedReviewer: email} })
+        this.$router.push({ name: 'ModifyReviewer', params: { passedReviewerId: email} })
       //  console.log(`TODO - Edit user ${reviewer.email} ${reviewer.first_name} ${reviewer.is_admin}`)   
     },
 
@@ -90,9 +90,9 @@ export default {
           querySnapshot.forEach((doc) => {
             this.reviewerData.push({
               email: doc.data().email,
-              first_name: doc.data().first_name,
-              last_name: doc.data().last_name,
-              is_admin: doc.data().is_admin,
+              first_name: doc.data().firstName,
+              last_name: doc.data().lastName,
+              is_admin: doc.data().isAdmin,
               id: doc.id
             });
             console.log(doc.id, " => ", doc.data());
