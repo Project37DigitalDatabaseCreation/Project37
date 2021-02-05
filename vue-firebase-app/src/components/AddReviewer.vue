@@ -16,10 +16,14 @@
         <div class="card">
           <div class="card-header">Add a new reviewer</div>
           <div class="card-body">
-            <div v-if="error" class="alert alert-danger">{{error}}</div>
+            <div v-if="error" class="alert alert-danger">{{ error }}</div>
             <form action="#" @submit.prevent="submit">
               <div class="form-group row">
-                <label for="First Name" class="col-md-4 col-form-label text-md-right">First Name</label>
+                <label
+                  for="First Name"
+                  class="col-md-4 col-form-label text-md-right"
+                  >First Name</label
+                >
 
                 <div class="col-md-6">
                   <input
@@ -36,7 +40,11 @@
               </div>
 
               <div class="form-group row">
-                <label for="Last Name" class="col-md-4 col-form-label text-md-right">Last Name</label>
+                <label
+                  for="Last Name"
+                  class="col-md-4 col-form-label text-md-right"
+                  >Last Name</label
+                >
 
                 <div class="col-md-6">
                   <input
@@ -53,7 +61,9 @@
               </div>
 
               <div class="form-group row">
-                <label for="email" class="col-md-4 col-form-label text-md-right">Email</label>
+                <label for="email" class="col-md-4 col-form-label text-md-right"
+                  >Email</label
+                >
 
                 <div class="col-md-6">
                   <input
@@ -69,8 +79,12 @@
                 </div>
               </div>
 
-              <div class="form-group row">
-                <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
+              <!-- <div class="form-group row">
+                <label
+                  for="password"
+                  class="col-md-4 col-form-label text-md-right"
+                  >Password</label
+                >
 
                 <div class="col-md-6">
                   <input
@@ -82,25 +96,49 @@
                     v-model="form.password"
                   />
                 </div>
-              </div>
+              </div> -->
 
               <div class="form-group row">
-                <label for="password" class="col-md-4 col-form-label text-md-right">Administror Access</label>
+                <label
+                  for="password"
+                  class="col-md-4 col-form-label text-md-right"
+                  >Administror Access</label
+                >
                 <div class="col-md-6">
-                  <input type="radio" name="isAdmin" id="yes" value="true" v-model="form.isAdmin">
-                   <label for="Administrator Access">Yes</label>
-                  <br>
-                  <input type="radio" name="isAdmin"  value="false" v-model="form.isAdmin">
+                  <input
+                    class="radioButton"
+                    type="radio"
+                    name="isAdmin"
+                    id="yes"
+                    value="true"
+                    v-model="form.isAdmin"
+                  />
+                  <label for="Administrator Access">Yes</label>
+                  <br />
+                  <input
+                    class="radioButton"
+                    type="radio"
+                    name="isAdmin"
+                    value="false"
+                    v-model="form.isAdmin"
+                  />
                   <label for="No access">No</label>
-                  <br>
-
+                  <br />
                 </div>
               </div>
-              
 
               <div class="form-group row mb-0">
                 <div class="col-md-8 offset-md-4">
-                  <button type="submit" class="btn btn-primary">Create reviewer</button>
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    @click.prevent="returnToPreviousScreen"
+                  >
+                    Cancel
+                  </button>
+                  <button type="submit" class="btn btn-primary">
+                    Create reviewer
+                  </button>
                 </div>
               </div>
             </form>
@@ -113,61 +151,49 @@
 
 
 <script>
-//import firebase from "firebase";
+import firebase from "firebase";
+import "firebase/firestore";
 
 export default {
   data() {
     return {
       form: {
-        name: "",
+        fname: "",
+        lname: "",
         email: "",
         password: "",
-        isAdmin: false
+        isAdmin: false,
       },
-  
-      error: null
+
+      error: null,
     };
   },
   methods: {
-    submit() {
-
+    async submit() {
       let newUser = {
         firstName: this.form.fname,
         lastName: this.form.lname,
         email: this.form.email,
-        password: this.form.password,
-        isAdmin: this.form.isAdmin
-      }
+        isAdmin: this.form.isAdmin,
+      };
 
-    console.log(newUser)
-    
-    //this.$emit('reviewer-created', newUser)
-    
-    /** TODO create firebase method
-     firebase
-        .auth()
-        .createUserWithEmailAndPassword(this.form.email, this.form.password)
-        .then(data => {
-          data.user
-            .updateProfile({
-              displayName: this.form.name
-            })
-            .then(() => {});
-        })
-        .catch(err => {
-          this.error = err.message;
-        });
-       */
-
-        this.form.name = "",
-        this.form.email =  "",
-        this.form.password = "",
-        this.form.isAdmin = false
-    }
-  }
+      await firebase
+        .firestore()
+        .collection("Reviewers")
+        .add(newUser)
+      console.log(newUser);
+      this.returnToPreviousScreen();
+    },
+    returnToPreviousScreen() {
+      this.$router.push({path: '/managereviewers'});
+    },
+  },
 };
 </script>
 <style scoped>
-
+.radioButton,
+button {
+  margin-right: 10px;
+}
 /* TODO: Add in breakpoints for the width */
 </style>

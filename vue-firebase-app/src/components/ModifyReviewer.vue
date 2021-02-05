@@ -155,7 +155,7 @@ export default {
     return {
       form: {
         fname: "",
-        name: "",
+        lname: "",
         email: "",
         isAdmin: "",
       },
@@ -185,26 +185,35 @@ export default {
 
     //Returns to the previous screen/view
     returnToPreviousScreen() {
-      this.$router.back();
+      this.$router.push({ path: "/managereviewers" });
     },
 
     //This method reads the reviewer from the Firebase Firestore DB and
     // and loads the data into the form
     async getReviewer() {
-      const snapshot = await firebase
+      await firebase
         .firestore()
         .collection("Reviewers")
         .doc(this.passedReviewerId)
-        .get();
-      const reviewer = snapshot.data();
+        .get().then(snapshot => {
 
-      console.log(reviewer);
-      this.form.fname = reviewer.firstName;
-      this.form.lname = reviewer.lastName;
-      this.form.email = reviewer.email;
-      this.form.isAdmin = reviewer.isAdmin;
+      
+
+                console.log(snapshot.empty);
+                const reviewer = snapshot.data();
+                console.log(reviewer);
+                this.form.fname = reviewer.firstName;
+                this.form.lname = reviewer.lastName;
+                this.form.email = reviewer.email;
+                this.form.isAdmin = reviewer.isAdmin;
+          
+        }
+
+        )
+  
+      }
     },
-  },
+
 
   // This method runs on page load.
   mounted() {
