@@ -5,8 +5,11 @@
         <div class="modal-container">
 
           <div class="modal-header">
-            <slot name="header">
+            <slot v-if="review.id" name="header">              
               Update Review
+            </slot>
+            <slot v-else name="header">              
+              Add New Review to Project
             </slot>
           </div>
 
@@ -41,7 +44,7 @@
                     v-model="review.reviewer.id"
                     >
                     <option v-for="reviewer in reviewers" :value="reviewer.id" :key="reviewer.id">
-                        {{ reviewer.data().last_name + ", " + reviewer.data().first_name}}
+                        {{ reviewer.data().lastName + ", " + reviewer.data().firstName}}
                     </option>                
                     </select>
                 </div>
@@ -51,7 +54,6 @@
 
           <div class="modal-footer">
             <slot name="footer">
-              default footer
               <button class="btn btn-primary" @click="handleSubmit()">Save</button>
               <button class="btn btn-primary" @click="$emit('close')">Cancel</button>
             </slot>

@@ -58,14 +58,17 @@
           <th scope="col">Course Name</th>
           <th scope="col">Reviewer</th>
           <th scope="col">Status</th>
+          <th scope="col"></th>
+          <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="review in reviews" :key="review.id">
           <td>{{ review.course_name }}</td>
-          <td>{{ review.reviewer.last_name + ", " + review.reviewer.first_name}}</td>
+          <td>{{ review.reviewer.lastName + ", " + review.reviewer.firstName}}</td>
           <td>{{ review.status }}</td>
           <td><button class="btn btn-primary" @click="populatePopOut(review)">Edit</button></td>
+          <td><button class="btn btn-primary" @click="deleteReview(review)">Delete</button></td>
         </tr>
       </tbody>
     </table>    
@@ -113,33 +116,18 @@ export default {
       })}).catch(err => { console.error(err) });
 
     // Get all of the reviewers
-    firebase.firestore().collection("Reviewers").orderBy("last_name", "asc").get()
+    firebase.firestore().collection("Reviewers").orderBy("lastName", "asc").get()
     .then(result => {
       result.forEach(doc => {
         this.reviewers.push(doc);
       })}).catch(err => { console.error(err) });
   },
   methods: {
-    submit() {
-      var navigate = this.$router;
-      firebase.firestore().collection("Reviews").add({
-        created: firebase.firestore.FieldValue.serverTimestamp(),
-        course_name: this.form.course_name,
-        reviewer_ref: firebase.firestore().doc('Reviewers/' + this.form.reviewer),
-        project: firebase.firestore().doc('Projects/' + this.form.project),
-        status: "In Progress"
-        })
-      .then(function() {
-        console.log("Document successfully written!");
-        navigate.replace({ name: "Dashboard" });
-      })
-      .catch(function(error) {
-        console.error("Error writing document: ", error);
-      });
-    },
     populateProjects() {
       this.projects = [];
-      var orgRef = firebase.firestore().doc("/Organizations/" + this.selected_org);
+      this.reviews = [];
+      this.projectNewReviewEnabled = 0;
+      var orgRef = firebase.firestore().doc("/Organizations/" + this.selected_org);      
 
       firebase.firestore().collection("Projects")
       .where("org_ref", "==", orgRef).get()
@@ -153,6 +141,7 @@ export default {
         this.reviews = [];
         let reviews = this.reviews;
         var projectRef = firebase.firestore().doc("/Projects/" + this.selected_proj);
+        this.projectNewReviewEnabled = 1;
         
         firebase.firestore().collection("Reviews")
         .where("project", "==", projectRef).get()
@@ -171,14 +160,15 @@ export default {
                 .catch(err => console.error(err));
               } else {
                 reviews.push(review);
-              } 
-              
-              this.projectNewReviewEnabled = 1;
+              }                             
       })}).catch(err => { console.error(err) });
     },
     populatePopOut(review) {
       if(review) {
-        this.selected_review = review;
+        // create a copy of the object to send to the popuout
+        // so as to avoid the table showing the new values as
+        // they are entered
+        this.selected_review = Object.assign({}, review);
       } else {
         // pass an empty review object to hold the data
         this.selected_review = {
@@ -190,7 +180,45 @@ export default {
     },
     submitEdit(review) {
       console.log("New Course Name: " + review.course_name);
-      console.log("New Review ID: " + review.reviewer.id);
+      console.log("New Review ID: " + review.reviewer.id);      
+
+      let projectRef = firebase.firestore().doc("/Projects/" + this.selected_proj);
+      let reviewerRef = firebase.firestore().doc("Reviewers/" + review.reviewer.id);
+      let Vue = this;
+
+      //var navigate = this.$router;
+      if (!review.created) {
+        review.created = firebase.firestore.FieldValue.serverTimestamp();
+        review.status = "New";
+      }        
+
+      firebase.firestore().collection("Reviews").doc(review.id).set({
+        created: review.created,
+        course_name: review.course_name,
+        reviewer_ref: reviewerRef,
+        project: projectRef,
+        status: review.status
+        })
+      .then(function() {
+        Vue.populateReviews();
+        //navigate.replace({ name: "Dashboard" });
+      })
+      .catch(function(error) {
+        console.error("Error writing document: ", error);
+      });
+    },
+    deleteReview(review) {
+      let Vue = this;
+      let reviewId = review.id;
+
+      if(confirm("Are you sure you want to delete this review?")) {
+        firebase.firestore().collection("Reviews").doc(reviewId).delete().then(() => {
+          console.log("Document successfully deleted!");
+          Vue.populateReviews();
+        }).catch((error) => {
+            console.error("Error removing document: ", error);
+        });
+      }      
     }
   },
 };
