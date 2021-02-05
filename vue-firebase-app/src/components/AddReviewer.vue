@@ -177,15 +177,12 @@ export default {
         isAdmin: this.form.isAdmin,
       };
 
-      await firebase
-        .firestore()
-        .collection("Reviewers")
-        .add(newUser)
+      await firebase.firestore().collection("Reviewers").add(newUser);
       console.log(newUser);
       this.returnToPreviousScreen();
     },
     returnToPreviousScreen() {
-      this.$router.push({path: '/managereviewers'});
+      this.$router.push({ path: "/managereviewers" });
     },
   },
 };
@@ -196,4 +193,4 @@ button {
   margin-right: 10px;
 }
 /* TODO: Add in breakpoints for the width */
-</style>
+</style>ß

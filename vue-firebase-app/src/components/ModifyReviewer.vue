@@ -195,25 +195,18 @@ export default {
         .firestore()
         .collection("Reviewers")
         .doc(this.passedReviewerId)
-        .get().then(snapshot => {
-
-      
-
-                console.log(snapshot.empty);
-                const reviewer = snapshot.data();
-                console.log(reviewer);
-                this.form.fname = reviewer.firstName;
-                this.form.lname = reviewer.lastName;
-                this.form.email = reviewer.email;
-                this.form.isAdmin = reviewer.isAdmin;
-          
-        }
-
-        )
-  
-      }
+        .get()
+        .then((snapshot) => {
+          console.log(snapshot.empty);
+          const reviewer = snapshot.data();
+          console.log(reviewer);
+          this.form.fname = reviewer.firstName;
+          this.form.lname = reviewer.lastName;
+          this.form.email = reviewer.email;
+          this.form.isAdmin = reviewer.isAdmin;
+        });
     },
-
+  },
 
   // This method runs on page load.
   mounted() {
