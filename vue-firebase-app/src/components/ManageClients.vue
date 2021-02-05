@@ -27,35 +27,40 @@
         </tr>
       </tbody>
     </table>
-    <div>
-      <ul class="pagination justify-content-end">
-        <li class="page-item disabled">
-          <a class="page-link" href="#" tabindex="-1">Previous</a>
-        </li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item">
-          <a class="page-link" href="#">Next</a>
-        </li>
-      </ul>
+    <div class="overflow-auto">
+      <b-pagination
+        v-model="currentPage"
+        :total-rows="rows"
+        :per-page="perPage"
+        aria-controls="my-table"
+      ></b-pagination>
+
+      <p class="mt-3">Current Page: {{ currentPage }}</p>
     </div>
   </div>
 </template>
 
 <script>
+  import { computed, ref } from 'vue'
   import getClients from '../composables/getClients'
   import ClientEntry from '../components/ClientEntry'
 
   export default {
     components: { ClientEntry },
     setup() {
+      const rows = computed(() => {
+        return clients.length
+      })
+      const perPage = ref(0)
+      const currentPage = ref(1)
       const { clients, error, loadClients } = getClients()
 
       // Loads the clients for the data table
       loadClients()
+      console.log(clients)
+      console.log(rows)
 
-      return { clients, error }
+      return { clients, error, rows, perPage, currentPage }
     },
   }
 </script>
