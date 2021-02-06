@@ -88,12 +88,6 @@ const routes = [
     name: 'ManageClients',
     component: ManageClients
   },
-  // {
-
-  //   path: '/modifyreviewer',
-  //   name: 'ModifyReviewer',
-  //   component: ModifyReviewer
-  // },
   {
     path: '/clientEntry',
     name: 'ClientEntry',

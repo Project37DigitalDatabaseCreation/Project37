@@ -87,7 +87,6 @@ export default {
 
     modifyReviewer(email){
         this.$router.push({ name: 'ModifyReviewer', params: { passedReviewerId: email} })
-      //  console.log(`TODO - Edit user ${reviewer.email} ${reviewer.first_name} ${reviewer.is_admin}`)   
     },
 
 
