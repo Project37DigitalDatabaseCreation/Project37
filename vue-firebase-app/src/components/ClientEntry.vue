@@ -9,20 +9,22 @@
 * Organization is a drop down: relies on project being created.
 -->
 <template>
-  <div class="card">
+  <div class="d-flex justify-content-end">
+    <button
+      v-if="!showForm"
+      @click="showForm = true"
+      class="btn btn-primary btn-sm"
+    >
+      + Add Clients
+    </button>
+  </div>
+  <div class="card" v-if="showForm">
     <div class="card-header">
-      <div class="row justify-content-start">
-        <div class="col">
+      <div class="d-flex justify-content-between">
+        <div>
           <h4>Clients:</h4>
         </div>
-        <div class="col-1">
-          <button
-            v-if="!showForm"
-            @click="showForm = true"
-            class="btn btn-primary btn-sm"
-          >
-            + Add
-          </button>
+        <div>
           <button
             v-if="showForm"
             @click="showForm = false"
@@ -33,64 +35,62 @@
         </div>
       </div>
     </div>
-    <div class="card-body">
-      <form v-if="showForm" @submit.prevent="handleSubmit">
-        <div class="form-group row">
-          <label class="col-md-4 col-form-label text-md-right"
-            >First Name</label
-          >
-          <div class="col-md-6">
-            <input
-              type="text"
-              required
-              placeholder="First Name"
-              v-model="firstName"
-            />
-          </div>
+  </div>
+  <div class="card-body">
+    <form v-if="showForm" @submit.prevent="handleSubmit">
+      <div class="form-group row">
+        <label class="col-md-4 col-form-label text-md-right">First Name</label>
+        <div class="col-md-6">
+          <input
+            type="text"
+            required
+            placeholder="First Name"
+            v-model="firstName"
+          />
         </div>
-        <div class="form-group row">
-          <label class="col-md-4 col-form-label text-md-right">Last Name</label>
-          <div class="col-md-6">
-            <input
-              type="text"
-              required
-              placeholder="Last Name"
-              v-model="lastName"
-            />
-          </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-md-4 col-form-label text-md-right">Last Name</label>
+        <div class="col-md-6">
+          <input
+            type="text"
+            required
+            placeholder="Last Name"
+            v-model="lastName"
+          />
         </div>
-        <div class="form-group row">
-          <label class="col-md-4 col-form-label text-md-right">Email</label>
-          <div class="col-md-6">
-            <input type="email" required placeholder="Email" v-model="email" />
-          </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-md-4 col-form-label text-md-right">Email</label>
+        <div class="col-md-6">
+          <input type="email" required placeholder="Email" v-model="email" />
         </div>
-        <div class="form-group row">
-          <label class="col-md-4 col-form-label text-md-right"
-            >Organization</label
-          >
+      </div>
+      <div class="form-group row">
+        <label class="col-md-4 col-form-label text-md-right"
+          >Organization</label
+        >
 
-          <div class="col-md-6">
-            <select required v-model="organization">
-              <option
-                v-for="organization in organizations"
-                v-bind:key="organization.title"
-              >
-                {{ organization.title }}
-              </option>
-            </select>
-          </div>
+        <div class="col-md-6">
+          <select required v-model="organization">
+            <option
+              v-for="organization in organizations"
+              v-bind:key="organization.title"
+            >
+              {{ organization.title }}
+            </option>
+          </select>
         </div>
+      </div>
 
-        <div class="form-group row mb-0">
-          <div class="col-md-8 offset-md-4">
-            <button class="btn btn-primary" type="submit">
-              Add Client
-            </button>
-          </div>
+      <div class="form-group row mb-0">
+        <div class="col-md-8 offset-md-4">
+          <button class="btn btn-primary" type="submit">
+            Add Client
+          </button>
         </div>
-      </form>
-    </div>
+      </div>
+    </form>
   </div>
 </template>
 
@@ -122,12 +122,10 @@
           organization: organization.value,
         }
 
-        const res = await firebase
+        await firebase
           .firestore()
           .collection('Clients')
           .add(newClient)
-
-        console.log(res)
       }
 
       return {
