@@ -35,6 +35,11 @@
                 >
               </li>
               <li class="nav-item">
+                <router-link to="/project-reviews" class="nav-link"
+                  >Project Reviews</router-link
+                >
+              </li>
+              <li class="nav-item">
                 <router-link to="/addreviewer" class="nav-link"
                   >Add Reviewer</router-link
                 >
