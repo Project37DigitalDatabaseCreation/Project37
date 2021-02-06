@@ -7,6 +7,7 @@ const getOrganizations = () => {
     const organizations = ref([])
     const error = ref(null)
 
+    // Loads the contents of the Firebase Document 'Organizations' and fetches the document id for each into an array.
     const loadOrganizations = async () => {
         try {
             const res = await firebase.firestore().collection('Organizations').get()

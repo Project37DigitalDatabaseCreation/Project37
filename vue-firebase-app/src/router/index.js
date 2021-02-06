@@ -17,7 +17,6 @@ import Project from '../components/Project'
 import NewProject from '../components/NewProject'
 import CurrentProjects from '../components/CurrentProjects'
 import ManageReviewers from '../components/ManageReviewers'
-import ClientEntry from '../components/ClientEntry'
 import ManageClients from '../components/ManageClients'
 
 
@@ -88,12 +87,7 @@ const routes = [
     name: 'ModifyReviewer',
     component: ModifyReviewer
   },
-  {
-    path: '/clientEntry',
-    name: 'ClientEntry',
-    component: ClientEntry
 
-  }
 ]
 
 const router = createRouter({
