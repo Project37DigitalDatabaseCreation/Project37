@@ -27,7 +27,6 @@
 
               <tbody>
               <tr v-for="project in projects" :key="project" v-on:click="clickProject(project)">
-                <project-info projectTitle='this is a test'/>
                 <td>{{project.title}}</td>
                 <td>{{project.client}}</td>
                 <td>{{project.num_reviews}}</td>
@@ -81,7 +80,7 @@ export default {
     clickProject(project){
       console.log("clickList fired with " + project.title);
       this.$router.push({
-    name: 'EditProject',
+    name: 'ViewProject',
     params: {
         project: project.title
     }

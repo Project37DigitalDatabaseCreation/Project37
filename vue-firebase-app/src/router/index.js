@@ -16,7 +16,7 @@ import ModifyReviewer from '../components/ModifyReviewer'
 import Project from '../components/Project'
 import NewProject from '../components/NewProject'
 import CurrentProjects from '../components/CurrentProjects'
-import EditProject from '../components/EditProject'
+import ViewProject from '../components/ViewProject'
 import ManageReviewers from '../components/ManageReviewers'
 import ClientEntry from '../components/ClientEntry'
 import ManageClients from '../components/ManageClients'
@@ -60,9 +60,9 @@ const routes = [
     props: true
   },
   {
-    path: '/editProject',
-    name: 'EditProject',
-    component: EditProject,
+    path: '/viewProject',
+    name: 'ViewProject',
+    component: ViewProject,
     props: true
   },
   {
