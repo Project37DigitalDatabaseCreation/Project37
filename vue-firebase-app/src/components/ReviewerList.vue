@@ -15,6 +15,15 @@
 
      <router-view></router-view>
     <h4>Reviewers</h4>
+    <div >
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    @click.prevent="AddReviewer"
+                  >
+                    Add Reviewer
+                  </button>
+    </div>
     <table>
       <thead>
         <tr>
@@ -37,23 +46,20 @@
         </tr>
       </tbody>
     </table>
-    <div class="paginationContainer">
+    <!-- <div class="paginationContainer">
       <p>
         <button class="btn" @click="prevPage">Previous</button>
         <button class="btn" @click="nextPage">Next</button>
       </p>
-    </div>
+    </div> -->
   </div>
 </template>
 
 
 <script>
-//import firebase from "firebase";
 
 import firebase from "firebase";
 import "firebase/firestore";
-// const db = firebase.firestore();
-// const reviewersRef = db.collection("Reviewers");
 
 export default {
   data() {
@@ -67,6 +73,10 @@ export default {
     // edit(reviewer) {
     //   db.collection("Reviewers").get();
     // },
+
+    AddReviewer() {
+      this.$router.push({ name: 'AddReviewer'})
+    },
 
     prevPage() {
       alert("TODO - previous page");
@@ -140,7 +150,7 @@ table {
 }
 
 button {
-  margin: 0 auto;
+  margin-bottom: 10px ;
 }
 .paginationContainer {
   display: flex;
