@@ -44,7 +44,7 @@
                     v-model="review.reviewer.id"
                     >
                     <option v-for="reviewer in reviewers" :value="reviewer.id" :key="reviewer.id">
-                        {{ reviewer.data().lastName + ", " + reviewer.data().firstName}}
+                        {{ reviewer.lastName + ", " + reviewer.firstName}}
                     </option>                
                     </select>
                 </div>
