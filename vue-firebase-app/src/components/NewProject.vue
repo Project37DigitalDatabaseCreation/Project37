@@ -17,7 +17,8 @@
             <div class="card-body">
                 <div v-if="error" class="alert alert-danger">{{error}}</div>
                 <!-- Input fields for form -->
-                <form action="#" @submit.prevent="submit">
+                <form ref="OrgForm" action="#" @submit.prevent="submit">
+
                     <!-- Title label and textbox -->
                     <div class="form-group row">
                         <label for="title" class="col-md-4 col-form-label text-md-right">Title</label>
@@ -25,25 +26,34 @@
                             <input id="title" type="text" class="form-control" name="title" value required v-model="form.title" />
                           </div>
                     </div>
+
                     <!-- Organization label and dropdown menu -->
-                    <div class="form-check row">
+                    <div class="form-group row">
                         <label for="organization" class="col-md-4 col-form-label text-md-right">Organization</label>
-                          <select>
-                          <option v-for="organization in organizations" :key="organization.key"> {{organization.title}}</option>
+                          <div class="col-md-8">
+                          <select id="organization" class="form-control" name="organization" required v-model="form.organization" v-on:change="readClients">
+                            <option disabled selected value="default"> Select Organization </option>
+                            <option v-for="organization in organizations" :value="organization.title" :key="organization.key"> {{organization.title}}</option>
                           </select>
+                          </div>
                     </div>
+
                     <!-- Clients label and dropdown menu -->
-                    <div class="form-check row">
+                    <div class="form-group row">
                         <label for="client" class="col-md-4 col-form-label text-md-right">Clients</label>
-                          <select>
-                          <option v-for="client in clients" :key="client.key"> {{client.title}}</option>
+                          <div class="col-md-8">
+                          <select id="client" class="form-control" name="client" required v-model="form.client" v-on:change="getOrganizationId">
+                            <option disabled selected value="default"> Select Client </option>
+                            <option v-for="client in clients" :value="client.firstName" :key="client.key"> {{client.firstName}}</option>
                           </select>
+                          </div>
                     </div>
+
                     <!-- Description label and textbox -->
                     <div class="form-group row">
                         <label for="description" class="col-md-4 col-form-label text-md-right">Description</label>
                           <div class="col-md-8">
-                            <input id="title" type="text" class="form-control" name="title" value required v-model="form.description" />
+                            <input id="description" type="text" class="form-control" name="description" value required v-model="form.description" />
                           </div>
                     </div>
                     <!-- Submit new project -->
@@ -62,24 +72,51 @@
 </template>
 
 <script>
-
+var submission = false
 import firebase from 'firebase'
-
 export default {
   data() {
     return {
       organizations: [],
+      updateOrganizationId: [],
       clients: [],
       form: {
             title: "",
             organization: "",
             description: "",
-            client: ""
+            client: "",
+            org_ref: ""
           },
         error: null
     };
   },
   methods: {
+    submit() {
+     submission = true
+      var navigate = this.$router;
+      firebase.firestore().collection("Projects").add({
+        description: this.form.description,
+        num_reviews: 0,
+        org_ref: this.form.org_ref,
+        organization: this.form.organization,
+        status: "In Progress",
+        title: this.form.title,
+        client: this.form.client
+        })
+      .then(function() {
+        navigate.replace({ name: "NewProject" });
+        if (submission){
+          alert("New Project added successfully!")
+        }
+      })
+      .catch(function(error) {
+        console.error("Error writing document: ", error);
+      });
+      this.form.organization = "default"
+      this.form.client = "default"
+      this.form.title = ""
+      this.form.description = ""
+    },
     readOrganizations() {
       let organizations = [];
       firebase.firestore().collection("Organizations")
@@ -87,6 +124,7 @@ export default {
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
            this.organizations.push({
+              id: doc.id,
               title: doc.data().title,
             });
           });
@@ -97,16 +135,37 @@ export default {
         });
     },
     readClients() {
-      let clients = [];
+      this.clients = [];
       firebase.firestore().collection("Clients")
-        .get()
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
+        .where("organization", "==", this.form.organization).get()
+        .then((result) => {
+          result.forEach((doc) => {
            this.clients.push({
-              title: doc.data().name,
+              id: doc.id,
+              email: doc.data().email,
+              firstName: doc.data().firstName,
+              lastName: doc.data().lastName,
+              organization: doc.data().organization,
             });
           });
-          return clients
+        })
+        .catch((error) => {
+          console.log("Error retrieving documents: ", error);
+        });
+    },
+    getOrganizationId() {
+      let updateOrganizationId = [];
+      firebase.firestore().collection("Organizations")
+        .where("title", "==", this.form.organization).get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+           this.updateOrganizationId.push({
+              id: doc.id,
+              title: doc.data().title,
+            });
+            this.form.org_ref = doc.id
+          });
+          return updateOrganizationId
         })
         .catch((error) => {
           console.log("Error retrieving documents: ", error);
@@ -117,6 +176,5 @@ export default {
     this.readOrganizations(),
     this.readClients();
   },
-  //finish submit logic for database to save new project
 };
 </script>

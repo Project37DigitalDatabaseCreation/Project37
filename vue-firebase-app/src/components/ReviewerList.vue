@@ -85,8 +85,8 @@ export default {
       alert("TODO - next page");
     },
 
-    modifyReviewer(email){
-        this.$router.push({ name: 'ModifyReviewer', params: { passedReviewerId: email} })
+    modifyReviewer(reviewerId){
+        this.$router.push({ name: 'ModifyReviewer', params: { passedReviewerId: reviewerId} })
     },
 
 
