@@ -1,3 +1,11 @@
+<!--
+* EditProjectReview.vue
+*
+* Description: Provides form to edit or create a project review.
+* The form is used as a modal pop out and interacts with the
+* ProjectReviews component.
+*
+-->
 <template>
   <transition name="modal">
     <div class="modal-mask">
