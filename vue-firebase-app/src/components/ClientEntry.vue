@@ -9,31 +9,9 @@
 * Organization is a drop down: relies on project being created.
 -->
 <template>
-  <div class="d-flex justify-content-end">
-    <button
-      v-if="!showForm"
-      @click="showForm = true"
-      class="btn btn-primary btn-sm"
-    >
-      + Add Clients
-    </button>
-  </div>
   <div class="card" v-if="showForm">
     <div class="card-header">
-      <div class="d-flex justify-content-between">
-        <div>
-          <h4>Clients:</h4>
-        </div>
-        <div>
-          <button
-            v-if="showForm"
-            @click="showForm = false"
-            class="btn btn-outline-primary btn-sm"
-          >
-            Hide
-          </button>
-        </div>
-      </div>
+      <h4>Clients:</h4>
     </div>
   </div>
   <div class="card-body">

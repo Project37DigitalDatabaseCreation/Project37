@@ -8,6 +8,11 @@
 
 <template>
   <div class="container">
+    <div>
+      <button class="btn btn-primary btn-sm">
+        + Add Clients
+      </button>
+    </div>
     <ClientEntry />
     <table class="table table-hover table-borderless table-striped">
       <thead>

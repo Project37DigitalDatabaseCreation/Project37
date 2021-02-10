@@ -86,7 +86,7 @@ const routes = [
     component: ManageReviewers, children: [
 
       { path: '', name: 'ReviewerList', component: ReviewerList },
-      { path: '/modifyreviewer', name: 'ModifyReviewer', component: ModifyReviewer, props:true }
+      { path: '/modifyreviewer', name: 'ModifyReviewer', component: ModifyReviewer, props: true }
 
     ]
   },
@@ -100,7 +100,7 @@ const routes = [
     path: '/modifyreviewer',
     name: 'ModifyReviewer',
     component: ModifyReviewer,
-    props:true 
+    props: true
   },
 
 ]
