@@ -14,7 +14,10 @@
     <div class="row justify-content-center">
       <div class="col-md-8">
         <div class="card">
-          <div class="card-header">Modify reviewer</div>
+          <div class="card-header">
+            Modify reviewer
+            <button type="button" class="btn btn-danger" @click.prevent="deleteUser">Delete User</button>
+          </div>
           <div class="card-body">
             <div v-if="error" class="alert alert-danger">{{ error }}</div>
             <form action="#" @submit.prevent="submit">
@@ -206,6 +209,12 @@ export default {
           this.form.isAdmin = reviewer.isAdmin;
         });
     },
+
+    deleteUser() {
+
+      console.log(`Deleting user ${this.passedReviewerId}`)
+      this.returnToPreviousScreen()
+    }
   },
 
   // This method runs on page load.
@@ -218,6 +227,9 @@ export default {
 .radioButton,
 button {
   margin-right: 10px;
+}
+.btn-danger{
+   float: right;
 }
 /* TODO: Add in breakpoints for the width */
 </style>
