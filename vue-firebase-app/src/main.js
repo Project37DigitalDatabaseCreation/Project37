@@ -34,12 +34,6 @@ firebase.auth().onAuthStateChanged(user => {
     store.dispatch("fetchUser", user);
   });
 
-  
-//  Try to fetch all standards so they are ready for us to use
-// store.dispatch('fetchGeneralStandards')
-// store.dispatch('fetchStandards')
-//  Then sort all of these standards
-store.dispatch('sortStandards')
 
 const app = createApp(App)
 

@@ -21,7 +21,7 @@
           v-model="selected_org"
           v-on:change="populateProjects"
           >
-          <option v-for="organization in organizations" :value="organization.id" :key="organization.id">{{ organization.title }}</option>                
+          <option v-for="organization in organizations" :value="organization.id" :key="organization.id">{{ organization.data().title }}</option>                
           </select>
       </div>
     </div>
@@ -34,12 +34,12 @@
           id="project"
           class="form-control"
           name="project"
-          :disabled="!projectSelectEnabled"
+          :disabled="projectSelectEnabled == 0"
           v-on:change="populateReviews"
           required
           v-model="selected_proj"
           >
-          <option v-for="project in projects" :value="project.id" :key="project.id">{{ project.title }}</option>                
+          <option v-for="project in projects" :value="project.id" :key="project.id">{{ project.data().title }}</option>                
           </select>
       </div>
     </div>
@@ -47,7 +47,7 @@
       <button
         class="btn btn-primary"
         id="show-modal"
-        :disabled="!projectNewReviewEnabled"
+        :disabled="projectNewReviewEnabled == 0"
         @click="populatePopOut()">
           Add Review to Project
         </button>
@@ -86,7 +86,6 @@
 <script>
 import firebase from "firebase";
 import modal from "@/components/EditProjectReview";
-import { mapGetters } from 'vuex'
 
 export default {
   name: "ProjectReviews",
@@ -96,13 +95,13 @@ export default {
   data() {
     return {
       showModal: false,
-      // projectSelectEnabled: 0,
-      // projectNewReviewEnabled: 0,
-      // organizations: [],
-      // projects: [],
-      // reviews: [],
-      // reviewers: [],
-      selected_org: null,
+      projectSelectEnabled: 0,
+      projectNewReviewEnabled: 0,
+      organizations: [],
+      projects: [],
+      reviews: [],
+      reviewers: [],
+      selected_org: {},
       selected_proj: {},
       selected_review: {},
       error: null
@@ -110,41 +109,59 @@ export default {
   },
   mounted() {
     // Get all of the organizations    
-    this.$store.dispatch('fetchOrganizations')
+    firebase.firestore().collection("Organizations").orderBy("title", "asc").get()
+    .then(result => {
+      result.forEach(doc => {
+        this.organizations.push(doc);
+      })}).catch(err => { console.error(err) });
 
     // Get all of the reviewers
-    this.$store.dispatch('fetchReviewers')
-
-    console.log('REVIEWS', this.reviews)
-    console.log("ORGANIZATIONS", this.organizations)
-  },
-  computed: {
-    ...mapGetters(['organizations','projects','reviews','reviewers']),
-    projectNewReviewEnabled() {
-      return this.reviews
-    },
-    projectSelectEnabled() {
-      return this.projects
-    }
+    firebase.firestore().collection("Reviewers").orderBy("lastName", "asc").get()
+    .then(result => {
+      result.forEach(doc => {
+        this.reviewers.push(doc);
+      })}).catch(err => { console.error(err) });
   },
   methods: {
     populateProjects() {
-      // this.projects = [];
-      // this.reviews = [];
-      // this.projectNewReviewEnabled = 0;
-      var orgRef = firebase.firestore().doc("/Organizations/" + this.selected_org);    
-      console.log('selected org', this.selected_org)
-      
-      //  Get our projects
-      this.$store.dispatch('fetchProjects', orgRef)
+      this.projects = [];
+      this.reviews = [];
+      this.projectNewReviewEnabled = 0;
+      var orgRef = firebase.firestore().doc("/Organizations/" + this.selected_org);
+
+      firebase.firestore().collection("Projects")
+      .where("org_ref", "==", orgRef).get()
+      .then(result => {
+        result.forEach(doc => {            
+          this.projects.push(doc);
+          this.projectSelectEnabled = 1;
+      })}).catch(err => { console.error(err) });
     },
     populateReviews() {
-        // this.reviews = [];
-        // let reviews = this.reviews;
+        this.reviews = [];
+        let reviews = this.reviews;
         var projectRef = firebase.firestore().doc("/Projects/" + this.selected_proj);
-        // this.projectNewReviewEnabled = 1;
-
-        this.$store.dispatch('fetchReviews', projectRef)
+        this.projectNewReviewEnabled = 1;
+        
+        firebase.firestore().collection("Reviews")
+        .where("project", "==", projectRef).get()
+        .then(result => {
+            result.forEach(doc => {
+              let review = doc.data();
+              review.id = doc.id;
+              
+              if(review.reviewer_ref) {
+                review.reviewer_ref.get()
+                .then(rDoc => {
+                  review.reviewer = rDoc.data();
+                  review.reviewer.id = rDoc.id;
+                  reviews.push(review);
+                })
+                .catch(err => console.error(err));
+              } else {
+                reviews.push(review);
+              }                             
+      })}).catch(err => { console.error(err) });
     },
     populatePopOut(review) {
       if(review) {
