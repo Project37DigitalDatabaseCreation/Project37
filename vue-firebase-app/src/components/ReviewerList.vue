@@ -19,7 +19,7 @@
         type="button"
         class="btn btn-primary"
         @click.prevent="AddReviewer"
-      >
+      style="float: right;">
         + Add Reviewer
       </button>
     </div>
