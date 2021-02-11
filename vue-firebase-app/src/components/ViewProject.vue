@@ -21,7 +21,7 @@
                         <label for="title" class="col-md-12 text-center">Title: {{project.title}}</label>
                     </div>
                     <div v-for="project in projects" :key="project">
-                        <label for="client" class="col-md-12 text-center">Client: {{project.client}}</label>
+                        <label for="client" class="col-md-12 text-center">Client: {{project.clients}}</label>
                     </div>
                     <div v-for="project in projects" :key="project">
                         <label for="client" class="col-md-12 text-center">Status: {{project.status}}</label>
@@ -67,7 +67,7 @@ data() {
               org_ref: doc.data().org_ref,
               organization: doc.data().organization,
               description: doc.data().description,
-              client: doc.data().client
+              clients: doc.data().clients
             });
           });
           return projects

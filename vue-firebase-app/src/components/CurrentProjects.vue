@@ -18,7 +18,7 @@
               <thead>
               <tr>
                 <th>Project</th>
-                <th>Client</th>
+                <th>Clients</th>
                 <th>Reviews</th>
                 <th>Status</th>
                 <th>Organization</th>
@@ -28,7 +28,7 @@
               <tbody>
               <tr v-for="project in projects" :key="project" v-on:click="clickProject(project)">
                 <td>{{project.title}}</td>
-                <td>{{project.client}}</td>
+                <td>{{project.clients}}</td>
                 <td>{{project.num_reviews}}</td>
                 <td>{{project.status}}</td>
                 <td>{{project.organization}}</td>
@@ -68,7 +68,7 @@ export default {
               org_ref: doc.data().org_ref,
               organization: doc.data().organization,
               description: doc.data().description,
-              client: doc.data().client
+              clients: doc.data().clients
             });
           });
           return projects

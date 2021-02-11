@@ -42,8 +42,7 @@
                     <div class="form-group row">
                         <label for="client" class="col-md-4 col-form-label text-md-right">Clients</label>
                           <div class="col-md-8">
-                          <select id="client" class="form-control" name="client" required v-model="form.client" v-on:change="getOrganizationId">
-                            <option disabled selected value="default"> Select Client </option>
+                          <select multiple id="clients" class="form-control" name="clients" required v-model="form.clients" v-on:change="getOrganizationId">
                             <option v-for="client in clients" :value="client.firstName" :key="client.key"> {{client.firstName}}</option>
                           </select>
                           </div>
@@ -101,7 +100,7 @@ export default {
         organization: this.form.organization,
         status: "In Progress",
         title: this.form.title,
-        client: this.form.client
+        clients: this.form.clients
         })
       .then(function() {
         navigate.replace({ name: "NewProject" });
