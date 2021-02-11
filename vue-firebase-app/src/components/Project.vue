@@ -9,8 +9,22 @@
 <template>
   <div class="example">
     <div class="output">Selected Clients: {{selectedClients}}</div>
-    <multiselect :options="clients" :value="selectedClients"  @select="updateSelected" :multiple="true" label="firstName" track-by="firstName" value-prop="firstName"
-    :show-labels="true" :close-on-select="true" placeholder="Choose Client(s)"></multiselect>
+    <multiselect
+    :options="clients"
+    :value="selectedClients"
+    @select="updateSelected"
+    @deselect="updateSelected"
+    :multiple="true"
+    :searchable="true"
+    label="firstName"
+    track-by="firstName"
+    value-prop="firstName"
+    :show-labels="true"
+    :can-deselect="true"
+    :max=-1
+    mode="tags"
+    placeholder="Choose Client(s)"
+    ></multiselect>
   </div>
 </template>
 
@@ -25,12 +39,24 @@
             return {
                 clients: [],
                 selectedClients: [],
+                exists: null,
                 }
             },
         methods: {
             updateSelected(value) {
-                this.selectedClients.push(value)
+                this.checkIfExists(value)
+                if (!this.exists) {
+                    this.selectedClients.push(value)
+                }
+                else{
+                    this.selectedClients.splice(this.selectedClients.indexOf(value), 1);
+                }
             },
+            checkIfExists(val) {
+                this.exists = this.selectedClients.some((item) => {
+                    return val === item
+                })
+                },
             readClients() {
                 this.clients = [];
                 firebase.firestore().collection("Clients")
