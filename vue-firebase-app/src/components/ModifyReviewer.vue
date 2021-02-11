@@ -210,9 +210,14 @@ export default {
         });
     },
 
-    deleteUser() {
+    async deleteUser() {
 
       console.log(`Deleting user ${this.passedReviewerId}`)
+       await firebase
+        .firestore()
+        .collection("Reviewers")
+        .doc(this.passedReviewerId)
+        .delete();
       this.returnToPreviousScreen()
     }
   },
