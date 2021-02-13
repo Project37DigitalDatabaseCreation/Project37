@@ -104,10 +104,7 @@ export default createStore({
         commit("SET_USER", null);
       }
     },
-    async fetchGeneralStandards({ commit, dispatch }) {
-      //  Start loading
-      commit('SET_LOADING', true)
-
+    async fetchGeneralStandards({ dispatch }) {
       //  Our collection of general Standards
       const generalStandards = firebase.firestore().collection('GeneralStandards');
 
@@ -172,15 +169,12 @@ export default createStore({
       //  Stop loading
       commit('SET_LOADING', false)
     },
-    async fetchReviews({commit}, projectRef) {
+    async fetchReviews({commit}) {
       //  Start loading
       commit('SET_LOADING', true)
 
       //  Our collection of reviews
       let reviews = firebase.firestore().collection('Reviews')
-
-      //  If there is a projectRef, update our query
-      if (projectRef) reviews = reviews.where("project", "==", projectRef)
 
       //  Container for our reviews
       const response = []
@@ -218,9 +212,6 @@ export default createStore({
       commit('SET_LOADING', false)
     },
     async fetchReviewers({commit}) {
-      //  Start loading
-      commit('SET_LOADING', true)
-
       //  Our collection of reviewers
       const reviewers = firebase.firestore().collection("Reviewers").orderBy("lastName", "asc")
 
@@ -246,10 +237,7 @@ export default createStore({
       //  Stop loading
       commit('SET_LOADING', false)
     },
-    async fetchStandards({ commit, dispatch }) {
-      //  Start loading
-      commit('SET_LOADING', true)
-
+    async fetchStandards({ dispatch }) {
       //  Our collection of general Standards
       const standards = firebase.firestore().collection('Standards');
 
@@ -286,11 +274,11 @@ export default createStore({
 
       //  Commit this array to the corresponding array
       commit(`SET_${obj.type}`, standards)
-
-      //  Stop loading
-      commit('SET_LOADING', false)
     },
     async sortStandards({ commit, getters }) {
+      //  Start loading
+      commit('SET_LOADING', true)
+
       //  Fetch our general standards and regular standards and await their execution
       await this.dispatch('fetchGeneralStandards')
       await this.dispatch('fetchStandards')
@@ -315,6 +303,9 @@ export default createStore({
 
       //  Set our sorted standards (we use lodash to deep clone and remove proxies)
       commit('SET_SORTED_STANDARDS', _.cloneDeep(sorted))
+
+      //  Stop loading
+      commit('SET_LOADING', false)
     }
   }
 })
