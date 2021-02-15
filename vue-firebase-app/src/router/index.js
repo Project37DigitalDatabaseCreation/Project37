@@ -13,7 +13,6 @@ import Dashboard from '../components/Dashboard'
 import ProjectReviews from '../components/ProjectReviews'
 import AddReviewer from '../components/AddReviewer'
 import ModifyReviewer from '../components/ModifyReviewer'
-import Project from '../components/Project'
 import NewProject from '../components/NewProject'
 import CurrentProjects from '../components/CurrentProjects'
 import ViewProject from '../components/ViewProject'
@@ -43,11 +42,6 @@ const routes = [
     path: '/project-reviews',
     name: 'Project Reviews',
     component: ProjectReviews
-  },
-  {
-    path: '/project',
-    name: 'Project',
-    component: Project
   },
   {
     path: '/newProject',
