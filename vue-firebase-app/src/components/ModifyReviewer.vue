@@ -137,6 +137,13 @@
         </div>
       </div>
     </div>
+        <modal
+      v-if="showModal"
+      v-on:edit-review="submitEdit"
+      :selected_review="this.selected_review"
+      :reviewers="this.reviewers"
+      @close="showModal = false"
+    />
   </div>
 </template>
 
