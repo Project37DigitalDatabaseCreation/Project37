@@ -137,11 +137,12 @@
         </div>
       </div>
     </div>
-        <modal
+    <modal
       v-if="showModal"
       v-on:edit-review="submitEdit"
       :selected_review="this.selected_review"
-      :reviewers="this.reviewers"
+      :passedMessage="this.modalMessage"
+      :passedMessageTitle="this.modalMessageTitle"
       @close="showModal = false"
     />
   </div>
@@ -152,8 +153,12 @@
 //import firebase from "firebase";
 import firebase from "firebase";
 import "firebase/firestore";
+import modal from "@/components/DeleteReviewerModal";
 
 export default {
+   components: {
+    modal
+  },
   props: {
     // The Firestore doc id of the reviewer is passed into this prop
     // when the user is clicked on in the ReviewerList.vue
@@ -169,8 +174,10 @@ export default {
         email: "",
         isAdmin: "",
       },
-
+      showModal: false,
       error: null,
+      modalMessage: "Modal message",
+      modalMessageTitle: "Modal message title"
     };
   },
 
@@ -218,14 +225,14 @@ export default {
     },
 
     async deleteUser() {
-
-      console.log(`Deleting user ${this.passedReviewerId}`)
-       await firebase
-        .firestore()
-        .collection("Reviewers")
-        .doc(this.passedReviewerId)
-        .delete();
-      this.returnToPreviousScreen()
+      this.showModal = true
+      // console.log(`Deleting user ${this.passedReviewerId}`)
+      //  await firebase
+      //   .firestore()
+      //   .collection("Reviewers")
+      //   .doc(this.passedReviewerId)
+      //   .delete();
+      // this.returnToPreviousScreen()
     }
   },
 
