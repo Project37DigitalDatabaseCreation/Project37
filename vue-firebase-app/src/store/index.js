@@ -197,9 +197,9 @@ export default createStore({
 
         //  Attach to our reviewer
         rev.project = proj.data()
-        rev.project.id = proj.id
+        if (rev.project) rev.project.id = proj.id
         rev.reviewer = reviewer.data()
-        rev.reviewer.id = reviewer.id
+        if (rev.reviewer) rev.reviewer.id = reviewer.id
 
         //  Push the document onto the container
         response.push(rev)
