@@ -67,7 +67,7 @@ export default {
   },
   methods: {
     handleSubmit() {
-      this.$emit("edit-review", this.org);
+      this.$emit("edit-org", this.org);
       this.$emit('close');
     }
   }

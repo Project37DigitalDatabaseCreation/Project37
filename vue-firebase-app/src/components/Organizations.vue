@@ -9,6 +9,7 @@
 <template>
   <div class="container">
     <h1 class="mt-4 text-center">Organizations</h1>
+    <span style="color: red">{{ error }}</span>
     <div>
       <button
         class="btn btn-primary"
@@ -44,7 +45,7 @@
 </template>
 
 <script>
-//import firebase from "firebase";
+import firebase from "firebase";
 import modal from "@/components/EditOrganization";
 import { mapGetters } from 'vuex'
 
@@ -79,7 +80,53 @@ export default {
         this.selected_org = {};
       }
       
+      this.error = null;
       this.showModal = true;
+    },
+    submitEdit(org) {
+      let Vue = this;     
+
+      firebase.firestore().collection("Organizations").doc(org.id).set({
+        title: org.title
+        })
+      .then(function() {
+        Vue.$store.dispatch('fetchOrganizations')
+      })
+      .catch(function(error) {
+        console.error("Error writing document: ", error);
+      });
+    },
+    deleteOrg(org) {
+      let Vue = this;
+      let orgId = org.id;
+
+      if(confirm("Are you sure you want to delete this organization?")) {
+        let orgRef = firebase.firestore().doc("/Organizations/" + orgId);
+
+        firebase.firestore().collection("Projects")
+        .where("org_ref", "==", orgRef).get()
+        .then(result => {
+          if (result.size > 0) {
+            Vue.error = "The selected organization cannot be deleted because there are one or more projects associated with it.";
+          } else {
+            firebase.firestore().collection("Clients")
+            .where("org_ref", "==", orgRef).get()
+            .then(result => {
+              if (result.size > 0) {
+                Vue.error = "The selected organization cannot be deleted because there are one or more clients associated with it.";
+              } else {
+                firebase.firestore().collection("Organizations").doc(orgId).delete().then(() => {
+                  console.log("Document successfully deleted!");
+                  Vue.error = null;
+                  Vue.$store.dispatch('fetchOrganizations');
+                });
+              }
+            }).catch((error) => {
+              console.error("Error removing document: ", error);
+            });
+          }
+        }).catch(err => { console.error(err) });
+      }      
     }
   }
 };
