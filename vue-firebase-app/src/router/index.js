@@ -19,6 +19,7 @@ import ViewProject from '../components/ViewProject'
 import ManageReviewers from '../components/ManageReviewers'
 import ManageClients from '../components/ManageClients'
 import ReviewerList from '../components/ReviewerList'
+import Organizations from '../components/Organizations'
 
 
 const routes = [
@@ -90,11 +91,15 @@ const routes = [
     component: ManageClients
   },
   {
-
     path: '/modifyreviewer',
     name: 'ModifyReviewer',
     component: ModifyReviewer,
     props:true 
+  },
+  {
+    path: '/organizations',
+    name: 'Organizations',
+    component: Organizations
   },
 
 ]

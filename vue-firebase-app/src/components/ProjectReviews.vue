@@ -179,9 +179,6 @@ export default {
       this.showModal = true;
     },
     submitEdit(review) {
-      console.log("New Course Name: " + review.course_name);
-      console.log("New Review ID: " + review.reviewer.id);      
-
       let projectRef = firebase.firestore().doc("/Projects/" + this.selected_proj);
       let reviewerRef = firebase.firestore().doc("Reviewers/" + review.reviewer.id);
       let Vue = this;
@@ -201,7 +198,6 @@ export default {
         })
       .then(function() {
         Vue.populateReviews();
-        //navigate.replace({ name: "Dashboard" });
       })
       .catch(function(error) {
         console.error("Error writing document: ", error);
