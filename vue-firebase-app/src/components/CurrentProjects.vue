@@ -25,15 +25,18 @@
             </tr>
             </thead>
           <tbody>
-              <tr v-for="project in projects" :key="project" v-on:click="clickProject(project)">
+              <tr v-for="project in projects" :key="project">
                 <td>{{project.title}}</td>
                 <td>{{project.clients.join(', ')}}</td>
                 <td>{{project.num_reviews}}</td>
                 <td>{{project.status}}</td>
                 <td>{{project.organization}}</td>
+                <td><button class="btn btn-primary" id="show-modal" @click="showModal = true">Edit</button></td>
               </tr>
           </tbody>
       </table>
+      <modal v-if="this.showModal" @close="closeModal">
+      </modal>
     </div>
     </div>
     </div>
@@ -44,10 +47,15 @@
 <script>
 
 import firebase from 'firebase'
-
+import modal from "@/components/EditProject";
 export default {
+  name: "CurrentProject",
+  components: {
+    modal
+  },
   data() {
     return {
+      showModal: false,
       projects: []
     };
   },
@@ -83,6 +91,9 @@ export default {
           project: project.title
         }
       });
+    },
+    closeModal(){
+      this.showModal = false
     }
   },
   mounted() {
