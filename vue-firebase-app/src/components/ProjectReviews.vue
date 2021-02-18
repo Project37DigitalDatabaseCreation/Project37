@@ -144,7 +144,7 @@ export default {
         this.projectNewReviewEnabled = 1;
         
         firebase.firestore().collection("Reviews")
-        .where("project", "==", projectRef).get()
+        .where("project_ref", "==", projectRef).get()
         .then(result => {
             result.forEach(doc => {
               let review = doc.data();
@@ -182,18 +182,19 @@ export default {
       let projectRef = firebase.firestore().doc("/Projects/" + this.selected_proj);
       let reviewerRef = firebase.firestore().doc("Reviewers/" + review.reviewer.id);
       let Vue = this;
+      let ts = firebase.firestore.FieldValue.serverTimestamp();
 
-      //var navigate = this.$router;
       if (!review.created) {
-        review.created = firebase.firestore.FieldValue.serverTimestamp();
+        review.created = ts;
         review.status = "New";
       }        
 
       firebase.firestore().collection("Reviews").doc(review.id).set({
         created: review.created,
+        modified: ts,
         course_name: review.course_name,
         reviewer_ref: reviewerRef,
-        project: projectRef,
+        project_ref: projectRef,
         status: review.status
         })
       .then(function() {
