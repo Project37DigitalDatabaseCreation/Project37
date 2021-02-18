@@ -31,12 +31,11 @@
                 <td>{{project.num_reviews}}</td>
                 <td>{{project.status}}</td>
                 <td>{{project.organization}}</td>
-                <td><button class="btn btn-primary" id="show-modal" @click="showModal = true">Edit</button></td>
+                <td><button class="btn btn-primary" id="show-modal" @click="openModal(project)">Edit</button></td>
               </tr>
           </tbody>
       </table>
-      <modal v-if="this.showModal" @close="closeModal">
-      </modal>
+      <modal v-if="this.showModal" :selectedProject="this.selectedProject"  :organizations="this.organizations" @close="closeModal"></modal>
     </div>
     </div>
     </div>
@@ -56,6 +55,8 @@ export default {
   data() {
     return {
       showModal: false,
+      selectedProject: {},
+      organizations: [],
       projects: []
     };
   },
@@ -83,6 +84,23 @@ export default {
           console.log("Error retrieving documents: ", error);
         });
       },
+      readOrganizations() {
+                let organizations = [];
+                firebase.firestore().collection("Organizations")
+                .get()
+                .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        this.organizations.push({
+                            id: doc.id,
+                            title: doc.data().title,
+                        });
+                    });
+                return organizations
+                })
+                .catch((error) => {
+                    console.log("Error retrieving documents: ", error);
+                });
+            },
     clickProject(project) {
       console.log("clickList fired with " + project.title);
       this.$router.push({
@@ -92,12 +110,17 @@ export default {
         }
       });
     },
+    openModal(project){
+      this.selectedProject = Object.assign({}, project);
+      this.showModal = true
+    },
     closeModal(){
       this.showModal = false
     }
   },
   mounted() {
-    this.readProjects();
+    this.readProjects(),
+    this.readOrganizations();
   },
 };
 </script>

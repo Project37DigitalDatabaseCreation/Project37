@@ -1,3 +1,11 @@
+<!--
+* EditProject.vue
+*
+* Description: Overview for Edit Project Modal,
+* allows the user to edit an existing project.
+*
+-->
+
 <template>
   <transition name="modal">
     <div class="modal-mask">
@@ -24,6 +32,7 @@
                     value
                     required
                     autofocus
+                    v-model="project.title"
                     />
                 </div>
               </div>
@@ -32,31 +41,29 @@
                 <label for="client_names" class="col-md-4 col-form-label text-md-right">Clients</label>
 
                 <div class="col-md-6">
-                    <select
-                    id="client_names"
-                    type="text"
-                    class="form-control"
-                    name="client_names"
-                    value
-                    required
-                    autofocus
-                    />
-                </div>
-              </div>
-
-              <div class="form-group row">
-                <label for="num_reviews" class="col-md-4 col-form-label text-md-right">Reviews</label>
-
-                <div class="col-md-6">
-                    <select
-                    id="num_reviews"
-                    type="text"
-                    class="form-control"
-                    name="num_reviews"
-                    value
-                    required
-                    autofocus
-                    />
+                    <multiselect
+                        :v-model="selectedClients"
+                        :options="clients"
+                        :value="selectedClients"
+                        @select="updateSelected"
+                        @deselect="updateSelected"
+                        @open="updateSelected"
+                        @close="updateSelected"
+                        :multiple="true"
+                        :caret="true"
+                        :searchable="true"
+                        :allow-empty="false"
+                        no-results-text="No Clients Found"
+                        label="firstName"
+                        track-by="firstName"
+                        value-prop="firstName"
+                        :show-labels="true"
+                        :can-deselect="true"
+                        :max=-1
+                        :min=1
+                        mode="tags"
+                        placeholder="Choose Client(s)"
+                        ></multiselect>
                 </div>
               </div>
 
@@ -66,13 +73,15 @@
                 <div class="col-md-6">
                     <select
                     id="status"
-                    type="text"
                     class="form-control"
                     name="status"
-                    value
                     required
-                    autofocus
-                    />
+                    v-model="selectedStatus"
+                    >
+                    <option v-for="status in statusOptions" :value="status" :key="status">
+                        {{ status}}
+                    </option>
+                    </select>
                 </div>
               </div>
 
@@ -82,13 +91,13 @@
                 <div class="col-md-6">
                     <select
                     id="organization_name"
-                    type="text"
                     class="form-control"
                     name="organization_name"
-                    value
                     required
-                    autofocus
-                    />
+                    v-model="selectedOrganization"
+                    >
+                    <option v-for="organization in organizations" :value="organization.title" :key="organization.id"> {{organization.title}}</option>
+                    </select>
                 </div>
               </div>
             </slot>
@@ -107,14 +116,66 @@
 </template>
  
 <script>
+import firebase from 'firebase'
+import Multiselect from '@vueform/multiselect'
   export default {
     name: "EditProject",
+    props: {
+    selectedProject: Object,
+    organizations: Array
+    },
+    components: {
+      Multiselect,
+    },
     data() {
         return {
-          projects: [],
-          title: this.project
+          project: this.selectedProject,
+          selectedStatus: this.selectedProject.status,
+          selectedOrganization: this.selectedProject.organization,
+          selectedClients: this.selectedProject.clients,
+          statusOptions: ["New", "In Progress", "Complete"],
+          clients: [],
+          exists: null,
         };
       },
+    methods: {
+      updateSelected(value) {
+        this.checkIfExists(value)
+        if (!this.exists) {
+          this.selectedClients.push(value)
+        }
+        else {
+          this.selectedClients.splice(this.selectedClients.indexOf(value), 1);
+        }
+      },
+      checkIfExists(val) {
+        this.exists = this.selectedClients.some((item) => {
+          return val === item
+        })
+      },
+      readClients() {
+                this.clients = [];
+                firebase.firestore().collection("Clients")
+                .get()
+                .then((result) => {
+                    result.forEach((doc) => {
+                        this.clients.push({
+                            id: doc.id,
+                            email: doc.data().email,
+                            firstName: doc.data().firstName,
+                            lastName: doc.data().lastName,
+                            organization: doc.data().organization,
+                        });
+                    });
+                })
+                .catch((error) => {
+                    console.log("Error retrieving documents: ", error);
+                });
+            },
+    },
+    created() {
+            this.readClients();
+        },
   }
 </script>
 
