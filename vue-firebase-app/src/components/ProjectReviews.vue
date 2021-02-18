@@ -9,6 +9,7 @@
 <template>
   <div class="container">
     <h1 class="mt-4 text-center">Project Reviews</h1>
+    <span style="color: red">{{ error }}</span>
     <div class="form-group row">
       <label for="organization" class="col-md-4 col-form-label text-md-right">Organization</label>
 
@@ -182,6 +183,7 @@ export default {
       let projectRef = firebase.firestore().doc("/Projects/" + this.selected_proj);
       let reviewerRef = firebase.firestore().doc("Reviewers/" + review.reviewer.id);
       let Vue = this;
+      Vue.error = null;
 
       //var navigate = this.$router;
       if (!review.created) {
@@ -208,12 +210,21 @@ export default {
       let reviewId = review.id;
 
       if(confirm("Are you sure you want to delete this review?")) {
-        firebase.firestore().collection("Reviews").doc(reviewId).delete().then(() => {
-          console.log("Document successfully deleted!");
-          Vue.populateReviews();
-        }).catch((error) => {
-            console.error("Error removing document: ", error);
-        });
+        let reviewRef = firebase.firestore().doc("/Reviews/" + reviewId);
+
+        firebase.firestore().collection("Scores")
+        .where("review_ref", "==", reviewRef).get()
+        .then(result => {
+          if (result.size > 0) {
+            Vue.error = "The selected review cannot be deleted because there are course ratings associated with it.";
+          } else {
+            firebase.firestore().collection("Reviews").doc(reviewId).delete().then(() => {
+              Vue.populateReviews();
+            }).catch((error) => {
+              console.error("Error removing document: ", error);
+            });
+          }
+        }).catch(err => { console.error(err) });        
       }      
     }
   },
