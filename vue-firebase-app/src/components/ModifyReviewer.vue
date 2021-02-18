@@ -16,7 +16,7 @@
         <div class="card">
           <div class="card-header">
             Modify reviewer
-            <button type="button" class="btn btn-danger" @click.prevent="deleteUser">Delete User</button>
+            <button type="button" class="btn btn-danger"  @click.prevent="showDeleteUserModal">Delete User</button>
           </div>
           <div class="card-body">
             <div v-if="error" class="alert alert-danger">{{ error }}</div>
@@ -139,9 +139,8 @@
     </div>
     <modal
       v-if="showModal"
-      v-on:edit-review="submitEdit"
-      :selected_review="this.selected_review"
-      :passedMessage="this.modalMessage"
+      v-on:ok-click="deleteUserConfirmed"
+      :passedMessage="this.modalMessage + ' ' + this.form.fname +  ' ' + this.form.lname + '? This action cannot be undone.'"
       :passedMessageTitle="this.modalMessageTitle"
       @close="showModal = false"
     />
@@ -176,12 +175,14 @@ export default {
       },
       showModal: false,
       error: null,
-      modalMessage: "Modal message",
-      modalMessageTitle: "Modal message title"
+      modalMessage: "Are you sure you want to delete the user ",
+      modalMessageTitle: "Are you sure?"
     };
   },
 
   methods: {
+
+    //Method to modify a existing user 
     async updateClicked() {
       console.log("Update clicked");
       let modifiedUser = {
@@ -206,7 +207,7 @@ export default {
     },
 
     //This method reads the reviewer from the Firebase Firestore DB and
-    // and loads the data into the form
+    // and loads the data into the form.
     async getReviewer() {
       await firebase
         .firestore()
@@ -224,15 +225,23 @@ export default {
         });
     },
 
-    async deleteUser() {
+    //User clicked the delete user button
+     showDeleteUserModal() {
+
       this.showModal = true
-      // console.log(`Deleting user ${this.passedReviewerId}`)
-      //  await firebase
-      //   .firestore()
-      //   .collection("Reviewers")
-      //   .doc(this.passedReviewerId)
-      //   .delete();
-      // this.returnToPreviousScreen()
+
+    },
+
+    //User confirmed they want to delete the user
+    async deleteUserConfirmed(){
+
+      console.log(`Deleting user ${this.passedReviewerId}`)
+       await firebase
+        .firestore()
+        .collection("Reviewers")
+        .doc(this.passedReviewerId)
+        .delete();
+      this.returnToPreviousScreen()
     }
   },
 

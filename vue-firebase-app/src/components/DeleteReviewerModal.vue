@@ -1,3 +1,15 @@
+<!--
+* DeleteReviewerModal.vue
+*
+* Author: Ben McElyea
+* Date: February 2021
+*
+* Description: Modal that confirms the user wants to delete the selected reviewer 
+* Emits ok-click event on "Yes, Delete" button click
+* 
+*
+-->
+
 <template>
   <transition name="modal">
     <div class="modal-mask">
@@ -5,21 +17,20 @@
         <div class="modal-container">
 
           <div class="modal-header">
-            {{passedMessageTitle}}
+            <h3>{{passedMessageTitle}}</h3>
           </div>
 
           <div class="modal-body">
             <slot name="body">
-              <div class="form-group row">
-                <label for="course_name" class="col-md-4 col-form-label text-md-right">{{passedMessage}}</label>
-
+              <div class="form-group row justify-content-center" >
+                <p>{{passedMessage}}</p>
               </div>
             </slot>
           </div>
           <div class="modal-footer">
             <slot name="footer">
-              <button class="btn btn-primary" @click="handleSubmit()">Ok</button>
-              <button class="btn btn-primary" @click="$emit('close')">Cancel</button>
+              <button class="btn btn-primary" @click="cancelClicked()">Cancel</button>
+                      <button class="btn btn-danger" @click="okClicked()">Delete</button>
             </slot>
           </div>
         </div>
@@ -29,21 +40,28 @@
 </template>
 <script>
 export default {
+
+  emits: ['ok-click', 'close'],
   props: {
-    selected_review: Object,
-    reviewers: Array,
     passedMessage: String,
     passedMessageTitle: String,
+
+
   },
   data() {
       return {
         showModal: false,
-        review: this.selected_review
+
       }
   },
   methods: {
-    handleSubmit() {
-      this.$emit("edit-review", this.review);
+    okClicked() {
+      this.$emit('ok-click');
+      this.$emit('close');
+    },
+
+    cancelClicked(){
+
       this.$emit('close');
     }
   }
@@ -80,8 +98,8 @@ export default {
 
 .modal-header h3 {
   margin-top: 0;
-  color: #42b983;
-}
+  
+  }
 
 .modal-body {
   margin: 20px 0;
