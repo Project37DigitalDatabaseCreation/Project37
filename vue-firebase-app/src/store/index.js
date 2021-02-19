@@ -190,7 +190,7 @@ export default createStore({
         rev.id = obj.docs[i].id
 
         //  Parse the project for this document
-        let proj = await rev.project.get()
+        let proj = await rev.project_ref.get()
 
         //  Parse the reviewer for this document
         let reviewer = await rev.reviewer_ref.get()

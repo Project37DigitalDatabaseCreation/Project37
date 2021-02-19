@@ -8,6 +8,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import Login from '../components/Login'
 import Register from '../components/Register'
 import Review from '../components/Review'
+import ReviewsList from '../components/ReviewsList'
 import Reviews from '../components/Reviews'
 import Dashboard from '../components/Dashboard'
 import ProjectReviews from '../components/ProjectReviews'
@@ -63,13 +64,18 @@ const routes = [
   {
     path: '/reviews',
     name: 'Reviews',
-    component: Reviews
+    component: Reviews,
+    children: [
+        { path: '', name: 'ReviewsList', component: ReviewsList },
+        { path: '/review', name: 'Review', component: Review, props: true }
+    ]
   },
-  {
-    path: '/review',
-    name: 'Review',
-    component: Review
-  },
+//   {
+//     path: '/review',
+//     name: 'Review',
+//     component: Review,
+//     props: true
+//   },
   {
     path: '/addreviewer',
     name: 'AddReviewer',

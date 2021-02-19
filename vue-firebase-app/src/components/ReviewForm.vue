@@ -145,6 +145,7 @@ export default {
         }
     },
     mounted() {
+        console.log('REVIEW TYPE IS??? ', this.review)
         //  Once review prop is here we do this
         this.currReview = _.cloneDeep(this.review)
         console.log('CONTENT HEIGHT', this.contentHeight)
@@ -161,20 +162,6 @@ export default {
         }
     },
     methods: {
-        pointsGiven(std, i, j) {
-            console.log('std', std, i, j)
-        },
-        standardMet(idx) {
-            //  We calculate if a standard is met, by looking at the met value of every standard at idx i, from 0 to max
-            for (let i = 0; i < this.sortedStandards[idx].standards.length; i++) {
-                //  Container for our current
-                let curr = this.sortedStandards[idx].standards[i]
-                //  If this does not have the standard met, return false
-                if (!curr.met) return false
-            }
-            //  Else return true
-            return true
-        },
         //  This gets triggered to save it as COMPLETE
         async saveComplete() {
             //  Create a clone of our sorted standards so we can operate on it
@@ -194,7 +181,7 @@ export default {
             console.log('yee', payload)
 
             //  ITs in progress so set status to incomplete
-            payload.status = 'INCOMPLETE'
+            payload.status = 'PROGRESS'
 
             //  For now, lets just store these as documents in a collection called "savedReviews"
             const res = await firebase.firestore().collection('Reviews').add(payload)
@@ -222,12 +209,23 @@ export default {
             console.log('yee', payload)
 
             //  ITs in progress so set status to complete
-            payload.status = 'COMPLETE'
+            payload.status = 'INCOMPLETE'
 
             //  For now, lets just store these as documents in a collection called "savedReviews"
             const res = await firebase.firestore().collection('Reviews').add(payload)
 
             console.log('Added document with id: ', res.id)
+        },
+        standardMet(idx) {
+            //  We calculate if a standard is met, by looking at the met value of every standard at idx i, from 0 to max
+            for (let i = 0; i < this.sortedStandards[idx].standards.length; i++) {
+                //  Container for our current
+                let curr = this.sortedStandards[idx].standards[i]
+                //  If this does not have the standard met, return false
+                if (!curr.met) return false
+            }
+            //  Else return true
+            return true
         }
     },
     watch: {
