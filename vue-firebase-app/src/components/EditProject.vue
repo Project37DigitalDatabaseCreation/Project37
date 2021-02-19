@@ -32,8 +32,43 @@
                     value
                     required
                     autofocus
-                    v-model="project.title"
+                    v-model="selectedTitle"
                     />
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="project_description" class="col-md-4 col-form-label text-md-right">Description</label>
+
+                <div class="col-md-6">
+                    <input
+                    id="project_description"
+                    type="text"
+                    class="form-control"
+                    name="project_description"
+                    height="350"
+                    value
+                    required
+                    autofocus
+                    v-model="selectedDescription"
+                    />
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="organization_name" class="col-md-4 col-form-label text-md-right">Organization</label>
+
+                <div class="col-md-6">
+                    <select
+                    id="organization_name"
+                    class="form-control"
+                    name="organization_name"
+                    required
+                    v-model="selectedOrganization"
+                    v-on:change="readClients"
+                    >
+                    <option v-for="organization in organizations" :value="organization.title" :key="organization.id"> {{organization.title}}</option>
+                    </select>
                 </div>
               </div>
 
@@ -68,13 +103,13 @@
               </div>
 
               <div class="form-group row">
-                <label for="status" class="col-md-4 col-form-label text-md-right">Status</label>
+                <label for="project_status" class="col-md-4 col-form-label text-md-right">Status</label>
 
                 <div class="col-md-6">
                     <select
-                    id="status"
+                    id="project_status"
                     class="form-control"
-                    name="status"
+                    name="project_status"
                     required
                     v-model="selectedStatus"
                     >
@@ -84,28 +119,12 @@
                     </select>
                 </div>
               </div>
-
-              <div class="form-group row">
-                <label for="organization_name" class="col-md-4 col-form-label text-md-right">Organization</label>
-
-                <div class="col-md-6">
-                    <select
-                    id="organization_name"
-                    class="form-control"
-                    name="organization_name"
-                    required
-                    v-model="selectedOrganization"
-                    >
-                    <option v-for="organization in organizations" :value="organization.title" :key="organization.id"> {{organization.title}}</option>
-                    </select>
-                </div>
-              </div>
             </slot>
           </div>
 
           <div class="modal-footer">
             <slot name="footer">
-              <button class="btn btn-primary" @click="$emit('close')">Save</button>
+              <button class="btn btn-primary" @click="saveEdit()">Save</button>
               <button class="btn btn-primary" @click="$emit('close')">Close</button>
             </slot>
           </div>
@@ -130,15 +149,35 @@ import Multiselect from '@vueform/multiselect'
     data() {
         return {
           project: this.selectedProject,
+          selectedTitle: this.selectedProject.title,
+          selectedDescription: this.selectedProject.description,
           selectedStatus: this.selectedProject.status,
           selectedOrganization: this.selectedProject.organization,
           selectedClients: this.selectedProject.clients,
+          selectedOrgRef: this.selectedProject.org_ref,
           statusOptions: ["New", "In Progress", "Complete"],
           clients: [],
           exists: null,
         };
       },
     methods: {
+      saveEdit() {
+        this.getOrganizationId()
+          firebase.firestore().collection("Projects").doc(this.project.id).update({
+              title: this.selectedTitle,
+              description: this.selectedDescription,
+              org_ref: this.selectedOrgRef,
+              organization: this.selectedOrganization,
+              status: this.selectedStatus,
+              clients: this.selectedClients
+          })
+          .then(function() {
+          })
+          .catch(function(error) {
+              console.error("Error writing document: ", error);
+          });
+        this.$emit('close');
+      },
       updateSelected(value) {
         this.checkIfExists(value)
         if (!this.exists) {
@@ -154,18 +193,36 @@ import Multiselect from '@vueform/multiselect'
         })
       },
       readClients() {
-                this.clients = [];
-                firebase.firestore().collection("Clients")
-                .get()
-                .then((result) => {
-                    result.forEach((doc) => {
-                        this.clients.push({
+        this.clients = [];
+        firebase.firestore().collection("Clients")
+        .where("organization", "==", this.selectedOrganization).get()
+        .then((result) => {
+          result.forEach((doc) => {
+            this.clients.push({
+              id: doc.id,
+              email: doc.data().email,
+              firstName: doc.data().firstName,
+              lastName: doc.data().lastName,
+              organization: doc.data().organization,
+            });
+          });
+          this.getOrganizationId();
+        })
+        .catch((error) => {
+          console.log("Error retrieving documents: ", error);
+          });
+        },
+        getOrganizationId() {
+                this.organizationId = [];
+                firebase.firestore().collection("Organizations")
+                .where("title", "==", this.selectedOrganization).get()
+                .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        this.organizationId.push({
                             id: doc.id,
-                            email: doc.data().email,
-                            firstName: doc.data().firstName,
-                            lastName: doc.data().lastName,
-                            organization: doc.data().organization,
+                            title: doc.data().title,
                         });
+                        this.selectedOrgRef = doc.id
                     });
                 })
                 .catch((error) => {
@@ -174,8 +231,8 @@ import Multiselect from '@vueform/multiselect'
             },
     },
     created() {
-            this.readClients();
-        },
+      this.readClients();
+    },
   }
 </script>
 
