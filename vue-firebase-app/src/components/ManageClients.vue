@@ -9,11 +9,11 @@
 <template>
   <div class="container">
     <div>
-      <button class="btn btn-primary btn-sm">
-        + Add Clients
+      <button @click="showModal = true" class="btn btn-primary btn-sm">
+        Add Clients
       </button>
     </div>
-    <ClientEntry />
+    <modal v-if="showModal" @close="showModal = false" />
     <table class="table table-hover table-borderless table-striped">
       <thead>
         <tr>
@@ -38,19 +38,21 @@
 
 <script>
   import getClients from '../composables/getClients'
-  import ClientEntry from '../components/ClientEntry'
+  import modal from '../components/ClientEntry'
   import { ref } from 'vue'
 
   export default {
-    components: { ClientEntry },
+    components: { modal },
+
     setup() {
+      const showModal = ref(false)
       const currentPage = ref(1)
       const { clients, error, loadClients } = getClients()
 
       // Loads the clients for the data table
       loadClients()
 
-      return { clients, error, currentPage }
+      return { clients, error, currentPage, showModal }
     },
   }
 </script>

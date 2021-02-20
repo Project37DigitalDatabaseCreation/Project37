@@ -93,7 +93,8 @@ const routes = [
   {
     path: '/manage-clients',
     name: 'ManageClients',
-    component: ManageClients
+    component: ManageClients,
+    props: true
   },
   {
 
