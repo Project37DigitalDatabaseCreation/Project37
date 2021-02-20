@@ -12,17 +12,16 @@
 
 <template>
   <div class="container">
-
-     <router-view></router-view>
+    <router-view></router-view>
     <h4>Reviewers</h4>
     <div>
-                  <button
-                    type="button"
-                    class="btn btn-primary"
-                    @click.prevent="AddReviewer"
-                  >
-                    Add Reviewer
-                  </button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click.prevent="AddReviewer"
+      style="float: right;">
+        + Add Reviewer
+      </button>
     </div>
     <table>
       <thead>
@@ -38,11 +37,10 @@
           v-for="(reviewer, index) in reviewerData"
           :key="index"
           @click="modifyReviewer(reviewer.id)"
-          >
-          <td>{{ reviewer.first_name + ' ' + reviewer.last_name }}</td>
+        >
+          <td>{{ reviewer.first_name + " " + reviewer.last_name }}</td>
           <td>{{ reviewer.email }}</td>
-          <td>{{ reviewer.is_admin === 'true' ? 'Yes' : 'No' }}</td>
-          
+          <td>{{ reviewer.is_admin === "true" ? "Yes" : "No" }}</td>
         </tr>
       </tbody>
     </table>
@@ -57,14 +55,12 @@
 
 
 <script>
-
 import firebase from "firebase";
 import "firebase/firestore";
 
 export default {
   data() {
     return {
-      
       reviewerData: [],
       reviewer: {},
     };
@@ -75,7 +71,7 @@ export default {
     // },
 
     AddReviewer() {
-      this.$router.push({ name: 'AddReviewer'})
+      this.$router.push({ name: "AddReviewer" });
     },
 
     prevPage() {
@@ -85,15 +81,18 @@ export default {
       alert("TODO - next page");
     },
 
-    modifyReviewer(reviewerId){
-        this.$router.push({ name: 'ModifyReviewer', params: { passedReviewerId: reviewerId} })
+    modifyReviewer(reviewerId) {
+      this.$router.push({
+        name: "ModifyReviewer",
+        params: { passedReviewerId: reviewerId },
+      });
     },
 
-
-    getReviewers(){
-
-    this.reviewerData = [];
-      firebase.firestore().collection("Reviewers")
+    getReviewers() {
+      this.reviewerData = [];
+      firebase
+        .firestore()
+        .collection("Reviewers")
         .get()
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
@@ -102,7 +101,7 @@ export default {
               first_name: doc.data().firstName,
               last_name: doc.data().lastName,
               is_admin: doc.data().isAdmin,
-              id: doc.id
+              id: doc.id,
             });
             console.log(doc.id, " => ", doc.data());
           });
@@ -110,13 +109,10 @@ export default {
         .catch((error) => {
           console.log("Error getting documents: ", error);
         });
-
     },
-
-  
   },
-    mounted() {
-    console.log("In mount")
+  mounted() {
+    console.log("In mount");
     this.getReviewers();
   },
 };
@@ -149,7 +145,7 @@ table {
 }
 
 button {
-  margin-bottom: 10px ;
+  margin-bottom: 10px;
 }
 .paginationContainer {
   display: flex;
