@@ -12,8 +12,7 @@
                         style="overflow:auto; background-color:#f1f1f1;"
                         :style="`height:${cardHeight}px;`">
                         <div v-if="error" class="alert alert-danger">{{error}}</div>
-                        <form v-if="sortedStandards" action="#"
-                            @submit.prevent="saveProgress">
+                        <div v-if="sortedStandards">
 
                             <div class="form-group row" style="background-color:#ffffff;">
                                 <div
@@ -99,8 +98,8 @@
 
                             <div class="form-group row mb-0">
                                 <div class="col-12 px-0">
-                                    <button type="submit" class="btn btn-primary"
-                                        style="width:100%;">Save Progress</button>
+                                    <button class="btn btn-primary" style="width:100%;"
+                                        @click="saveProgress">Save Progress</button>
                                 </div>
                             </div>
                             <div class="form-group row mb-0">
@@ -109,7 +108,7 @@
                                         @click="saveComplete">Save as Complete</button>
                                 </div>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -178,15 +177,27 @@ export default {
                 payload.created = timestamp
             }
 
+            //  its complete
+            payload.status = 'COMPLETE'
+
             console.log('yee', payload)
 
-            //  ITs in progress so set status to incomplete
-            payload.status = 'PROGRESS'
+            //  Container for our response
+            let res = null
 
-            //  For now, lets just store these as documents in a collection called "savedReviews"
-            const res = await firebase.firestore().collection('Reviews').add(payload)
+            //  IF we are editing, then update, don't create
+            if (this.edit)
+                res = await firebase
+                    .firestore()
+                    .collection('Reviews')
+                    .doc(payload.id)
+                    .update(payload)
+            else res = await firebase.firestore().collection('Reviews').add(payload)
 
-            console.log('Added document with id: ', res.id)
+            console.log('Added document response ', res)
+
+            //  Get our reviews again
+            this.$store.dispatch('fetchReviews')
 
             this.$router.push('/reviews')
         },
@@ -206,15 +217,27 @@ export default {
                 payload.created = timestamp
             }
 
-            console.log('yee', payload)
-
             //  ITs in progress so set status to complete
             payload.status = 'INCOMPLETE'
 
-            //  For now, lets just store these as documents in a collection called "savedReviews"
-            const res = await firebase.firestore().collection('Reviews').add(payload)
+            console.log('yee', payload)
 
-            console.log('Added document with id: ', res.id)
+            //  Container for our response
+            let res = null
+
+            //  IF we are editing, then update, don't create
+            if (this.edit)
+                res = await firebase
+                    .firestore()
+                    .collection('Reviews')
+                    .doc(payload.id)
+                    .update(payload)
+            else res = await firebase.firestore().collection('Reviews').add(payload)
+
+            //  Get our reviews again
+            this.$store.dispatch('fetchReviews')
+
+            console.log('Added document response ', res)
         },
         standardMet(idx) {
             //  We calculate if a standard is met, by looking at the met value of every standard at idx i, from 0 to max

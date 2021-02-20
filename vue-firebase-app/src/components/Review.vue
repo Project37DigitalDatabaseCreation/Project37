@@ -1,7 +1,8 @@
 <template>
     <div style="display:flex;" :style="`height:${contentHeight}px`">
         <ReviewNav @go-to-item="goToItem"></ReviewNav>
-        <ReviewForm v-if="ready" :currentLink="currentLink" :review="selectedReview">
+        <ReviewForm v-if="ready" :currentLink="currentLink" :edit="review ? true : false"
+            :review="selectedReview">
         </ReviewForm>
     </div>
 </template>
@@ -45,6 +46,7 @@ export default {
             //  If this review exists, use it
             if (temp) {
                 this.selectedReview = temp.data()
+                this.selectedReview.id = this.review
                 this.ready = true
             } else {
                 this.createTemplate()
