@@ -7,38 +7,30 @@
 -->
 <template>
   <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <div class="card">
-          <div class="card-header">Dashboard</div>
-          <div class="card-body">
-            <div v-if="user" class="alert alert-success" role="alert">You are logged in!</div>
-          </div>
-        </div>
-        <table class="table mt-5">
-          <thead>
-            <tr>
-              <th scope="col">Client</th>
-              <th scope="col">Reviewer</th>
-              <th scope="col">Project</th>
-              <th scope="col">Points</th>
-              <th scope="col">Status</th>
-              <th scope="col">Review</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="review in reviews" :key="review.id">
-              <td>{{ review.org.title }}</td>
-              <td>{{ review.reviewer.lastName + ", " + review.reviewer.firstName }}</td>
-              <td>{{ review.project.title }}</td>
-              <td></td>
-              <td>{{ review.status }}</td>
-              <td></td>
-            </tr>
-          </tbody>          
-        </table>
-      </div>
-    </div>
+    <h4 class="mt-4 text-center">Latest Reviews:</h4>
+    <span style="color: red">{{ error }}</span>
+    <table class="table mt-5">
+      <thead>
+        <tr>
+          <th scope="col">Client</th>
+          <th scope="col">Reviewer</th>
+          <th scope="col">Project</th>
+          <th scope="col">Points</th>
+          <th scope="col">Status</th>
+          <th scope="col">Review</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="review in reviews" :key="review.id">
+          <td>{{ review.org.title }}</td>
+          <td>{{ review.reviewer.lastName + ", " + review.reviewer.firstName }}</td>
+          <td>{{ review.project.title }}</td>
+          <td></td>
+          <td>{{ review.status }}</td>
+          <td></td>
+        </tr>
+      </tbody>          
+    </table>
   </div>
 </template>
 <script>
