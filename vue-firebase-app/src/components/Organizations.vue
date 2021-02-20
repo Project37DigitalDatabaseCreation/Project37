@@ -84,7 +84,8 @@ export default {
       this.showModal = true;
     },
     submitEdit(org) {
-      let Vue = this;     
+      let Vue = this;
+      Vue.error = null;
 
       firebase.firestore().collection("Organizations").doc(org.id).set({
         title: org.title
