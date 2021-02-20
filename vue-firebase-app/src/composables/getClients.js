@@ -10,7 +10,7 @@ const getClients = () => {
     // Loads the contents of the Firebase Document 'Clients' and fetches the document id for each into an array.
     const loadClients = async () => {
         try {
-            const res = await firebase.firestore().collection('Clients').get()
+            const res = await firebase.firestore().collection('Clients').orderBy("organization", "asc").get()
 
             clients.value = res.docs.map(doc => {
                 return { ...doc.data(), id: doc.id }
