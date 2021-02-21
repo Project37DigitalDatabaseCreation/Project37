@@ -10,15 +10,14 @@ const modifyDocument = (collection, id) => {
 
     const deleteDoc = async () => {
         error.value = null
-        // isPending = true
 
         try {
             const res = await docReference.delete()
-            // isPending = false
+
             return res
         } catch (err) {
             console.log(err.message)
-            // isPending = false
+
             error.value = 'could not delete document'
         }
     }

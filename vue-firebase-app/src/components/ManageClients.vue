@@ -33,7 +33,10 @@
             <button class="btn btn-primary btn-sm">
               Modify
             </button>
-            <button class="btn btn-warning btn-sm">
+            <button
+              @click="handleDelete(client.id)"
+              class="btn btn-warning btn-sm"
+            >
               Delete
             </button>
           </td>
@@ -45,7 +48,7 @@
 </template>
 
 <script>
-  //import modifyDocument from '../composables/modifyDocument'
+  import modifyDocument from '../composables/modifyDocument'
   import getClients from '../composables/getClients'
   import modal from '../components/ClientModal'
   import { ref } from 'vue'
@@ -56,12 +59,16 @@
     setup() {
       const showModal = ref(false)
       const currentPage = ref(1)
-      const { clients, error, loadClients } = getClients()
-      //const { deleteDoc } = modifyDocument()
-      // Loads the clients for the data table
-      loadClients()
+      const { clients, error } = getClients()
 
-      return { clients, error, currentPage, showModal }
+      const handleDelete = async (id) => {
+        if (confirm('Are you sure?')) {
+          modifyDocument('Clients', id).deleteDoc()
+        } else {
+          console.log('Error')
+        }
+      }
+      return { clients, error, currentPage, showModal, handleDelete }
     },
   }
 </script>
