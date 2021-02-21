@@ -14,7 +14,10 @@
     <div class="row justify-content-center">
       <div class="col-md-8">
         <div class="card">
-          <div class="card-header">Modify reviewer</div>
+          <div class="card-header">
+            Modify reviewer
+            <button type="button" class="btn btn-danger"  @click.prevent="showDeleteUserModal">Delete User</button>
+          </div>
           <div class="card-body">
             <div v-if="error" class="alert alert-danger">{{ error }}</div>
             <form action="#" @submit.prevent="submit">
@@ -134,6 +137,13 @@
         </div>
       </div>
     </div>
+    <modal
+      v-if="showModal"
+      v-on:ok-click="deleteUserConfirmed"
+      :passedMessage="this.modalMessage + ' ' + this.form.fname +  ' ' + this.form.lname + '? This action cannot be undone.'"
+      :passedMessageTitle="this.modalMessageTitle"
+      @close="showModal = false"
+    />
   </div>
 </template>
 
@@ -142,8 +152,12 @@
 //import firebase from "firebase";
 import firebase from "firebase";
 import "firebase/firestore";
+import modal from "@/components/DeleteReviewerModal";
 
 export default {
+   components: {
+    modal
+  },
   props: {
     // The Firestore doc id of the reviewer is passed into this prop
     // when the user is clicked on in the ReviewerList.vue
@@ -159,12 +173,16 @@ export default {
         email: "",
         isAdmin: "",
       },
-
+      showModal: false,
       error: null,
+      modalMessage: "Are you sure you want to delete the user ",
+      modalMessageTitle: "Are you sure?"
     };
   },
 
   methods: {
+
+    //Method to modify a existing user 
     async updateClicked() {
       console.log("Update clicked");
       let modifiedUser = {
@@ -189,7 +207,7 @@ export default {
     },
 
     //This method reads the reviewer from the Firebase Firestore DB and
-    // and loads the data into the form
+    // and loads the data into the form.
     async getReviewer() {
       await firebase
         .firestore()
@@ -206,6 +224,25 @@ export default {
           this.form.isAdmin = reviewer.isAdmin;
         });
     },
+
+    //User clicked the delete user button
+     showDeleteUserModal() {
+
+      this.showModal = true
+
+    },
+
+    //User confirmed they want to delete the user
+    async deleteUserConfirmed(){
+
+      console.log(`Deleting user ${this.passedReviewerId}`)
+       await firebase
+        .firestore()
+        .collection("Reviewers")
+        .doc(this.passedReviewerId)
+        .delete();
+      this.returnToPreviousScreen()
+    }
   },
 
   // This method runs on page load.
@@ -218,6 +255,9 @@ export default {
 .radioButton,
 button {
   margin-right: 10px;
+}
+.btn-danger{
+   float: right;
 }
 /* TODO: Add in breakpoints for the width */
 </style>

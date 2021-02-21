@@ -9,47 +9,54 @@
 <template>
     <!-- Card which displays all  -->
     <div id="project-info" class="container">
-      <div style="position:fixed; left:200px; width:90%;">
-        <div class="justify-content-center">
-          <div class="col-md-10" style="padding:0 !important;">
-            <div class="card">
-            <div class="card-header text-center" style="font-size: 1.5em">Current Projects</div>
-            <table>
-              <thead>
-              <tr>
-                <th>Project</th>
-                <th>Client</th>
-                <th>Reviews</th>
-                <th>Status</th>
-                <th>Organization</th>
-              </tr>
-              </thead>
-
-              <tbody>
-              <tr v-for="project in projects" :key="project" v-on:click="clickProject(project)">
+    <div style="position:fixed; left:200px; width:90%;">
+    <div class="justify-content-center">
+    <div class="col-md-10" style="padding:0 !important;">
+    <div class="card">
+    <div class="card-header text-center" style="font-size: 1.5em">Current Projects</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Project</th>
+            <th>Clients</th>
+            <th>Reviews</th>
+            <th>Status</th>
+            <th>Organization</th>
+            </tr>
+            </thead>
+          <tbody>
+              <tr v-for="project in projects" :key="project">
                 <td>{{project.title}}</td>
-                <td>{{project.client}}</td>
+                <td>{{project.clients.join(', ')}}</td>
                 <td>{{project.num_reviews}}</td>
                 <td>{{project.status}}</td>
                 <td>{{project.organization}}</td>
+                <td><button class="btn btn-primary" id="show-modal" @click="openModal(project)">Edit</button></td>
               </tr>
-              </tbody>
-              
-            </table>
-            </div>
-          </div>
-        </div>
-      </div>
+          </tbody>
+      </table>
+      <modal v-if="this.showModal" :selectedProject="this.selectedProject"  :organizations="this.organizations" @close="closeModal"></modal>
+    </div>
+    </div>
+    </div>
+    </div>
     </div>
 </template>
 
 <script>
 
 import firebase from 'firebase'
-
+import modal from "@/components/EditProject";
 export default {
+  name: "CurrentProject",
+  components: {
+    modal
+  },
   data() {
     return {
+      showModal: false,
+      selectedProject: {},
+      organizations: [],
       projects: []
     };
   },
@@ -60,7 +67,7 @@ export default {
         .get()
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
-           this.projects.push({
+            this.projects.push({
               id: doc.id,
               title: doc.data().title,
               status: doc.data().status,
@@ -68,28 +75,52 @@ export default {
               org_ref: doc.data().org_ref,
               organization: doc.data().organization,
               description: doc.data().description,
-              client: doc.data().client
+              clients: doc.data().clients
             });
           });
-          return projects
+        return projects
         })
         .catch((error) => {
           console.log("Error retrieving documents: ", error);
         });
-    },
-    clickProject(project){
+      },
+      readOrganizations() {
+                let organizations = [];
+                firebase.firestore().collection("Organizations")
+                .get()
+                .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        this.organizations.push({
+                            id: doc.id,
+                            title: doc.data().title,
+                        });
+                    });
+                return organizations
+                })
+                .catch((error) => {
+                    console.log("Error retrieving documents: ", error);
+                });
+            },
+    clickProject(project) {
       console.log("clickList fired with " + project.title);
       this.$router.push({
-    name: 'ViewProject',
-    params: {
-        project: project.title
-    }
-});
-
+        name: 'ViewProject',
+        params: {
+          project: project.title
+        }
+      });
+    },
+    openModal(project){
+      this.selectedProject = Object.assign({}, project);
+      this.showModal = true
+    },
+    closeModal(){
+      this.showModal = false
     }
   },
   mounted() {
-    this.readProjects();
+    this.readProjects(),
+    this.readOrganizations();
   },
 };
 </script>

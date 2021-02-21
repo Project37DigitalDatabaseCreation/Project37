@@ -8,18 +8,19 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import Login from '../components/Login'
 import Register from '../components/Register'
 import Review from '../components/Review'
+import ReviewsList from '../components/ReviewsList'
 import Reviews from '../components/Reviews'
 import Dashboard from '../components/Dashboard'
 import ProjectReviews from '../components/ProjectReviews'
 import AddReviewer from '../components/AddReviewer'
 import ModifyReviewer from '../components/ModifyReviewer'
-import Project from '../components/Project'
 import NewProject from '../components/NewProject'
 import CurrentProjects from '../components/CurrentProjects'
 import ViewProject from '../components/ViewProject'
 import ManageReviewers from '../components/ManageReviewers'
 import ManageClients from '../components/ManageClients'
 import ReviewerList from '../components/ReviewerList'
+import Organizations from '../components/Organizations'
 
 
 const routes = [
@@ -44,11 +45,6 @@ const routes = [
     component: ProjectReviews
   },
   {
-    path: '/project',
-    name: 'Project',
-    component: Project
-  },
-  {
     path: '/newProject',
     name: 'NewProject',
     component: NewProject
@@ -68,13 +64,18 @@ const routes = [
   {
     path: '/reviews',
     name: 'Reviews',
-    component: Reviews
+    component: Reviews,
+    children: [
+        { path: '', name: 'ReviewsList', component: ReviewsList },
+        { path: '/review', name: 'Review', component: Review, props: true }
+    ]
   },
-  {
-    path: '/review',
-    name: 'Review',
-    component: Review
-  },
+//   {
+//     path: '/review',
+//     name: 'Review',
+//     component: Review,
+//     props: true
+//   },
   {
     path: '/addreviewer',
     name: 'AddReviewer',
@@ -97,11 +98,15 @@ const routes = [
     props: true
   },
   {
-
     path: '/modifyreviewer',
     name: 'ModifyReviewer',
     component: ModifyReviewer,
     props: true
+  },
+  {
+    path: '/organizations',
+    name: 'Organizations',
+    component: Organizations
   },
 
 ]
