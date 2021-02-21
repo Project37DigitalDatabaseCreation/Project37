@@ -79,7 +79,7 @@
                 </div>
               </div>
 
-              <!-- <div class="form-group row">
+              <div class="form-group row">
                 <label
                   for="password"
                   class="col-md-4 col-form-label text-md-right"
@@ -96,7 +96,7 @@
                     v-model="form.password"
                   />
                 </div>
-              </div> -->
+              </div>
 
               <div class="form-group row">
                 <label
@@ -170,6 +170,9 @@ export default {
   },
   methods: {
     async submit() {
+
+        
+
       let newUser = {
         firstName: this.form.fname,
         lastName: this.form.lname,
