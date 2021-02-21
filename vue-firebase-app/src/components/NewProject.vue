@@ -98,6 +98,7 @@ export default {
         description: this.form.description,
         num_reviews: 0,
         org_ref: this.form.org_ref,
+        organization: this.form.organization,
         status: "In Progress",
         title: this.form.title,
         client: this.form.client

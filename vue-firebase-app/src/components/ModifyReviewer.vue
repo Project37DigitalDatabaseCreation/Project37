@@ -16,10 +16,14 @@
         <div class="card">
           <div class="card-header">Modify reviewer</div>
           <div class="card-body">
-            <div v-if="error" class="alert alert-danger">{{error}}</div>
+            <div v-if="error" class="alert alert-danger">{{ error }}</div>
             <form action="#" @submit.prevent="submit">
               <div class="form-group row">
-                <label for="First Name" class="col-md-4 col-form-label text-md-right">First Name</label>
+                <label
+                  for="First Name"
+                  class="col-md-4 col-form-label text-md-right"
+                  >First Name</label
+                >
 
                 <div class="col-md-6">
                   <input
@@ -36,7 +40,11 @@
               </div>
 
               <div class="form-group row">
-                <label for="Last Name" class="col-md-4 col-form-label text-md-right">Last Name</label>
+                <label
+                  for="Last Name"
+                  class="col-md-4 col-form-label text-md-right"
+                  >Last Name</label
+                >
 
                 <div class="col-md-6">
                   <input
@@ -53,7 +61,9 @@
               </div>
 
               <div class="form-group row">
-                <label for="email" class="col-md-4 col-form-label text-md-right">Email</label>
+                <label for="email" class="col-md-4 col-form-label text-md-right"
+                  >Email</label
+                >
 
                 <div class="col-md-6">
                   <input
@@ -70,24 +80,53 @@
               </div>
 
               <div class="form-group row">
-                <label for="password" class="col-md-4 col-form-label text-md-right">Administror Access</label>
+                <label
+                  for="password"
+                  class="col-md-4 col-form-label text-md-right"
+                  >Administror Access</label
+                >
                 <div class="col-md-6">
-                  <input class="radioButton" type="radio" name="isAdmin" id="yes" value="true" v-model="form.isAdmin">
-                   <label for="Administrator Access">Yes</label>
-                  <br>
-                  <input class="radioButton" type="radio" name="isAdmin"  value="false" v-model="form.isAdmin">
+                  <input
+                    class="radioButton"
+                    type="radio"
+                    name="isAdmin"
+                    id="yes"
+                    value="true"
+                    v-model="form.isAdmin"
+                  />
+                  <label for="Administrator Access">Yes</label>
+                  <br />
+                  <input
+                    class="radioButton"
+                    type="radio"
+                    name="isAdmin"
+                    value="false"
+                    v-model="form.isAdmin"
+                  />
                   <label for="No access">No</label>
-                  <br>
-
+                  <br />
                 </div>
               </div>
-              
 
               <div class="form-group row">
                 <div class="col-md-8 offset-md-4">
-                <button type="button" class="btn btn-primary"  @click.prevent="cancelClicked">Cancel</button>
-                <button type="submit" class="btn btn-primary">Update reviewer</button>
-                <button type="submit" class="btn btn-primary">Reset password</button>
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    @click.prevent="returnToPreviousScreen"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    @click.prevent="updateClicked"
+                    class="btn btn-primary"
+                  >
+                    Update reviewer
+                  </button>
+                  <button type="submit" class="btn btn-primary">
+                    Reset password
+                  </button>
                 </div>
               </div>
             </form>
@@ -101,56 +140,84 @@
 
 <script>
 //import firebase from "firebase";
+import firebase from "firebase";
+import "firebase/firestore";
 
 export default {
+  props: {
+    // The Firestore doc id of the reviewer is passed into this prop
+    // when the user is clicked on in the ReviewerList.vue
+    passedReviewerId: {
+      type: String, //The Firestore doc id of the reviewer
+    },
+  },
   data() {
     return {
       form: {
-        name: "",
+        fname: "",
+        lname: "",
         email: "",
-        isAdmin: false
+        isAdmin: "",
       },
-  
-      error: null
+
+      error: null,
     };
   },
-  methods: {
-    submit() {
 
+  methods: {
+    async updateClicked() {
+      console.log("Update clicked");
       let modifiedUser = {
         firstName: this.form.fname,
         lastName: this.form.lname,
         email: this.form.email,
-        isAdmin: this.form.isAdmin
-      }
+        isAdmin: this.form.isAdmin,
+      };
 
-    console.log(modifiedUser)
-    
-    //this.$emit('reviewer-created', newUser)
-    
-    //TODO create firebase method to modify data
-        this.form.name = "",
-        this.form.email =  "",
-        this.form.isAdmin = false
+      await firebase
+        .firestore()
+        .collection("Reviewers")
+        .doc(this.passedReviewerId)
+        .set(modifiedUser);
+      console.log(modifiedUser);
+      this.returnToPreviousScreen();
     },
 
+    //Returns to the previous screen/view
+    returnToPreviousScreen() {
+      this.$router.push({ path: "/managereviewers" });
+    },
 
-    cancelClicked() {
-
-      console.log("Cancel Clicked")
-      
-      //TODO handle cancel event
-      this.$router.back()
-
-  }
-
+    //This method reads the reviewer from the Firebase Firestore DB and
+    // and loads the data into the form
+    async getReviewer() {
+      await firebase
+        .firestore()
+        .collection("Reviewers")
+        .doc(this.passedReviewerId)
+        .get()
+        .then((snapshot) => {
+          console.log(snapshot.empty);
+          const reviewer = snapshot.data();
+          console.log(reviewer);
+          this.form.fname = reviewer.firstName;
+          this.form.lname = reviewer.lastName;
+          this.form.email = reviewer.email;
+          this.form.isAdmin = reviewer.isAdmin;
+        });
+    },
   },
 
+  // This method runs on page load.
+  mounted() {
+    this.getReviewer();
+  },
 };
 </script>
 <style scoped>
-    .radioButton, button {
-        margin-right: 10px;
-    }
+.radioButton,
+button {
+  margin-right: 10px;
+}
 /* TODO: Add in breakpoints for the width */
 </style>

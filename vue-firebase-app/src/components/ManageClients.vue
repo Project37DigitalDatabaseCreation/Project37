@@ -8,8 +8,13 @@
 
 <template>
   <div class="container">
-    <h4>Clients</h4>
-    <table class="table table-hover table-bordered table-striped">
+    <div>
+      <button @click="showModal = true" class="btn btn-primary btn-sm">
+        Add Clients
+      </button>
+    </div>
+    <modal v-if="showModal" @close="showModal = false" />
+    <table class="table table-hover table-borderless table-striped">
       <thead>
         <tr>
           <th>First Name</th>
@@ -19,64 +24,51 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="(clients, index) in getClients"
-          :key="index"
-          @click="edit(clients.email)"
-        >
-          <td>{{ clients.firstName }}</td>
-          <td>{{ clients.lastName }}</td>
-          <td>{{ clients.email }}</td>
-          <td>{{ clients.organization }}</td>
+        <tr v-for="client in clients" :key="client.id">
+          <td>{{ client.firstName }}</td>
+          <td>{{ client.lastName }}</td>
+          <td>{{ client.email }}</td>
+          <td>{{ client.organization }}</td>
+          <td>
+            <button class="btn btn-primary btn-sm">
+              Modify
+            </button>
+            <button
+              @click="handleDelete(client.id)"
+              class="btn btn-warning btn-sm"
+            >
+              Delete
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
-    <div class="paginationContainer">
-      <p>
-        <button class="btn" @click="prevPage">Previous</button>
-        <button class="btn" @click="nextPage">Next</button>
-      </p>
-    </div>
+    <p class="mt-3">Current Page: {{ currentPage }}</p>
   </div>
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        getClients: {
-          1: {
-            firstName: 'first name',
-            lastName: 'last name',
-            email: 'email@email.com',
-            organization: 'ASU',
-          },
-          2: {
-            firstName: 'Hank',
-            lastName: 'Hill',
-            email: 'msu@msu.edu',
-            organization: 'Michigan State University',
-          },
-          3: {
-            firstName: 'Sally',
-            lastName: 'Woodlocks',
-            email: 'mcc@mcc.com',
-            organization: 'Mesa Community College',
-          },
-        },
-      }
-    },
-    methods: {
-      edit(clients) {
-        alert(`TODO - Attach ${clients} row to database`)
-      },
+  import modifyDocument from '../composables/modifyDocument'
+  import getClients from '../composables/getClients'
+  import modal from '../components/ClientModal'
+  import { ref } from 'vue'
 
-      prevPage() {
-        alert('TODO - previous page')
-      },
-      nextPage() {
-        alert('TODO - next page')
-      },
+  export default {
+    components: { modal },
+
+    setup() {
+      const showModal = ref(false)
+      const currentPage = ref(1)
+      const { clients, error } = getClients()
+
+      const handleDelete = async (id) => {
+        if (confirm('Are you sure?')) {
+          modifyDocument('Clients', id).deleteDoc()
+        } else {
+          console.log('Error')
+        }
+      }
+      return { clients, error, currentPage, showModal, handleDelete }
     },
   }
 </script>

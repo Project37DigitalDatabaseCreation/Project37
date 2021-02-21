@@ -10,15 +10,16 @@ import Register from '../components/Register'
 import Review from '../components/Review'
 import Reviews from '../components/Reviews'
 import Dashboard from '../components/Dashboard'
-import EditReview from '../components/EditReview'
+import ProjectReviews from '../components/ProjectReviews'
 import AddReviewer from '../components/AddReviewer'
 import ModifyReviewer from '../components/ModifyReviewer'
 import Project from '../components/Project'
 import NewProject from '../components/NewProject'
 import CurrentProjects from '../components/CurrentProjects'
+import ViewProject from '../components/ViewProject'
 import ManageReviewers from '../components/ManageReviewers'
-import ClientEntry from '../components/ClientEntry'
 import ManageClients from '../components/ManageClients'
+import ReviewerList from '../components/ReviewerList'
 
 
 const routes = [
@@ -38,9 +39,9 @@ const routes = [
     component: Dashboard
   },
   {
-    path: '/edit-review',
-    name: 'EditReview',
-    component: EditReview
+    path: '/project-reviews',
+    name: 'Project Reviews',
+    component: ProjectReviews
   },
   {
     path: '/project',
@@ -55,7 +56,14 @@ const routes = [
   {
     path: '/currentProjects',
     name: 'CurrentProjects',
-    component: CurrentProjects
+    component: CurrentProjects,
+    props: true
+  },
+  {
+    path: '/viewProject',
+    name: 'ViewProject',
+    component: ViewProject,
+    props: true
   },
   {
     path: '/reviews',
@@ -75,25 +83,27 @@ const routes = [
   {
     path: '/managereviewers',
     name: 'ManageReviewers',
-    component: ManageReviewers
+    component: ManageReviewers, children: [
+
+      { path: '', name: 'ReviewerList', component: ReviewerList },
+      { path: '/modifyreviewer', name: 'ModifyReviewer', component: ModifyReviewer, props: true }
+
+    ]
   },
   {
     path: '/manage-clients',
     name: 'ManageClients',
-    component: ManageClients
+    component: ManageClients,
+    props: true
   },
   {
 
     path: '/modifyreviewer',
     name: 'ModifyReviewer',
-    component: ModifyReviewer
+    component: ModifyReviewer,
+    props: true
   },
-  {
-    path: '/clientEntry',
-    name: 'ClientEntry',
-    component: ClientEntry
 
-  }
 ]
 
 const router = createRouter({

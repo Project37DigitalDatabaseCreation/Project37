@@ -30,8 +30,13 @@
               style="list-style:none; display:flex; justify-content:space-between;"
             >
               <li class="nav-item">
-                <router-link to="/clientEntry" class="nav-link"
-                  >Add Client</router-link
+                <router-link to="/manage-clients" class="nav-link"
+                  >Manage Client</router-link
+                >
+              </li>
+              <li class="nav-item">
+                <router-link to="/project-reviews" class="nav-link"
+                  >Project Reviews</router-link
                 >
               </li>
               <li class="nav-item">

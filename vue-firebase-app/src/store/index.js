@@ -12,14 +12,17 @@ import _ from 'lodash'
 export default createStore({
   state: {
     generalStandards: null,
-    standards: null,
     loading: false,
+    organizations: null,
+    projects: null,
+    reviews: null,
+    reviewers: null,
+    sortedStandards: null,
+    standards: null,
     user: {
       loggedIn: false,
       data: null
     },
-    reviews: null,
-    sortedStandards: null
   },
   getters: {
     generalStandards(state) {
@@ -28,8 +31,17 @@ export default createStore({
     loading(state) {
       return state.loading
     },
+    organizations(state) {
+      return state.organizations
+    },
+    projects(state) {
+      return state.projects
+    },
     reviews(state) {
       return state.reviews
+    },
+    reviewers(state) {
+      return state.reviewers
     },
     sortedStandards(state) {
       return state.sortedStandards
@@ -52,10 +64,21 @@ export default createStore({
     SET_LOGGED_IN(state, value) {
       state.user.loggedIn = value;
     },
+    SET_ORGANIZATIONS(state, value) {
+      console.log("ORGS", value)
+      state.organizations = value
+    },
+    SET_PROJECTS(state, value) {
+      console.log("pROJS", value)
+      state.projects = value
+    },
     SET_REVIEWS(state, value) {
       console.log('VALUE', value)
       state.reviews = value
       console.log('NEW',state.reviews)
+    },
+    SET_REVIEWERS(state, value) {
+      state.reviewers = value
     },
     SET_SORTED_STANDARDS(state, value) {
       state.sortedStandards = value
@@ -81,22 +104,77 @@ export default createStore({
         commit("SET_USER", null);
       }
     },
-    async fetchGeneralStandards({ commit, dispatch }) {
-      //  Start loading
-      commit('SET_LOADING', true)
-
+    async fetchGeneralStandards({ dispatch }) {
       //  Our collection of general Standards
       const generalStandards = firebase.firestore().collection('GeneralStandards');
 
       //  Dispatch the mapstandards request with our constructed payload
       await dispatch('mapStandards', { snapshot: await generalStandards.orderBy('number').get(), type: 'GENERAL_STANDARDS', discover: false })
     },
+    async fetchOrganizations({commit}) {
+      //  Start loading
+      commit('SET_LOADING', true)
+
+      //  Our collection or organizations
+      const orgs = firebase.firestore().collection("Organizations").orderBy("title", "asc")
+      
+      //  Container for our organizations
+      const response = []
+
+      //  Get all the organizations and look at the docs
+      const obj = await orgs.get();
+
+      //  Iterate through each document parsing appropriately
+      for (let i = 0; i < obj.docs.length; i++) {
+        //  Our current document with the data parsed
+        let doc = obj.docs[i].data()
+        //  Attach the id
+        doc.id = obj.docs[i].id
+        //  Push our doc in
+        response.push(doc);
+      }
+      
+      //  We have our documents so set our organizations
+      commit("SET_ORGANIZATIONS", response)
+
+      // Stop loading
+      commit('SET_LOADING', false)
+    },
+    async fetchProjects({commit}, orgRef) {
+      //  Start loading
+      commit('SET_LOADING', true)
+
+      //  Our collection of projects
+      const projects = firebase.firestore().collection("Projects").where("org_ref", "==", orgRef)
+
+      //  Container for our projects
+      const response = []
+
+      //  We have to get all the projects
+      const obj = await projects.get()
+
+      //  Iterate through each document parsing appropriately
+      for (let i = 0; i < obj.docs.length; i++) {
+        //  Our current document with the data parsed
+        let doc = obj.docs[i].data()
+        //  Attach the id
+        doc.id = obj.docs[i].id
+        //  Push our doc in
+        response.push(doc);
+      }
+
+      //  Commit the projects
+      commit('SET_PROJECTS', response)
+
+      //  Stop loading
+      commit('SET_LOADING', false)
+    },
     async fetchReviews({commit}) {
       //  Start loading
       commit('SET_LOADING', true)
 
       //  Our collection of reviews
-      const reviews = firebase.firestore().collection('Reviews')
+      let reviews = firebase.firestore().collection('Reviews')
 
       //  Container for our reviews
       const response = []
@@ -108,6 +186,8 @@ export default createStore({
       for (let i = 0; i < obj.docs.length; i++) {
         //  The document we want
         let rev = obj.docs[i].data()
+        //  Attach document id since it won't be available now that we got the data
+        rev.id = obj.docs[i].id
 
         //  Parse the project for this document
         let proj = await rev.project.get()
@@ -117,7 +197,9 @@ export default createStore({
 
         //  Attach to our reviewer
         rev.project = proj.data()
-        rev.reviewer_ref = reviewer.data()
+        rev.project.id = proj.id
+        rev.reviewer = reviewer.data()
+        rev.reviewer.id = reviewer.id
 
         //  Push the document onto the container
         response.push(rev)
@@ -125,11 +207,37 @@ export default createStore({
 
       //  We have our documents, now we can set our reviews
       commit('SET_REVIEWS', response);
-    },
-    async fetchStandards({ commit, dispatch }) {
-      //  Start loading
-      commit('SET_LOADING', true)
 
+      // Stop loading
+      commit('SET_LOADING', false)
+    },
+    async fetchReviewers({commit}) {
+      //  Our collection of reviewers
+      const reviewers = firebase.firestore().collection("Reviewers").orderBy("lastName", "asc")
+
+      //  Container for our reviewers
+      const response = []
+
+      //  Get all of our reviewers
+      const obj = await reviewers.get()
+
+      //  Iterate through all reviewers to get all documents
+      for (let i = 0; i < obj.docs.length; i++) {
+        //  Our current document with the data parsed
+        let doc = obj.docs[i].data()
+        //  Attach the id
+        doc.id = obj.docs[i].id
+        //  Push our doc in
+        response.push(doc);
+      }
+
+      //  We have our documents, now we can set our reviewers
+      commit('SET_REVIEWERS', response)
+
+      //  Stop loading
+      commit('SET_LOADING', false)
+    },
+    async fetchStandards({ dispatch }) {
       //  Our collection of general Standards
       const standards = firebase.firestore().collection('Standards');
 
@@ -145,6 +253,9 @@ export default createStore({
           //  Our standard from the data
           const standard = doc.data()
 
+          //  Attach the id
+          standard.id = doc.id
+
           //  If the general standard ref doesn't exist, then just push
           return standards.push(standard)
       })
@@ -154,17 +265,20 @@ export default createStore({
         for (let i = 0; i < standards.length; i++) {
             //  Parse the general standard ref
             const snap = await standards[i].general_standard_ref.get()
+            //  Parse the data
             standards[i].generalStandard = snap.data()
+            //  Attach the id
+            standards[i].generalStandard.id = snap.id
         }
       }
 
       //  Commit this array to the corresponding array
       commit(`SET_${obj.type}`, standards)
-
-      //  Stop loading
-      commit('SET_LOADING', false)
     },
     async sortStandards({ commit, getters }) {
+      //  Start loading
+      commit('SET_LOADING', true)
+
       //  Fetch our general standards and regular standards and await their execution
       await this.dispatch('fetchGeneralStandards')
       await this.dispatch('fetchStandards')
@@ -175,7 +289,6 @@ export default createStore({
       //  Create an array of objects with the titles corresponding to the general standard
       for (let i = 0; i < getters.generalStandards.length; i++) {
           sorted[i] = { genStandard: getters.generalStandards[i], standards: [] }
-          // console.log('sorted', sorted[i])
       }
 
       for (let i = 0; i < getters.standards.length; i++) {
@@ -190,6 +303,9 @@ export default createStore({
 
       //  Set our sorted standards (we use lodash to deep clone and remove proxies)
       commit('SET_SORTED_STANDARDS', _.cloneDeep(sorted))
+
+      //  Stop loading
+      commit('SET_LOADING', false)
     }
   }
 })
