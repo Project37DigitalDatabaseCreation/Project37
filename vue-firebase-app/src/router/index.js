@@ -87,20 +87,21 @@ const routes = [
     component: ManageReviewers, children: [
 
       { path: '', name: 'ReviewerList', component: ReviewerList },
-      { path: '/modifyreviewer', name: 'ModifyReviewer', component: ModifyReviewer, props:true }
+      { path: '/modifyreviewer', name: 'ModifyReviewer', component: ModifyReviewer, props: true }
 
     ]
   },
   {
     path: '/manage-clients',
     name: 'ManageClients',
-    component: ManageClients
+    component: ManageClients,
+    props: true
   },
   {
     path: '/modifyreviewer',
     name: 'ModifyReviewer',
     component: ModifyReviewer,
-    props:true 
+    props: true
   },
   {
     path: '/organizations',

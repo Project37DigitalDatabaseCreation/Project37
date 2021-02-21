@@ -1,13 +1,3 @@
-<!--
-* ClientEntry.vue
-*
-* Description: Provides the necessary fields to allow an admin user
-* to create and edit a client for each organization
-*
-* the following fields: First Name, Last Name, Email, and Organization
-*
-* Organization is a drop down: relies on project being created.
--->
 <template>
   <transition name="modal">
     <div class="modal-mask">
@@ -77,16 +67,21 @@
                     </select>
                   </div>
                 </div>
+
+                <div class="form-group row mb-0">
+                  <div class="col-md-8 offset-md-4">
+                    <button class="btn btn-primary" type="submit">
+                      Add Client
+                    </button>
+                  </div>
+                </div>
               </form>
             </slot>
           </div>
 
           <div class="modal-footer">
             <slot name="footer">
-              <button
-                class="btn btn-primary"
-                @click="handleSubmit(), $emit('close')"
-              >
+              <button class="btn btn-primary" @click="handleSubmit()">
                 Add Client
               </button>
               <button class="btn btn-primary" @click="$emit('close')">
@@ -99,117 +94,24 @@
     </div>
   </transition>
 </template>
-
 <script>
-  import firebase from 'firebase'
-  import 'firebase/firestore'
-  import getOrganizations from '../composables/getOrganizations'
-  import { ref } from 'vue'
-
   export default {
-    setup() {
-      const firstName = ref('')
-      const lastName = ref('')
-      const email = ref('')
-      const organization = ref('')
-      const showModal = ref(false)
-
-      const { organizations, error, loadOrganizations } = getOrganizations()
-
-      // loads the current organizations from firebase for the dropdown menu
-      loadOrganizations()
-
-      // creates the client document in firebase on submitting the form
-      const handleSubmit = async () => {
-        const newClient = {
-          firstName: firstName.value,
-          lastName: lastName.value,
-          email: email.value,
-          organization: organization.value,
-        }
-
-        await firebase
-          .firestore()
-          .collection('Clients')
-          .add(newClient)
-      }
-
+    name: 'EditProjectReview',
+    props: {
+      selected_review: Object,
+      reviewers: Array,
+    },
+    data() {
       return {
-        organizations,
-        error,
-        handleSubmit,
-        firstName,
-        lastName,
-        email,
-        organization,
-        showModal,
+        showModal: false,
+        review: this.selected_review,
       }
+    },
+    methods: {
+      handleSubmit() {
+        this.$emit('edit-review', this.review)
+        this.$emit('close')
+      },
     },
   }
 </script>
-<style scoped>
-  .modal-mask {
-    position: fixed;
-    z-index: 9998;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: table;
-    transition: opacity 0.3s ease;
-  }
-
-  .modal-wrapper {
-    display: table-cell;
-    vertical-align: middle;
-  }
-
-  .modal-container {
-    width: 600px;
-    margin: 0px auto;
-    padding: 20px 30px;
-    background-color: #fff;
-    border-radius: 2px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
-    transition: all 0.3s ease;
-    font-family: Helvetica, Arial, sans-serif;
-  }
-
-  .modal-header h3 {
-    margin-top: 0;
-    color: #42b983;
-  }
-
-  .modal-body {
-    margin: 20px 0;
-  }
-
-  .modal-default-button {
-    display: block;
-    margin-top: 1rem;
-  }
-
-  /*
- * The following styles are auto-applied to elements with
- * transition="modal" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the modal transition by editing
- * these styles.
- */
-
-  .modal-enter {
-    opacity: 0;
-  }
-
-  .modal-leave-active {
-    opacity: 0;
-  }
-
-  .modal-enter .modal-container,
-  .modal-leave-active .modal-container {
-    -webkit-transform: scale(1.1);
-    transform: scale(1.1);
-  }
-</style>
