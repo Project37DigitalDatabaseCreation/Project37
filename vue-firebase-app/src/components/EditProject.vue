@@ -31,8 +31,7 @@
                     name="project_name"
                     value
                     required
-                    autofocus
-                    v-model="selectedTitle"
+                    v-model="project.title"
                     />
                 </div>
               </div>
@@ -50,7 +49,7 @@
                     value
                     required
                     autofocus
-                    v-model="selectedDescription"
+                    v-model="project.description"
                     />
                 </div>
               </div>
@@ -64,8 +63,8 @@
                     class="form-control"
                     name="organization_name"
                     required
-                    v-model="selectedOrganization"
-                    v-on:change="readClients"
+                    v-model="project.organization"
+                    v-on:change="clearSelectedClients"
                     >
                     <option v-for="organization in organizations" :value="organization.title" :key="organization.id"> {{organization.title}}</option>
                     </select>
@@ -85,20 +84,20 @@
                         @open="updateSelected"
                         @close="updateSelected"
                         :multiple="true"
-                        :caret="true"
-                        :searchable="true"
-                        :allow-empty="false"
                         no-results-text="No Clients Found"
                         label="firstName"
                         track-by="firstName"
                         value-prop="firstName"
                         :show-labels="true"
-                        :can-deselect="true"
+                        :hide-selected="true"
+                        :clearable="false"
                         :max=-1
                         :min=1
                         mode="tags"
+                        :autofocus="true"
                         placeholder="Choose Client(s)"
                         ></multiselect>
+                        
                 </div>
               </div>
 
@@ -111,10 +110,10 @@
                     class="form-control"
                     name="project_status"
                     required
-                    v-model="selectedStatus"
+                    v-model="project.status"
                     >
                     <option v-for="status in statusOptions" :value="status" :key="status">
-                        {{ status}}
+                      {{ status}}
                     </option>
                     </select>
                 </div>
@@ -141,7 +140,7 @@ import Multiselect from '@vueform/multiselect'
     name: "EditProject",
     props: {
     selectedProject: Object,
-    organizations: Array
+    organizations: Array,
     },
     components: {
       Multiselect,
@@ -149,39 +148,28 @@ import Multiselect from '@vueform/multiselect'
     data() {
         return {
           project: this.selectedProject,
-          selectedTitle: this.selectedProject.title,
-          selectedDescription: this.selectedProject.description,
-          selectedStatus: this.selectedProject.status,
-          selectedOrganization: this.selectedProject.organization,
-          selectedClients: this.selectedProject.clients,
-          selectedOrgRef: this.selectedProject.org_ref,
           statusOptions: ["New", "In Progress", "Complete"],
           clients: [],
-          exists: null,
+          selectedClients: this.selectedProject.clients,
+          exists: null
         };
       },
     methods: {
       saveEdit() {
-        this.getOrganizationId()
-          firebase.firestore().collection("Projects").doc(this.project.id).update({
-              title: this.selectedTitle,
-              description: this.selectedDescription,
-              org_ref: this.selectedOrgRef,
-              organization: this.selectedOrganization,
-              status: this.selectedStatus,
-              clients: this.selectedClients
-          })
-          .then(function() {
-          })
-          .catch(function(error) {
-              console.error("Error writing document: ", error);
-          });
+        this.project.clients = this.selectedClients
+        this.$emit("edit-project", this.project);
         this.$emit('close');
+      },
+      load(){
+        this.selectedClients = this.project.clients;
+      },
+      loadSelected(){
+        this.selectedClients = this.project.clients;
       },
       updateSelected(value) {
         this.checkIfExists(value)
         if (!this.exists) {
-          this.selectedClients.push(value)
+            this.selectedClients.push(value)
         }
         else {
           this.selectedClients.splice(this.selectedClients.indexOf(value), 1);
@@ -195,7 +183,7 @@ import Multiselect from '@vueform/multiselect'
       readClients() {
         this.clients = [];
         firebase.firestore().collection("Clients")
-        .where("organization", "==", this.selectedOrganization).get()
+        .where("organization", "==", this.project.organization).get()
         .then((result) => {
           result.forEach((doc) => {
             this.clients.push({
@@ -212,17 +200,21 @@ import Multiselect from '@vueform/multiselect'
           console.log("Error retrieving documents: ", error);
           });
         },
+        clearSelectedClients(){
+          this.selectedClients = []
+          this.readClients();
+        },
         getOrganizationId() {
                 this.organizationId = [];
                 firebase.firestore().collection("Organizations")
-                .where("title", "==", this.selectedOrganization).get()
+                .where("title", "==", this.project.organization).get()
                 .then((querySnapshot) => {
                     querySnapshot.forEach((doc) => {
                         this.organizationId.push({
                             id: doc.id,
                             title: doc.data().title,
                         });
-                        this.selectedOrgRef = doc.id
+                        this.project.org_ref = doc.id
                     });
                 })
                 .catch((error) => {
