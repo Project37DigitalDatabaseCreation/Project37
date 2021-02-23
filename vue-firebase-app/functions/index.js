@@ -1,5 +1,6 @@
 const functions = require('firebase-functions');
-import admin from 'firebase-admin';
+const admin = require('firebase-admin');
+admin.initializeApp();
 
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
@@ -9,12 +10,24 @@ import admin from 'firebase-admin';
 //   response.send("Hello from Firebase!");
 // });
 
-const createReviewer = functions.https.onCall((reviewer) => {
-    return admin.auth().createUser(reviewer)
+exports.createReviewer = functions.https.onCall((request) => {
+  console.log(request)
+  return admin.auth().createUser({
+    email: request.email,
+    password: request.password
+    })
       .catch((error) => {
         throw new functions.https.HttpsError('internal', error.message)
       });
   });
   
-  export default createUser;
   
+exports.randomNumber = functions.https.onRequest((request, response) => {
+    const number = Math.round(Math.random() * 100)
+    response.send(number.toString())
+}) 
+
+exports.sayHello = functions.https.onCall((data) => {
+  return `project 37`;
+
+});

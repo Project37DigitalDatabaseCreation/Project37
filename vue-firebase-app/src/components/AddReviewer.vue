@@ -171,21 +171,34 @@ export default {
   methods: {
     async submit() {
 
-        
+      this.addUserToDB();
+      // let newUser = {
+      //   firstName: this.form.fname,
+      //   lastName: this.form.lname,
+      //   email: this.form.email,
+      //   isAdmin: this.form.isAdmin,
+      // };
 
-      let newUser = {
-        firstName: this.form.fname,
-        lastName: this.form.lname,
-        email: this.form.email,
-        isAdmin: this.form.isAdmin,
-      };
-
-      await firebase.firestore().collection("Reviewers").add(newUser);
-      console.log(newUser);
-      this.returnToPreviousScreen();
+      // await firebase.firestore().collection("Reviewers").add(newUser);
+      // console.log(newUser);
+      // this.returnToPreviousScreen();
     },
     returnToPreviousScreen() {
       this.$router.push({ path: "/managereviewers" });
+    },
+
+    addUserToDB() {
+      //Get cloud function reference
+      const createReviewer = firebase.functions().httpsCallable('createReviewer');
+      createReviewer({email: 'test123@gmail.com', password: 'topsecret'  }).then( result => {
+          console.log(result.data);
+      })
+
+      // const sayHello = firebase.functions().httpsCallable('sayHello');
+      //   sayHello().then( result => {
+      //     console.log(result.data);
+      // })
+
     },
   },
 };
