@@ -14,10 +14,11 @@
     <div class="col-md-10" style="padding:0 !important;">
     <div class="card">
     <div class="card-header text-center" style="font-size: 1.5em">Current Projects</div>
-      <table>
+      <table ref="table">
         <thead>
           <tr>
             <th>Project</th>
+            <th>Description</th>
             <th>Clients</th>
             <th>Reviews</th>
             <th>Status</th>
@@ -27,6 +28,7 @@
           <tbody>
               <tr v-for="project in projects" :key="project">
                 <td>{{project.title}}</td>
+                <td>{{project.description}}</td>
                 <td>{{project.clients.join(', ')}}</td>
                 <td>{{project.num_reviews}}</td>
                 <td>{{project.status}}</td>
@@ -35,7 +37,13 @@
               </tr>
           </tbody>
       </table>
-      <modal v-if="this.showModal" :selectedProject="this.selectedProject"  :organizations="this.organizations" @close="closeModal"></modal>
+      <modal
+        v-if="this.showModal"
+        v-on:edit-project="updateProject"
+        :selectedProject="this.selectedProject"
+        :organizations="this.organizations"
+        @close="closeModal"
+      ></modal>
     </div>
     </div>
     </div>
@@ -57,16 +65,31 @@ export default {
       showModal: false,
       selectedProject: {},
       organizations: [],
-      projects: []
+      projects: [],
+      error: null
     };
   },
   methods: {
+    updateProject(project){
+      this.projects = []
+      firebase.firestore().collection("Projects").doc(project.id).update({
+        title: project.title,
+        description: project.description,
+        org_ref: project.org_ref,
+        organization: project.organization,
+        status: project.status,
+        clients: project.clients
+      })
+      .then(function() {})
+        .catch(function(error) {
+          console.error("Error writing document: ", error);
+        });
+    },
     readProjects() {
-      let projects = [];
       firebase.firestore().collection("Projects")
         .get()
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
+        .then((result) => {
+          result.forEach((doc) => {
             this.projects.push({
               id: doc.id,
               title: doc.data().title,
@@ -78,38 +101,49 @@ export default {
               clients: doc.data().clients
             });
           });
-        return projects
         })
         .catch((error) => {
           console.log("Error retrieving documents: ", error);
         });
       },
       readOrganizations() {
-                let organizations = [];
-                firebase.firestore().collection("Organizations")
-                .get()
-                .then((querySnapshot) => {
-                    querySnapshot.forEach((doc) => {
-                        this.organizations.push({
-                            id: doc.id,
-                            title: doc.data().title,
-                        });
-                    });
-                return organizations
-                })
-                .catch((error) => {
-                    console.log("Error retrieving documents: ", error);
-                });
-            },
-    clickProject(project) {
-      console.log("clickList fired with " + project.title);
-      this.$router.push({
-        name: 'ViewProject',
-        params: {
-          project: project.title
-        }
-      });
-    },
+        let organizations = [];
+        firebase.firestore().collection("Organizations").get()
+          .then((result) => {
+            result.forEach((doc) => {
+              this.organizations.push({
+                id: doc.id,
+                title: doc.data().title,
+              });
+            });
+            return organizations
+          })
+          .catch((error) => {
+            console.log("Error retrieving documents: ", error);
+          });
+      },
+      refreshProjects(){
+        this.projects = []
+        firebase.firestore().collection("Projects")
+        .get()
+        .then(result => {
+          result.forEach((doc) => {
+            this.projects.push({
+              id: doc.id,
+              title: doc.data().title,
+              status: doc.data().status,
+              num_reviews: doc.data().num_reviews,
+              org_ref: doc.data().org_ref,
+              organization: doc.data().organization,
+              description: doc.data().description,
+              clients: doc.data().clients
+            });
+          });
+        })
+        .catch((error) => {
+          console.log("Error retrieving documents: ", error);
+        });
+      },
     openModal(project){
       this.selectedProject = Object.assign({}, project);
       this.showModal = true
@@ -118,8 +152,19 @@ export default {
       this.showModal = false
     }
   },
+  created() {
+    const ref = firebase.firestore().collection('Projects')
+    ref.onSnapshot(querySnapshot => {
+      var projectsArray = [];
+      querySnapshot.forEach(doc => {
+        let p = doc.data();
+        p.id = doc.id;
+        projectsArray.push(p);
+      });
+        this.projects = projectsArray;
+    });
+  },
   mounted() {
-    this.readProjects(),
     this.readOrganizations();
   },
 };
