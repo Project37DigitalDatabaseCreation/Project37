@@ -1,5 +1,5 @@
 <!--
-* Login.vue
+* Dashboard.vue
 *
 * Description: Provides a landing place
 * once a user has logged in.
