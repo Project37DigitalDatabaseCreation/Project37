@@ -107,7 +107,7 @@ const routes = [
     component: ManageReviewers, children: [
 
       { path: '', name: 'ReviewerList', component: ReviewerList },
-      { path: '/modifyreviewer', name: 'ModifyReviewer', component: ModifyReviewer, props:true }
+      { path: '/modifyreviewer', name: 'ModifyReviewer', component: ModifyReviewer, props: true }
 
     ],
     meta: {
@@ -120,7 +120,8 @@ const routes = [
     component: ManageClients,
     meta: {
       requiresAuth: true
-    }
+    },
+    props: true
   },
   {
     path: '/modifyreviewer',

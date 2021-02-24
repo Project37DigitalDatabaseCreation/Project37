@@ -8,7 +8,12 @@
 
 <template>
   <div class="container">
-    <ClientEntry />
+    <div>
+      <button @click="showModal = true" class="btn btn-primary btn-sm">
+        Add Clients
+      </button>
+    </div>
+    <modal v-if="showModal" @close="showModal = false" />
     <table class="table table-hover table-borderless table-striped">
       <thead>
         <tr>
@@ -24,6 +29,17 @@
           <td>{{ client.lastName }}</td>
           <td>{{ client.email }}</td>
           <td>{{ client.organization }}</td>
+          <td>
+            <button class="btn btn-primary btn-sm">
+              Modify
+            </button>
+            <button
+              @click="handleDelete(client.id)"
+              class="btn btn-warning btn-sm"
+            >
+              Delete
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -32,20 +48,27 @@
 </template>
 
 <script>
+  import modifyDocument from '../composables/modifyDocument'
   import getClients from '../composables/getClients'
-  import ClientEntry from '../components/ClientEntry'
+  import modal from '../components/ClientModal'
   import { ref } from 'vue'
 
   export default {
-    components: { ClientEntry },
+    components: { modal },
+
     setup() {
+      const showModal = ref(false)
       const currentPage = ref(1)
-      const { clients, error, loadClients } = getClients()
+      const { clients, error } = getClients()
 
-      // Loads the clients for the data table
-      loadClients()
-
-      return { clients, error, currentPage }
+      const handleDelete = async (id) => {
+        if (confirm('Are you sure?')) {
+          modifyDocument('Clients', id).deleteDoc()
+        } else {
+          console.log('Error')
+        }
+      }
+      return { clients, error, currentPage, showModal, handleDelete }
     },
   }
 </script>
