@@ -1,5 +1,5 @@
 <!--
-* ClientModal.vue
+* ClientEntry.vue
 *
 * Description: Provides the necessary fields to allow an admin user
 * to create and edit a client for each organization
@@ -15,7 +15,7 @@
         <div class="modal-container">
           <div class="modal-header">
             <slot name="header">
-              Add New Client
+              Edit Client
             </slot>
           </div>
 
@@ -31,7 +31,7 @@
                       type="text"
                       required
                       placeholder="First Name"
-                      v-model="firstName"
+                      v-model="update.value.firstName"
                     />
                   </div>
                 </div>
@@ -44,7 +44,7 @@
                       type="text"
                       required
                       placeholder="Last Name"
-                      v-model="lastName"
+                      v-model="update.value.lastName"
                     />
                   </div>
                 </div>
@@ -53,12 +53,7 @@
                     >Email</label
                   >
                   <div class="col-md-6">
-                    <input
-                      type="email"
-                      required
-                      placeholder="Email"
-                      v-model="email"
-                    />
+                    <input type="email" required v-model="update.value.email" />
                   </div>
                 </div>
                 <div class="form-group row">
@@ -67,7 +62,7 @@
                   >
 
                   <div class="col-md-6">
-                    <select required v-model="organization">
+                    <select required v-model="update.value.organization">
                       <option
                         v-for="organization in organizations"
                         :value="organization.title"
@@ -88,12 +83,13 @@
                 class="btn btn-primary"
                 @click="handleSubmit(), $emit('close')"
               >
-                Add Client
+                Save Client
               </button>
               <button class="btn btn-primary" @click="$emit('close')">
                 Cancel
               </button>
             </slot>
+            <p>{{ update.value }}</p>
           </div>
         </div>
       </div>
@@ -102,50 +98,33 @@
 </template>
 
 <script>
-  import firebase from 'firebase'
-  import 'firebase/firestore'
+  import { onMounted, reactive } from 'vue'
   import getOrganizations from '../composables/getOrganizations'
-  import { onMounted, ref } from 'vue'
+  import modifyDocument from '../composables/modifyDocument'
 
   export default {
-    emits: ['close'],
-    setup() {
-      const firstName = ref('')
-      const lastName = ref('')
-      const email = ref('')
-      const organization = ref('')
-      const showModal = ref(false)
+    props: ['userName', 'age', 'update_client'],
+    setup(props) {
+      const update = reactive({ ...props.update_client })
+
+      const handleSubmit = async () => {
+        const modified_client = {
+          firstName: update.value.firstName,
+          lastName: update.value.lastName,
+          email: update.value.email,
+          organization: update.value.organization,
+        }
+
+        modifyDocument('Clients', update.value.id).updateDoc(modified_client)
+      }
+
       const { organizations, error, loadOrganizations } = getOrganizations()
 
       // loads the current organizations from firebase for the dropdown menu
       // when mounted
       onMounted(loadOrganizations)
 
-      // creates the client document in firebase on submitting the form
-      const handleSubmit = async () => {
-        const newClient = {
-          firstName: firstName.value,
-          lastName: lastName.value,
-          email: email.value,
-          organization: organization.value,
-        }
-
-        await firebase
-          .firestore()
-          .collection('Clients')
-          .add(newClient)
-      }
-
-      return {
-        organizations,
-        error,
-        handleSubmit,
-        firstName,
-        lastName,
-        email,
-        organization,
-        showModal,
-      }
+      return { update, organizations, error, handleSubmit }
     },
   }
 </script>
