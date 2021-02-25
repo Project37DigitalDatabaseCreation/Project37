@@ -145,7 +145,7 @@ export default {
         this.projectNewReviewEnabled = 1;
         
         firebase.firestore().collection("Reviews")
-        .where("project", "==", projectRef).get()
+        .where("project_ref", "==", projectRef).get()
         .then(result => {
             result.forEach(doc => {
               let review = doc.data();
@@ -195,7 +195,7 @@ export default {
         created: review.created,
         course_name: review.course_name,
         reviewer_ref: reviewerRef,
-        project: projectRef,
+        project_ref: projectRef,
         status: review.status
         })
       .then(function() {
