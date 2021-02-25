@@ -123,8 +123,8 @@
 
           <div class="modal-footer">
             <slot name="footer">
-              <button class="btn btn-primary" @click="saveEdit()">Save</button>
-              <button class="btn btn-primary" @click="$emit('close')">Close</button>
+              <button class="btn save" @click="saveEdit()">Save</button>
+              <button class="btn cancel" @click="$emit('close')">Close</button>
             </slot>
           </div>
         </div>
@@ -229,6 +229,7 @@ import Multiselect from '@vueform/multiselect'
 </script>
 
 <style scoped>
+
 .modal-mask {
   position: fixed;
   z-index: 9998;
@@ -293,4 +294,7 @@ import Multiselect from '@vueform/multiselect'
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
 }
+
+.save { background-color: #4CAF50;} /* Green */
+.cancel {background-color: #e7e7e7; color: black;} /* Gray */
 </style>
