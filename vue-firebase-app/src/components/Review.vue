@@ -2,7 +2,7 @@
     <div style="display:flex;" :style="`height:${contentHeight}px`">
         <ReviewNav @go-to-item="goToItem"></ReviewNav>
         <ReviewForm v-if="ready" :currentLink="currentLink" :edit="review ? true : false"
-            :review="selectedReview">
+            :review="selectedReview" :scores="scores">
         </ReviewForm>
     </div>
 </template>
@@ -27,26 +27,46 @@ export default {
             course_name: null,
             status: null,
             created: null,
-            updated: null,
-            body: []
+            updated: null
         })
+        const scores = reactive([])
         const selectedReview = reactive(null)
-        return { currentLink, ready, reviewTemplate, selectedReview }
+        return { currentLink, ready, reviewTemplate, scores, selectedReview }
     },
     async mounted() {
         console.log('REVIEW', this.review)
-        //  If we have a review string, we are editing so fetch our review
+        //  If we have a review string, we are editing so fetch our scores
         if (this.review) {
-            //  Get our review
+            //  Get our scores
             let temp = await firebase
                 .firestore()
-                .collection('Reviews')
-                .doc(this.review)
+                .collection('Scores')
+                .where('review_ref', '==', `/Reviews/${this.review}`)
                 .get()
-            //  If this review exists, use it
+
+            //  We also have to get our review
+            let review = await firebase.firestore().collection('Reviews').doc(this.review)
+            //  If the review is set, set our selected, else just null
+            this.selectedReview = review || null
+
+            //  If these scores exist, use it
             if (temp) {
-                this.selectedReview = temp.data()
-                this.selectedReview.id = this.review
+                //  Get each of our score documents
+                temp.snapshot.docs.forEach(async (doc) => {
+                    //  Our score
+                    const score = doc.data()
+                    //  We also have to get our standard
+                    const std = score.standard_ref.get()
+                    //  Add the standard to our score
+                    score.standard = std.data()
+                    score.standard.id = std.id
+                    //  Append our id
+                    score.id = doc.id
+                    //  Push into our scores array
+                    this.scores.push(score)
+                })
+                console.log('FINISHED', this.scores)
+                //  Signal we are ready to go
                 this.ready = true
             } else {
                 this.createTemplate()
@@ -66,35 +86,37 @@ export default {
     },
     methods: {
         createTemplate() {
-            //  Once our sorted standards gets set, we have to fix our body
-            for (let i = 0; i < this.sortedStandards.length; i++) {
-                //  Current sorted entry
-                let curr = { ...this.sortedStandards[i] }
-                console.log('curr', curr)
-                //  Current genstandard
-                let gen = curr.genStandard
-                //  Give the body at this index the corresponding data
-                this.reviewTemplate.body[i] = {
-                    genStandard: gen.number,
-                    standards: []
-                }
-                //  Populate the standards in that body
-                for (let j = 0; j < curr.standards.length; j++) {
-                    let std = { ...curr.standards[j] }
-                    console.log('STD', std)
-                    //  Push it in
-                    this.reviewTemplate.body[i].standards[j] = {
-                        standard: std.number,
-                        met: false
+            if (this.sortedStandards) {
+                //  Iterate through each general standard
+                for (let i = 0; i < this.sortedStandards.length; i++) {
+                    //  Then iterate through each regular standard
+                    for (let j = 0; j < this.sortedStandards[i].standards.length; j++) {
+                        //  Placeholder for current standard
+                        let curr = this.sortedStandards[i].standards[j]
+                        //  Create our score item
+                        let score = {
+                            standard: _.cloneDeep(curr),
+                            met: false,
+                            review_ref: null
+                        }
+                        //  Push onto our array
+                        this.scores.push(score)
                     }
                 }
+                console.log('FINISHED', this.scores)
+
+                //  Finished
+                this.selectedReview = _.cloneDeep(this.reviewTemplate)
+                this.ready = true
             }
-            //  Finished
-            this.ready = true
-            this.selectedReview = _.cloneDeep(this.reviewTemplate)
         },
         goToItem(item) {
             this.currentLink = item.genStandard.number
+        }
+    },
+    watch: {
+        sortedStandards(val) {
+            if (val && !this.scores.length && !this.review) this.createTemplate()
         }
     }
 }
