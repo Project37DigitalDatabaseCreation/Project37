@@ -13,8 +13,6 @@
       </button>
       <client-modify-modal
         v-if="showEditModal"
-        :user-name="Uname"
-        :age="age"
         :update_client="update_client"
         @close="showEditModal = false"
       ></client-modify-modal>
@@ -55,7 +53,11 @@
   </div>
 
   <!-- modal definition -->
-  <client-modal v-if="showModal" @close="showModal = false" />
+  <client-modal
+    v-if="showModal"
+    :new_client="new_client"
+    @close="showModal = false"
+  />
 </template>
 
 <script>
@@ -73,14 +75,18 @@
       const showEditModal = ref(false)
       const currentPage = ref(1)
       const { clients, error } = getClients()
-      const Uname = ref('Doozle')
-      const age = ref({ high: 36, low: 11 })
+      const new_client = reactive({
+        firstName: '',
+        lastName: '',
+        email: '',
+        organization: '',
+      })
       const update_client = reactive({})
 
       const modifyClient = (client) => {
-        let update = {}
-        update = Object.assign({}, client)
-        update_client.value = update
+        let updates = {}
+        updates = Object.assign({}, client)
+        update_client.value = updates
       }
 
       const handleDelete = async (id) => {
@@ -101,9 +107,8 @@
         modifyClient,
         ClientModal,
         ClientModifyModal,
-        Uname,
-        age,
         update_client,
+        new_client,
       }
     },
   }

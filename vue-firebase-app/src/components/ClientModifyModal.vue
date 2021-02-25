@@ -1,8 +1,8 @@
 <!--
-* ClientEntry.vue
+* ClientModifyModal.vue
 *
-* Description: Provides the necessary fields to allow an admin user
-* to create and edit a client for each organization
+* Description: Provides a modal window to allow an admin user
+* to edit a client
 *
 * the following fields: First Name, Last Name, Email, and Organization
 *
@@ -89,7 +89,6 @@
                 Cancel
               </button>
             </slot>
-            <p>{{ update.value }}</p>
           </div>
         </div>
       </div>
@@ -103,7 +102,8 @@
   import modifyDocument from '../composables/modifyDocument'
 
   export default {
-    props: ['userName', 'age', 'update_client'],
+    emits: ['close'],
+    props: ['update_client'],
     setup(props) {
       const update = reactive({ ...props.update_client })
 
@@ -120,8 +120,8 @@
 
       const { organizations, error, loadOrganizations } = getOrganizations()
 
-      // loads the current organizations from firebase for the dropdown menu
-      // when mounted
+      // loads the current organizations from firebase for the dropdown
+      // menu when mounted
       onMounted(loadOrganizations)
 
       return { update, organizations, error, handleSubmit }

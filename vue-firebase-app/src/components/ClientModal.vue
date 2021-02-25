@@ -1,13 +1,3 @@
-<!--
-* ClientModal.vue
-*
-* Description: Provides the necessary fields to allow an admin user
-* to create and edit a client for each organization
-*
-* the following fields: First Name, Last Name, Email, and Organization
-*
-* Organization is a drop down: relies on project being created.
--->
 <template>
   <transition name="modal">
     <div class="modal-mask">
@@ -15,7 +5,7 @@
         <div class="modal-container">
           <div class="modal-header">
             <slot name="header">
-              Add New Client
+              Add Client
             </slot>
           </div>
 
@@ -70,8 +60,7 @@
                     <select required v-model="organization">
                       <option
                         v-for="organization in organizations"
-                        :value="organization.title"
-                        :key="organization.title"
+                        v-bind:key="organization.title"
                       >
                         {{ organization.title }}
                       </option>
@@ -108,20 +97,19 @@
   import { onMounted, ref } from 'vue'
 
   export default {
-    emits: ['close'],
     setup() {
       const firstName = ref('')
       const lastName = ref('')
       const email = ref('')
       const organization = ref('')
-      const showModal = ref(false)
+
       const { organizations, error, loadOrganizations } = getOrganizations()
 
-      // loads the current organizations from firebase for the dropdown menu
-      // when mounted
+      // loads the current organizations from firebase for the dropdown
+      // menu when mounted
       onMounted(loadOrganizations)
 
-      // creates the client document in firebase on submitting the form
+      // creates the client document in firebase
       const handleSubmit = async () => {
         const newClient = {
           firstName: firstName.value,
@@ -144,7 +132,6 @@
         lastName,
         email,
         organization,
-        showModal,
       }
     },
   }
