@@ -10,8 +10,13 @@ admin.initializeApp();
 //   response.send("Hello from Firebase!");
 // });
 
-exports.createReviewer = functions.https.onCall((request) => {
-  console.log(request)
+exports.createReviewer = functions.https.onCall((request, context) => {
+  console.log(request.email)
+
+  //Only allow authenticated users to call this function. 
+  if (!context.auth) {
+    return { message: 'Authentication Required!', code: 401 };
+  }
   return admin.auth().createUser({
     email: request.email,
     password: request.password
@@ -22,12 +27,3 @@ exports.createReviewer = functions.https.onCall((request) => {
   });
   
   
-exports.randomNumber = functions.https.onRequest((request, response) => {
-    const number = Math.round(Math.random() * 100)
-    response.send(number.toString())
-}) 
-
-exports.sayHello = functions.https.onCall((data) => {
-  return `project 37`;
-
-});
