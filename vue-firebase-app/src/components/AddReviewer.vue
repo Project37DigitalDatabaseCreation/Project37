@@ -169,35 +169,44 @@ export default {
     };
   },
   methods: {
-
     //Add user to the DB
     async submit() {
 
-      const uid = this.addUserToDB();
-      let newUser = {
-        firstName: this.form.fname,
-        lastName: this.form.lname,
-        email: this.form.email,
-        isAdmin: this.form.isAdmin,
-      };
+      //Get reference to cloud function
+      const createReviewer = firebase
+        .functions()
+        .httpsCallable("createReviewer");
 
-      await firebase.firestore().collection("Reviewers").doc(uid).set(newUser);
-      this.returnToPreviousScreen();
+      //Call cloud function to create a user in the authentication DB
+      await createReviewer({
+        email: this.form.email,
+        password: this.form.password,
+      })
+        .then((result) => {
+          console.log(result);
+          let newUser = {
+            firstName: this.form.fname,
+            lastName: this.form.lname,
+            email: this.form.email,
+            isAdmin: this.form.isAdmin,
+          };
+
+          //Call function to add the user to the reviewers collection
+          //Auth DB and Reviewer DB 
+          firebase.firestore().collection("Reviewers").doc(result.uid).set(newUser);
+          console.log(result.uid)
+          this.returnToPreviousScreen();
+         
+        })
+        .catch((err) => alert(err));
+
     },
     returnToPreviousScreen() {
       this.$router.push({ path: "/managereviewers" });
     },
 
-    addUserToDB() {
+    async addUserToDB() {
       //Get cloud function reference
-      const createReviewer = firebase.functions().httpsCallable('createReviewer');
-
-      //Call cloud function to create a user
-      createReviewer({email: this.form.email, password: this.form.password }).then( result => {
-          return result.data.uid
-      })
-
-
     },
   },
 };
