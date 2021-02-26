@@ -2,13 +2,13 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp();
 
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+
+
+
+// Function Author: Ben McElyea 
+// Date: February 2021
+// createReviewer - A Cloud function to add users to the Firebase authentication DB 
+// To update this function you must run the command firebase deploy --only functions 
 
 exports.createReviewer = functions.https.onCall((request, context) => {
   console.log(request.email)
