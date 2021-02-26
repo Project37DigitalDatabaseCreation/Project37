@@ -13,7 +13,6 @@ const getClients = () => {
         .orderBy("organization", "asc")
 
     const unsub = loadClients.onSnapshot(snap => {
-        console.log(snap)
         let results = []
         snap.docs.forEach(doc => {
             results.push({ ...doc.data(), id: doc.id })
