@@ -1,13 +1,37 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp();
+const db = admin.firestore();
 
-exports.reviewsCounter = functions.database.ref('Reviews/{reviewId}')
-    .onWrite(async (change, context) => {
+exports.reviewStatusCounter = functions.firestore.document('Reviews/{reviewId}')
+    .onWrite((change, context) => {
+        try {            
+            if(change.after.exists && change.before.exists) {
+                console.log("Hello world!");
+                // the review has been updated, check if status changed
+                let reviewBefore = change.before.data();
+                let reviewAfter = change.after.data();
 
-        try {
+                reviewBefore.id = change.before.id;
+                reviewAfter.id = change.after.id;
 
-            if (change.after.exists()) {
+                if(reviewBefore.status !== reviewAfter.status) {
+                    console.log("Review " + reviewBefore.id + " had a status of " + 
+                    reviewBefore.status + " but then was changed to " + reviewAfter.status + "!");
+
+                    return db.collection("Stats").doc("ReviewsByStatus").set({
+                            new: 1,
+                            not_new: 0
+                        }
+                    )
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+
+            /*if (change.after.exists()) {
                 if (change.before.exists()) {
 
                     const valObjBefore = change.before.val();
@@ -44,11 +68,10 @@ exports.reviewsCounter = functions.database.ref('Reviews/{reviewId}')
                     return 0;
                 });
                 return null;
-            }
+            }*/
 
         } catch (error) {
             console.log(error);
             return null;
         }
-
     });
