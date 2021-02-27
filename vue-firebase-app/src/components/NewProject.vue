@@ -120,9 +120,9 @@
           firebase.firestore().collection("Projects").add({
             description: this.form.description,
             num_reviews: 0,
-            org_ref: this.form.org_ref,
+            org_ref: firebase.firestore().doc("/Organizations/" + this.form.org_ref),
             organization: this.form.organization,
-            status: "In Progress",
+            status: "New",
             title: this.form.title,
             clients: this.selectedClients
           })
