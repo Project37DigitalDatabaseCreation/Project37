@@ -73,11 +73,10 @@ export default {
   },
   methods: {
     updateProject(project){
-      this.projects = []
       firebase.firestore().collection("Projects").doc(project.id).update({
         title: project.title,
         description: project.description,
-        org_ref: project.org_ref,
+        org_ref: firebase.firestore().doc("/Organizations/" + project.org_ref),
         organization: project.organization,
         status: project.status,
         clients: project.clients
@@ -88,7 +87,7 @@ export default {
         });
     },
     deleteProject(project){
-      if(confirm("Delete Project?")) {
+      if(confirm("Delete " + project.title + "?")) {
         firebase.firestore().collection("Projects").doc(project.id).delete()
         .then(() => {})
           .catch(function(error) {
@@ -121,7 +120,8 @@ export default {
     }
   },
   created() {
-    const ref = firebase.firestore().collection('Projects')
+    this.projects = []
+    const ref = firebase.firestore().collection('Projects').orderBy("title", "asc")
     ref.onSnapshot(querySnapshot => {
       var projectsArray = [];
       querySnapshot.forEach(doc => {
@@ -131,10 +131,9 @@ export default {
       });
         this.projects = projectsArray;
     });
-  },
-  mounted() {
     this.readOrganizations();
-  }
+
+  },
 };
 </script>
 
