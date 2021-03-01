@@ -5,9 +5,15 @@ const db = admin.firestore();
 
 exports.reviewStatusCounter = functions.firestore.document('Reviews/{reviewId}')
     .onWrite((change, context) => {
-        try {            
+        console.log("Before: " + change.before.exists);
+        console.log("After: " + change.after.exists);
+        try {       
+            const col = db.collection("Stats");
+            const doc = db.doc('Stats/ReviewsByStatus');
+            const arrayUnion = admin.firestore.FieldValue.arrayUnion;
+            const arrayRemove = admin.firestore.FieldValue.arrayRemove;
+                         
             if(change.after.exists && change.before.exists) {
-                console.log("Hello world!");
                 // the review has been updated, check if status changed
                 let reviewBefore = change.before.data();
                 let reviewAfter = change.after.data();
@@ -15,61 +21,56 @@ exports.reviewStatusCounter = functions.firestore.document('Reviews/{reviewId}')
                 reviewBefore.id = change.before.id;
                 reviewAfter.id = change.after.id;
 
-                if(reviewBefore.status !== reviewAfter.status) {
-                    console.log("Review " + reviewBefore.id + " had a status of " + 
-                    reviewBefore.status + " but then was changed to " + reviewAfter.status + "!");
+                if(reviewBefore.status !== reviewAfter.status) {                
+                    if(reviewBefore.status == "New" && reviewAfter.status == "In-Progress") {
+                        col.where("NewReviews", "array-contains", reviewBefore.id).get()
+                        .then(result => {
+                            if (result.size > 0) {
+                                return doc.update({
+                                    NewReviews: arrayRemove(reviewBefore.id),
+                                    InProgressReviews: arrayUnion(reviewBefore.id)
+                                });
+                            } else {
+                                return null;
+                            }
+                        });
+                    }
 
-                    return db.collection("Stats").doc("ReviewsByStatus").set({
-                            new: 1,
-                            not_new: 0
-                        }
-                    )
+                    if(reviewBefore.status == "In-Progress" && reviewAfter.status == "Complete") {
+                        col.where("InProgressReviews", "array-contains", reviewBefore.id).get()
+                        .then(result => {
+                            if(result.size > 0) {
+                                return doc.update({
+                                    InProgressReviews: arrayRemove(reviewBefore.id),
+                                    CompleteReviews: arrayUnion(reviewBefore.id)
+                                });
+                            } else {
+                                return null;
+                            }
+                        });
+                    }
                 } else {
                     return null;
                 }
+            } else if(change.after.exists && !change.before.exists) {
+                let reviewAfter = change.after.data();
+                let docId = change.after.id;
+
+                if(reviewAfter.status == "New") {
+                    col.where("NewReviews", "array-contains", docId).get()
+                    .then(result => {
+                        if(result.size == 0) {
+                            return doc.set({
+                                NewReviews: arrayUnion(docId)
+                            });
+                        } else {
+                            return null;
+                        }
+                    });
+                }                
             } else {
                 return null;
             }
-
-            /*if (change.after.exists()) {
-                if (change.before.exists()) {
-
-                    const valObjBefore = change.before.val();
-                    const valObjAfter = change.after.val();
-
-                    const nbrReviewsBefore = Object.keys(valObjBefore).length;
-                    const nbrReviewsAfter = Object.keys(valObjAfter).length;
-
-                    if (nbrReviewsBefore !== nbrReviewsAfter) {
-
-                        //We update the reviewCounter node
-                        const reviewCounterRef = change.after.ref.parent.child('reviewsCounter');
-                        await reviewCounterRef.transaction(() => {
-                            return nbrReviewsAfter;
-                        });
-                        return null;
-
-                    } else {
-                        //No need to update the reviewsCounter node
-                        return null;
-                    }
-
-                } else {                    
-                    const reviewCounterRef = change.before.ref.parent.child('reviewsCounter');
-                    await reviewCounterRef.transaction(() => {
-                        return 1;
-                    });
-                    return null;
-                }
-
-            } else {
-                const userJobsCounterRef = change.before.ref.parent.child('reviewsCounter');
-                await userJobsCounterRef.transaction(() => {
-                    return 0;
-                });
-                return null;
-            }*/
-
         } catch (error) {
             console.log(error);
             return null;
