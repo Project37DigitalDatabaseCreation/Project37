@@ -34,6 +34,7 @@
                 <td>{{project.status}}</td>
                 <td>{{project.organization}}</td>
                 <td><button class="btn btn-primary" id="show-modal" @click="openModal(project)">Edit</button></td>
+                <td><button class="btn delete" id="delete-project" @click="deleteProject(project)">Delete</button></td>
               </tr>
           </tbody>
       </table>
@@ -66,16 +67,16 @@ export default {
       selectedProject: {},
       organizations: [],
       projects: [],
+      mounted: null,
       error: null
     };
   },
   methods: {
     updateProject(project){
-      this.projects = []
       firebase.firestore().collection("Projects").doc(project.id).update({
         title: project.title,
         description: project.description,
-        org_ref: project.org_ref,
+        org_ref: firebase.firestore().doc("/Organizations/" + project.org_ref),
         organization: project.organization,
         status: project.status,
         clients: project.clients
@@ -85,65 +86,31 @@ export default {
           console.error("Error writing document: ", error);
         });
     },
-    readProjects() {
-      firebase.firestore().collection("Projects")
-        .get()
+    deleteProject(project){
+      if(confirm("Delete " + project.title + "?")) {
+        firebase.firestore().collection("Projects").doc(project.id).delete()
+        .then(() => {})
+          .catch(function(error) {
+            console.error("Error deleting document: ", error);
+          });
+      }
+    },
+    readOrganizations() {
+      let organizations = [];
+      firebase.firestore().collection("Organizations").get()
         .then((result) => {
           result.forEach((doc) => {
-            this.projects.push({
+            this.organizations.push({
               id: doc.id,
               title: doc.data().title,
-              status: doc.data().status,
-              num_reviews: doc.data().num_reviews,
-              org_ref: doc.data().org_ref,
-              organization: doc.data().organization,
-              description: doc.data().description,
-              clients: doc.data().clients
             });
           });
-        })
-        .catch((error) => {
-          console.log("Error retrieving documents: ", error);
-        });
-      },
-      readOrganizations() {
-        let organizations = [];
-        firebase.firestore().collection("Organizations").get()
-          .then((result) => {
-            result.forEach((doc) => {
-              this.organizations.push({
-                id: doc.id,
-                title: doc.data().title,
-              });
-            });
             return organizations
-          })
-          .catch((error) => {
-            console.log("Error retrieving documents: ", error);
-          });
-      },
-      refreshProjects(){
-        this.projects = []
-        firebase.firestore().collection("Projects")
-        .get()
-        .then(result => {
-          result.forEach((doc) => {
-            this.projects.push({
-              id: doc.id,
-              title: doc.data().title,
-              status: doc.data().status,
-              num_reviews: doc.data().num_reviews,
-              org_ref: doc.data().org_ref,
-              organization: doc.data().organization,
-              description: doc.data().description,
-              clients: doc.data().clients
-            });
-          });
         })
         .catch((error) => {
           console.log("Error retrieving documents: ", error);
         });
-      },
+    },
     openModal(project){
       this.selectedProject = Object.assign({}, project);
       this.showModal = true
@@ -153,7 +120,8 @@ export default {
     }
   },
   created() {
-    const ref = firebase.firestore().collection('Projects')
+    this.projects = []
+    const ref = firebase.firestore().collection('Projects').orderBy("title", "asc")
     ref.onSnapshot(querySnapshot => {
       var projectsArray = [];
       querySnapshot.forEach(doc => {
@@ -163,9 +131,8 @@ export default {
       });
         this.projects = projectsArray;
     });
-  },
-  mounted() {
     this.readOrganizations();
+
   },
 };
 </script>
@@ -174,4 +141,5 @@ export default {
 tr:hover {
   background-color: #ddd;
 }
+.delete {background-color: #f44336;} /* Red */
 </style>
