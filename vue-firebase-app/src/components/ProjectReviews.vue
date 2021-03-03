@@ -189,7 +189,23 @@ export default {
       if (!review.created) {
         review.created = firebase.firestore.FieldValue.serverTimestamp();
         review.status = "New";
-      }        
+
+        firebase.firestore().collection("Projects").doc(this.selected_proj).update({
+        num_reviews: firebase.firestore.FieldValue.increment(1)
+        })
+        .then(function() {})
+        .catch(function(error) {
+          console.error("Error writing document: ", error);
+        });
+      }
+      
+      firebase.firestore().collection("Projects").doc(this.selected_proj).update({
+      reviewer_ref: firebase.firestore().doc("Reviewers/" + review.reviewer.id)
+      })
+      .then(function() {})
+      .catch(function(error) {
+        console.error("Error writing document: ", error);
+      });
 
       firebase.firestore().collection("Reviews").doc(review.id).set({
         created: review.created,
@@ -222,6 +238,15 @@ export default {
               Vue.populateReviews();
             }).catch((error) => {
               console.error("Error removing document: ", error);
+            });
+
+            firebase.firestore().collection("Projects").doc(this.selected_proj).update({
+            num_reviews: firebase.firestore.FieldValue.increment(-1),
+            reviewer_ref: null
+            })
+            .then(function() {})
+            .catch(function(error) {
+              console.error("Error writing document: ", error);
             });
           }
         }).catch(err => { console.error(err) });        
