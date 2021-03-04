@@ -15,7 +15,7 @@
                 <tbody>
                     <tr v-for="review in reviews" :key="review.id">
                         <td>{{ review.course_name }}</td>
-                        <td>{{ review.reviewer.lastName + ", " + review.reviewer.firstName}}
+                        <td>{{ reviewerName(review) }}
                         </td>
                         <td>{{ review.status }}</td>
                         <td>
@@ -70,6 +70,10 @@ export default {
             console.log('rev', rev.id)
             //  Push the router
             this.$router.push({ name: 'Review', params: { review: rev.id } })
+        },
+        reviewerName(review) {
+            if (!review.reviewer) return ''
+            return review.reviewer.lastName + ', ' + review.reviewer.firstName
         }
     }
 }
