@@ -260,9 +260,13 @@ export default {
             //  If we have a review, we can populate it with those fields
             payload.course_name = this.currReview.course_name
             payload.created = this.currReview.created || timestamp
+
+            //  Get our reviewer document to be the reference
             payload.reviewer_ref = firebase
                 .firestore()
                 .doc(`/Reviewers/${this.currReview.reviewer_ref}`)
+
+            //  Get our projet document to be the reference
             payload.project_ref = firebase
                 .firestore()
                 .doc(`/Projects/${this.currReview.project_ref}`)
@@ -293,7 +297,9 @@ export default {
                 else {
                     //  Create our score to store
                     let score = {
-                        standard_ref: `/Standards/${this.currScores[i].standard.id}`,
+                        standard_ref: firebase
+                            .firestore()
+                            .doc(`/Standards/${this.currScores[i].standard.id}`),
                         met: this.currScores[i].met,
                         review_ref: firebase.firestore().doc(`/Reviews/${res.id}`)
                     }
@@ -308,24 +314,23 @@ export default {
         },
         //  This gets triggered to save it as INCOMPLETE
         async saveProgress() {
-            //  Create a clone of our sorted standards so we can operate on it
-            const payload = _.cloneDeep(this.currReview)
-
+            //  Create a timestamp
             const timestamp = firebase.firestore.Timestamp.fromDate(new Date()).toDate()
+            //  Our payload is an object that is only 1D
+            const payload = { updated: timestamp, status: 'INCOMPLETE' }
+            //  If we have a review, we can populate it with those fields
+            payload.course_name = this.currReview.course_name
+            payload.created = this.currReview.created || timestamp
 
-            console.log('timestamp', timestamp)
+            //  Get our reviewer document to be the reference
+            payload.reviewer_ref = firebase
+                .firestore()
+                .doc(`/Reviewers/${this.currReview.reviewer_ref}`)
 
-            //  IF we are editing then update updated at, otherwise update both updated and created
-            if (this.edit) payload.updated_at = timestamp
-            else {
-                payload.updated = timestamp
-                payload.created = timestamp
-            }
-
-            //  ITs in progress so set status to complete
-            payload.status = 'INCOMPLETE'
-
-            console.log('yee', payload)
+            //  Get our projet document to be the reference
+            payload.project_ref = firebase
+                .firestore()
+                .doc(`/Projects/${this.currReview.project_ref}`)
 
             //  Container for our response
             let res = null
@@ -339,10 +344,32 @@ export default {
                     .update(payload)
             else res = await firebase.firestore().collection('Reviews').add(payload)
 
+            //  Create all of our scores
+            for (let i = 0; i < this.currScores.length; i++) {
+                //  If we are editing, make sure we update
+                if (this.edit) {
+                    firebase
+                        .firestore()
+                        .collection('Scores')
+                        .doc(this.currScores[i].id)
+                        .update(this.currScores[i])
+                }
+                //  Else, we can just add it in as a new Score
+                else {
+                    //  Create our score to store
+                    let score = {
+                        standard_ref: firebase
+                            .firestore()
+                            .doc(`/Standards/${this.currScores[i].standard.id}`),
+                        met: this.currScores[i].met,
+                        review_ref: firebase.firestore().doc(`/Reviews/${res.id}`)
+                    }
+                    firebase.firestore().collection('Scores').add(score)
+                }
+            }
+
             //  Get our reviews again
             this.$store.dispatch('fetchReviews')
-
-            console.log('Added document response ', res)
         },
         standardMet(genStandard) {
             //  Find all scores that match the genstandard id
