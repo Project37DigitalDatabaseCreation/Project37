@@ -62,10 +62,10 @@
 
 <script>
   import modifyDocument from '../composables/modifyDocument'
-  import getClients from '../composables/getClients'
   import ClientModal from '../components/ClientModal'
   import ClientModifyModal from '../components/ClientModifyModal'
   import { ref, reactive } from 'vue'
+  import getCollection from '../composables/getCollection'
 
   export default {
     components: { ClientModal, ClientModifyModal },
@@ -74,7 +74,7 @@
       const showModal = ref(false)
       const showEditModal = ref(false)
       const currentPage = ref(1)
-      const { clients, error } = getClients()
+      const { documents: clients, error } = getCollection('Clients')
       const new_client = reactive({
         firstName: '',
         lastName: '',
