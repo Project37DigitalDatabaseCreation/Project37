@@ -30,9 +30,13 @@ firebase.initializeApp({
     appId: "1:46311260060:web:1e381fb482afc30c955259"
 })
 
+if (location.hostname === "localhost") {
+  firebase.firestore().useEmulator("localhost", 8080);
+}
+
 firebase.auth().onAuthStateChanged(user => {
     store.dispatch("fetchUser", user);
-  });
+});
 
 
 const app = createApp(App)
