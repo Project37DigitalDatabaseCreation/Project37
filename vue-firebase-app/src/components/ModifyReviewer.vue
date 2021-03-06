@@ -16,7 +16,13 @@
         <div class="card">
           <div class="card-header">
             Modify reviewer
-            <button type="button" class="btn btn-danger"  @click.prevent="showDeleteUserModal">Delete User</button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              @click.prevent="showDeleteUserModal"
+            >
+              Delete User
+            </button>
           </div>
           <div class="card-body">
             <div v-if="error" class="alert alert-danger">{{ error }}</div>
@@ -140,7 +146,14 @@
     <modal
       v-if="showModal"
       v-on:ok-click="deleteUserConfirmed"
-      :passedMessage="this.modalMessage + ' ' + this.form.fname +  ' ' + this.form.lname + '? This action cannot be undone.'"
+      :passedMessage="
+        this.modalMessage +
+        ' ' +
+        this.form.fname +
+        ' ' +
+        this.form.lname +
+        '? This action cannot be undone.'
+      "
       :passedMessageTitle="this.modalMessageTitle"
       @close="showModal = false"
     />
@@ -155,8 +168,8 @@ import "firebase/firestore";
 import modal from "@/components/DeleteReviewerModal";
 
 export default {
-   components: {
-    modal
+  components: {
+    modal,
   },
   props: {
     // The Firestore doc id of the reviewer is passed into this prop
@@ -176,13 +189,12 @@ export default {
       showModal: false,
       error: null,
       modalMessage: "Are you sure you want to delete the user ",
-      modalMessageTitle: "Are you sure?"
+      modalMessageTitle: "Are you sure?",
     };
   },
 
   methods: {
-
-    //Method to modify a existing user 
+    //Method to modify a existing user
     async updateClicked() {
       console.log("Update clicked");
       let modifiedUser = {
@@ -226,23 +238,39 @@ export default {
     },
 
     //User clicked the delete user button
-     showDeleteUserModal() {
-
-      this.showModal = true
-
+    showDeleteUserModal() {
+      this.showModal = true;
     },
 
-    //User confirmed they want to delete the user
-    async deleteUserConfirmed(){
+    async deleteUserConfirmed() {
+      console.log(
+        "Function called to delete the user " + this.passedReviewerId
+      );
+      //Get reference to cloud function to delete user
+      const deleteReviewer_ref = firebase
+        .functions()
+        .httpsCallable("deleteReviewer");
 
-      console.log(`Deleting user ${this.passedReviewerId}`)
-       await firebase
-        .firestore()
-        .collection("Reviewers")
-        .doc(this.passedReviewerId)
-        .delete();
-      this.returnToPreviousScreen()
-    }
+      //Call cloud function to delete the reviewer from the Firebase auth db
+      await deleteReviewer_ref({
+        uid: this.passedReviewerId,
+        email: this.form.email,
+      })
+        .then((result) => {
+          console.log(result);
+
+          //Delete reviewer from reviewers collection
+          firebase
+            .firestore()
+            .collection("Reviewers")
+            .doc(this.passedReviewerId)
+            .delete();
+
+          //Return to review list screen
+          this.returnToPreviousScreen();
+        })
+        .catch((err) => alert(err));
+    }, //User confirmed they want to delete the user
   },
 
   // This method runs on page load.
@@ -256,8 +284,8 @@ export default {
 button {
   margin-right: 10px;
 }
-.btn-danger{
-   float: right;
+.btn-danger {
+  float: right;
 }
 /* TODO: Add in breakpoints for the width */
 </style>
