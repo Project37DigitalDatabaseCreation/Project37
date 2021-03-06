@@ -1,5 +1,5 @@
 <!--
-* Login.vue
+* Dashboard.vue
 *
 * Description: Provides a landing place
 * once a user has logged in.
@@ -7,26 +7,173 @@
 -->
 <template>
   <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-8">
+    <div class="row">
+      <div class="col-sm-2">
         <div class="card">
-          <div class="card-header">Dashboard</div>
           <div class="card-body">
-            <div v-if="user" class="alert alert-success" role="alert">You are logged in!</div>
+            <h5 class="card-title">New Reviews</h5>
+            <h1>{{ reviewStats.NewReviewsCount }}</h1>
           </div>
         </div>
       </div>
+      <div class="col-sm-2">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">In-Progress Reviews</h5>
+            <h1>{{ reviewStats.InProgressReviewsCount }}</h1>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Complete Reviews</h5>
+            <h1>{{ reviewStats.CompletedReviewsCount }}</h1>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Current Projects</h5>
+            <h1>{{ projectStats.CurrentProjectsCount }}</h1>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Complete Projects</h5>
+            <h1>{{ projectStats.CompletedProjectsCount }}</h1>
+          </div>
+        </div>
+      </div>                  
     </div>
+    <h4 class="mt-4 text-center">Latest Reviews:</h4>
+    <span style="color: red">{{ error }}</span>
+    <table class="table mt-5">
+      <thead>
+        <tr>
+          <th scope="col">Client</th>
+          <th scope="col">Reviewer</th>
+          <th scope="col">Project</th>
+          <th scope="col">Points</th>
+          <th scope="col">Status</th>
+          <th scope="col">Review</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="review in reviews" :key="review.id">
+          <td>{{ review.org.title }}</td>
+          <td>{{ review.reviewer.lastName + ", " + review.reviewer.firstName }}</td>
+          <td>{{ review.project.title }}</td>
+          <td>{{ review.points }}</td>
+          <td>{{ review.met_status }}</td>
+          <td></td>
+        </tr>
+      </tbody>          
+    </table>
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import firebase from "firebase";
+
 export default {
-  computed: {
-    // map `this.user` to `this.$store.getters.user`
-    ...mapGetters({
-      user: "user"
-    })
+    data() {
+    return {
+      reviews: [],
+      standards: [],
+      reviewStats: {},
+      projectStats: {},
+      error: null
+    };
+  },
+  async mounted() {
+    const db = firebase.firestore();
+    
+    db.doc('Stats/ReviewsByStatus').get()
+    .then(result => {
+      this.reviewStats = result.data();
+    });
+
+    db.doc('Stats/ProjectsByStatus').get()
+    .then(result => {
+      this.projectStats = result.data();
+    });
+
+    await db.collection("Reviews").orderBy("modified", "desc").limit(10).get()
+    .then(result => {
+      result.forEach(doc => {
+        let review = doc.data();
+        review.id = doc.id;
+        review.org = {};
+        review.org.title = "";
+        review.reviewer = {};
+        review.reviewer.lastName = "";
+        review.reviewer.firstName = "";
+        review.project = {};
+        review.project.title = "";
+
+        let index = this.reviews.push(review) - 1;   
+
+        review.project_ref.get()
+        .then(doc => {
+          let proj = doc.data();
+          proj.id = doc.id;
+          this.reviews[index].project = proj;
+
+          proj.org_ref.get()
+          .then(doc => {
+            let org = doc.data();
+            org.id = doc.id;
+            this.reviews[index].org = org;
+
+            review.reviewer_ref.get()
+            .then(doc => {
+              let reviewer = doc.data();
+              reviewer.id = doc.id;
+              this.reviews[index].reviewer = reviewer;                                       
+            });            
+          });              
+        });        
+      })}).catch(err => { console.error(err) });
+
+    let querySnapshot = await db.collection("Standards").get();
+
+    querySnapshot.forEach(doc => {
+      let standard = {};
+      standard.id = doc.id;
+      standard.points = doc.data().points;
+      this.standards.push(standard);
+    });        
+
+    for (let i = 0; i < this.reviews.length; i++) {
+      let reviewRef = db.doc("/Reviews/" + this.reviews[i].id);          
+      this.reviews[i].points = 0;
+      this.reviews[i].met_status = "Met";
+      
+      db.collection("Scores").where("review_ref", "==", reviewRef).get()
+      .then(result => {        
+        result.forEach(doc => {
+          let score = doc.data();
+          
+          if(score.standard_ref) {            
+            const scoreStandard = this.standards.find(function(standard) {
+              return standard.id === score.standard_ref.id;
+            });
+            
+            if (scoreStandard && score.met) {
+              this.reviews[i].points += scoreStandard.points;
+            }
+            
+            if (scoreStandard && !score.met && scoreStandard.points == 3) {
+              this.reviews[i].met_status = "Not Met";
+            }
+          }
+        });
+      });        
+    }
   }
 };
 </script>
+ 

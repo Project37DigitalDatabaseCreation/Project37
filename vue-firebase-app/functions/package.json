@@ -10,7 +10,7 @@
     "logs": "firebase functions:log"
   },
   "engines": {
-    "node": "8"
+    "node": "15"
   },
   "main": "index.js",
   "dependencies": {

@@ -1,9 +1,9 @@
 <!--
-* EditProjectReview.vue
+* EditOrganization.vue
 *
-* Description: Provides form to edit or create a project review.
+* Description: Provides form to edit or create an organization.
 * The form is used as a modal pop out and interacts with the
-* ProjectReviews component.
+* Organizations component.
 *
 -->
 <template>
@@ -13,48 +13,30 @@
         <div class="modal-container">
 
           <div class="modal-header">
-            <slot v-if="review.id" name="header">              
-              Update Review
+            <slot v-if="org.id" name="header">              
+              Update Organization
             </slot>
             <slot v-else name="header">              
-              Add New Review to Project
+              Add New Organization
             </slot>
           </div>
 
           <div class="modal-body">
             <slot name="body">
               <div class="form-group row">
-                <label for="course_name" class="col-md-4 col-form-label text-md-right">Course Name</label>
+                <label for="course_name" class="col-md-4 col-form-label text-md-right">Organization Title</label>
 
                 <div class="col-md-6">
                     <input
-                    id="course_name"
+                    id="title"
                     type="text"
                     class="form-control"
-                    name="course_name"
+                    name="title"
                     value
                     required
                     autofocus
-                    v-model="review.course_name"
+                    v-model="org.title"
                     />
-                </div>
-              </div>
-
-              <div class="form-group row">
-                <label for="reviewer" class="col-md-4 col-form-label text-md-right">Reviewer</label>
-
-                <div class="col-md-6">
-                    <select
-                    id="reviewer"
-                    class="form-control"
-                    name="reviewer"
-                    required
-                    v-model="review.reviewer.id"
-                    >
-                    <option v-for="reviewer in reviewers" :value="reviewer.id" :key="reviewer.id">
-                        {{ reviewer.data().lastName + ", " + reviewer.data().firstName}}
-                    </option>                
-                    </select>
                 </div>
               </div>
             </slot>
@@ -73,20 +55,19 @@
 </template>
 <script>
 export default {
-  name: "EditProjectReview",
+  name: "EditOrganization",
   props: {
-    selected_review: Object,
-    reviewers: Array
+    selected_org: Object
   },
   data() {
       return {
         showModal: false,
-        review: this.selected_review
+        org: this.selected_org
       }
   },
   methods: {
     handleSubmit() {
-      this.$emit("edit-review", this.review);
+      this.$emit("edit-org", this.org);
       this.$emit('close');
     }
   }
