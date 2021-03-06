@@ -104,8 +104,8 @@
 <script>
   import firebase from 'firebase'
   import 'firebase/firestore'
-  import getOrganizations from '../composables/getOrganizations'
-  import { onMounted, ref } from 'vue'
+  import { ref } from 'vue'
+  import getCollection from '../composables/getCollection'
 
   export default {
     setup() {
@@ -114,11 +114,7 @@
       const email = ref('')
       const organization = ref('')
 
-      const { organizations, error, loadOrganizations } = getOrganizations()
-
-      // loads the current organizations from firebase for the dropdown
-      // menu when mounted
-      onMounted(loadOrganizations)
+      const { documents: organizations, error } = getCollection('Organizations')
 
       // creates the client document in firebase
       const handleSubmit = async () => {

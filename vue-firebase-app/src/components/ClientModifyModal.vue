@@ -97,9 +97,9 @@
 </template>
 
 <script>
-  import { onMounted, reactive } from 'vue'
-  import getOrganizations from '../composables/getOrganizations'
+  import { reactive } from 'vue'
   import modifyDocument from '../composables/modifyDocument'
+  import getCollection from '../composables/getCollection'
 
   export default {
     emits: ['close'],
@@ -118,11 +118,11 @@
         modifyDocument('Clients', update.value.id).updateDoc(modified_client)
       }
 
-      const { organizations, error, loadOrganizations } = getOrganizations()
+      const { documents: organizations, error } = getCollection('Organizations')
 
       // loads the current organizations from firebase for the dropdown
       // menu when mounted
-      onMounted(loadOrganizations)
+      //onMounted(loadOrganizations)
 
       return { update, organizations, error, handleSubmit }
     },
