@@ -8,35 +8,17 @@ admin.initializeApp();
 // To update this function you must run the command firebase deploy --only functions 
 
 exports.createReviewer = functions.https.onCall((request, context) => {
-  console.log(request.email)
-
-  //Only allow authenticated users to call this function. 
-  if (!context.auth) {
-    return { message: 'Authentication Required!', code: 401 };
-
-  }
-  return admin.auth().createUser({
-    email: request.email,
-    password: request.password
-
-  } else {
-
-    return admin.auth().createUser({
-      email: request.email,
-      password: request.password
-
+    console.log(request.email)  //Only allow authenticated users to call this function. 
+    if (!context.auth) {
+      return { message: 'Authentication Required!', code: 401 };
+    } else {    return admin.auth().createUser({
+        email: request.email,
+        password: request.password
     })
-      .catch((error) => {
+    .catch((error) => {
         throw new functions.https.HttpsError('internal', error.message)
-      });
-
-  });
-  
-  
-
-  }
-
-});
+    });
+}});
 
 
 // Function Author: Ben McElyea
@@ -79,10 +61,10 @@ exports.reviewCreateStatusCounter = functions.firestore.document('Reviews/{revie
             let docId = snap.id;
                 
             // handle a new review
-            if(newReview.status == "New") {
+            if(newReview.status === "New") {
                 let result = await col.where("NewReviews", "array-contains", docId).get();
                     
-                if(result.size == 0) {
+                if(result.size === 0) {
                     return doc.set({
                         NewReviewsCount: increment,
                         NewReviews: arrayUnion(docId)
@@ -122,7 +104,7 @@ exports.reviewUpdateStatusCounter = functions.firestore.document('Reviews/{revie
             
             if(reviewBefore.status !== reviewAfter.status) {  
                 // handle review going from New to In-Progress              
-                if(reviewBefore.status == "New" && reviewAfter.status == "In-Progress") {
+                if(reviewBefore.status === "New" && reviewAfter.status === "In-Progress") {
                     let result = await col.where("NewReviews", "array-contains", reviewBefore.id).get();
 
                     if (result.size > 0) {
@@ -141,7 +123,7 @@ exports.reviewUpdateStatusCounter = functions.firestore.document('Reviews/{revie
                 }
 
                 // handle review going from In-Progress to Complete
-                if(reviewBefore.status == "In-Progress" && reviewAfter.status == "Complete") {
+                if(reviewBefore.status === "In-Progress" && reviewAfter.status === "Complete") {
                     let result = await col.where("InProgressReviews", "array-contains", reviewBefore.id).get();
 
                     if(result.size > 0) {
@@ -183,7 +165,7 @@ exports.reviewDeleteStatusCounter = functions.firestore.document('Reviews/{revie
             let docId = snap.id;
 
             // each possible status needs to be handled
-            if(deletedReview.status == "New") {          
+            if(deletedReview.status === "New") {          
                 let result = await col.where("NewReviews", "array-contains", docId).get();
 
                 if(result.size > 0) {
@@ -195,9 +177,9 @@ exports.reviewDeleteStatusCounter = functions.firestore.document('Reviews/{revie
                         merge: true
                     });
                 } else {
-                    return null;h
+                    return null;
                 }
-            } else if(deletedReview.status == "In-Progress") {
+            } else if(deletedReview.status === "In-Progress") {
                 let result = await col.where("InProgressReviews", "array-contains", docId).get();
                                         
                 if(result.size > 0) {
@@ -233,4 +215,3 @@ exports.reviewDeleteStatusCounter = functions.firestore.document('Reviews/{revie
         }
     }
 );
-
