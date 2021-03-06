@@ -36,7 +36,7 @@ if (location.hostname === "localhost") {
 
 firebase.auth().onAuthStateChanged(user => {
     store.dispatch("fetchUser", user);
-  });
+});
 
 
 const app = createApp(App)

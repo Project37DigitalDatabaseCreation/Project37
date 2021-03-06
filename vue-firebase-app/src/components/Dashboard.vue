@@ -7,6 +7,48 @@
 -->
 <template>
   <div class="container">
+    <div class="row">
+      <div class="col-sm-2">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">New Reviews</h5>
+            <h1>{{ reviewStats.NewReviewsCount }}</h1>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">In-Progress Reviews</h5>
+            <h1>{{ reviewStats.InProgressReviewsCount }}</h1>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Complete Reviews</h5>
+            <h1>{{ reviewStats.CompletedReviewsCount }}</h1>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Current Projects</h5>
+            <h1>{{ projectStats.CurrentProjectsCount }}</h1>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Complete Projects</h5>
+            <h1>{{ projectStats.CompletedProjectsCount }}</h1>
+          </div>
+        </div>
+      </div>                  
+    </div>
     <h4 class="mt-4 text-center">Latest Reviews:</h4>
     <span style="color: red">{{ error }}</span>
     <table class="table mt-5">
@@ -41,12 +83,24 @@ export default {
     return {
       reviews: [],
       standards: [],
+      reviewStats: {},
+      projectStats: {},
       error: null
     };
   },
   async mounted() {
     const db = firebase.firestore();
     
+    db.doc('Stats/ReviewsByStatus').get()
+    .then(result => {
+      this.reviewStats = result.data();
+    });
+
+    db.doc('Stats/ProjectsByStatus').get()
+    .then(result => {
+      this.projectStats = result.data();
+    });
+
     await db.collection("Reviews").orderBy("modified", "desc").limit(10).get()
     .then(result => {
       result.forEach(doc => {
