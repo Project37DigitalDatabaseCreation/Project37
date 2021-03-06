@@ -183,16 +183,17 @@ export default {
       let projectRef = firebase.firestore().doc("/Projects/" + this.selected_proj);
       let reviewerRef = firebase.firestore().doc("Reviewers/" + review.reviewer.id);
       let Vue = this;
+      let ts = firebase.firestore.FieldValue.serverTimestamp();
       Vue.error = null;
 
-      //var navigate = this.$router;
       if (!review.created) {
-        review.created = firebase.firestore.FieldValue.serverTimestamp();
+        review.created = ts;
         review.status = "New";
       }        
 
       firebase.firestore().collection("Reviews").doc(review.id).set({
         created: review.created,
+        modified: ts,
         course_name: review.course_name,
         reviewer_ref: reviewerRef,
         project_ref: projectRef,
