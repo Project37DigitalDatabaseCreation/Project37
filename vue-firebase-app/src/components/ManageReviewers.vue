@@ -60,7 +60,6 @@ export default {
               last_name: doc.data().last_name,
               is_admin: doc.data().is_admin,
             });
-            console.log(doc.id, " => ", doc.data());
           });
         })
         .catch((error) => {
