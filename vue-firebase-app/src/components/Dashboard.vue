@@ -25,8 +25,8 @@
           <td>{{ review.org.title }}</td>
           <td>{{ review.reviewer.lastName + ", " + review.reviewer.firstName }}</td>
           <td>{{ review.project.title }}</td>
-          <td></td>
-          <td>{{ review.status }}</td>
+          <td>{{ review.points }}</td>
+          <td>{{ review.met_status }}</td>
           <td></td>
         </tr>
       </tbody>          
@@ -34,52 +34,92 @@
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
 import firebase from "firebase";
 
 export default {
     data() {
     return {
       reviews: [],
+      standards: [],
       error: null
     };
   },
-  computed: {
-    // map `this.user` to `this.$store.getters.user`
-    ...mapGetters({
-      user: "user"
-    })
-  },
-  mounted() { 
-    firebase.firestore().collection("Reviews").orderBy("modified", "desc").limit(10).get()
+  async mounted() {
+    const db = firebase.firestore();
+    
+    await db.collection("Reviews").orderBy("modified", "desc").limit(10).get()
     .then(result => {
       result.forEach(doc => {
         let review = doc.data();
         review.id = doc.id;
+        review.org = {};
+        review.org.title = "";
+        review.reviewer = {};
+        review.reviewer.lastName = "";
+        review.reviewer.firstName = "";
+        review.project = {};
+        review.project.title = "";
+
+        let index = this.reviews.push(review) - 1;   
 
         review.project_ref.get()
         .then(doc => {
           let proj = doc.data();
           proj.id = doc.id;
-          review.project = proj;
+          this.reviews[index].project = proj;
 
           proj.org_ref.get()
           .then(doc => {
             let org = doc.data();
             org.id = doc.id;
-            review.org = org;
+            this.reviews[index].org = org;
 
             review.reviewer_ref.get()
             .then(doc => {
               let reviewer = doc.data();
               reviewer.id = doc.id;
-              review.reviewer = reviewer;
-
-              this.reviews.push(review);
+              this.reviews[index].reviewer = reviewer;                                       
             });            
           });              
         });        
       })}).catch(err => { console.error(err) });
-  },
+
+    let querySnapshot = await db.collection("Standards").get();
+
+    querySnapshot.forEach(doc => {
+      let standard = {};
+      standard.id = doc.id;
+      standard.points = doc.data().points;
+      this.standards.push(standard);
+    });        
+
+    for (let i = 0; i < this.reviews.length; i++) {
+      let reviewRef = db.doc("/Reviews/" + this.reviews[i].id);          
+      this.reviews[i].points = 0;
+      this.reviews[i].met_status = "Met";
+      
+      db.collection("Scores").where("review_ref", "==", reviewRef).get()
+      .then(result => {        
+        result.forEach(doc => {
+          let score = doc.data();
+          
+          if(score.standard_ref) {            
+            const scoreStandard = this.standards.find(function(standard) {
+              return standard.id === score.standard_ref.id;
+            });
+            
+            if (scoreStandard && score.met) {
+              this.reviews[i].points += scoreStandard.points;
+            }
+            
+            if (scoreStandard && !score.met && scoreStandard.points == 3) {
+              this.reviews[i].met_status = "Not Met";
+            }
+          }
+        });
+      });        
+    }
+  }
 };
 </script>
+ 
