@@ -56,37 +56,4 @@ exports.deleteReviewer = functions.https.onCall((request, context) => {
 });
 
 
-// Function Author: Ben McElyea
-// Date: March 2021
-// resetPassword - A Cloud function to reset users to the Firebase authentication password 
-// To update this function you must run the command firebase deploy --only functions 
 
-exports.deleteReviewer = functions.https.onCall((request, context) => {
-  console.log("Deleting user" + request.email)
-
-  //Only allow authenticated users to call this function. 
-  if (!context.auth) {
-    return { message: 'Authentication Required!', code: 401 };
-  }
-  else {
-
-    admin
-      .auth()
-      .generatePasswordResetLink(userEmail, actionCodeSettings)
-      .then((link) => {
-        // Construct password reset email template, embed the link and send
-        // using custom SMTP server.
-        return sendCustomPasswordResetEmail(email, displayName, link);
-      })
-      .catch((error) => {
-        throw new functions.https.HttpsError('internal', error.message)
-      });
-
-
-  }
-
-
-});
-
-// Admin SDK API to generate the password reset link.
-const userEmail = 'user@example.com';

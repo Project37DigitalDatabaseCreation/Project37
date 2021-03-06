@@ -133,7 +133,11 @@
                   >
                     Update reviewer
                   </button>
-                  <button type="submit" class="btn btn-primary">
+                  <button
+                    type="submit"
+                    class="btn btn-primary"
+                    @click.prevent="resetPasswordClicked"
+                  >
                     Reset password
                   </button>
                 </div>
@@ -143,7 +147,18 @@
         </div>
       </div>
     </div>
-    <modal
+
+    <!-- This modal is displayed with a admin clicks "Reset password" -->
+    <genericModal
+      v-if="showGenericModal"
+      v-on:ok-click="resetPasswordConfirmed"
+      :passedMessage="this.genericModalMessage + '' + this.form.email"
+      :passedMessageTitle="this.genericModalMessageTitle"
+      @close="showModal = false"
+    />
+
+    <!-- This modal displayed when a user clicks "Delete User" -->
+    <deleteModal
       v-if="showModal"
       v-on:ok-click="deleteUserConfirmed"
       :passedMessage="
@@ -162,14 +177,15 @@
 
 
 <script>
-//import firebase from "firebase";
 import firebase from "firebase";
 import "firebase/firestore";
-import modal from "@/components/DeleteReviewerModal";
+import deleteModal from "@/components/DeleteReviewerModal";
+import genericModal from "@/components/GenericModal";
 
 export default {
   components: {
-    modal,
+    deleteModal,
+    genericModal,
   },
   props: {
     // The Firestore doc id of the reviewer is passed into this prop
@@ -187,6 +203,10 @@ export default {
         isAdmin: "",
       },
       showModal: false,
+      showGenericalModal: false,
+      genericModalMessage:
+        "Are you sure you want to reset the password for the account ",
+      genericalModalMessageTitle: "Are you sure?",
       error: null,
       modalMessage: "Are you sure you want to delete the user ",
       modalMessageTitle: "Are you sure?",
@@ -240,6 +260,24 @@ export default {
     //User clicked the delete user button
     showDeleteUserModal() {
       this.showModal = true;
+    },
+
+    async resetPasswordClicked() {
+      this.showGenericModal = true;
+      // const resetPassword_ref = firebase
+      //   .functions()
+      //   .httpsCallable("resetPassword");
+      // await resetPassword_ref({
+      //   uid: this.passedReviewerId,
+      //   email: this.form.email,
+      // }).then((result) => {
+      //   console.log(result);
+      // });
+    },
+
+    resetPasswordConfirmed() {
+      firebase.auth().sendPasswordResetEmail(this.form.email);
+      this.returnToPreviousScreen();
     },
 
     async deleteUserConfirmed() {
