@@ -171,6 +171,7 @@ export default {
   methods: {
     //Add user to the DB
     async submit() {
+
       //Get reference to cloud function
       const createReviewer = firebase
         .functions()
@@ -182,13 +183,26 @@ export default {
         password: this.form.password,
       })
         .then((result) => {
+
+          console.log(result);
           console.log("The new users uid is " + result.data.uid);
+
           let newUser = {
             firstName: this.form.fname,
             lastName: this.form.lname,
             email: this.form.email,
             isAdmin: this.form.isAdmin,
           };
+
+
+          //Call function to add the user to the reviewers collection
+          //Auth DB and Reviewer DB 
+          firebase.firestore().collection("Reviewers").doc(result.uid).set(newUser);
+          console.log(result.uid)
+          this.returnToPreviousScreen();
+         
+        })
+        .catch((err) => alert(err));
 
           //Call function to add the user to the reviewers collection
           //Auth DB and Reviewer DB
@@ -201,6 +215,7 @@ export default {
           this.returnToPreviousScreen();
         })
         .catch((err) => alert(err));
+
     },
     returnToPreviousScreen() {
       this.$router.push({ path: "/managereviewers" });
