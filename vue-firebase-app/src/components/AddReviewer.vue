@@ -79,7 +79,7 @@
                 </div>
               </div>
 
-              <!-- <div class="form-group row">
+              <div class="form-group row">
                 <label
                   for="password"
                   class="col-md-4 col-form-label text-md-right"
@@ -96,7 +96,7 @@
                     v-model="form.password"
                   />
                 </div>
-              </div> -->
+              </div>
 
               <div class="form-group row">
                 <label
@@ -169,20 +169,45 @@ export default {
     };
   },
   methods: {
+    //Add user to the DB
     async submit() {
-      let newUser = {
-        firstName: this.form.fname,
-        lastName: this.form.lname,
-        email: this.form.email,
-        isAdmin: this.form.isAdmin,
-      };
+      //Get reference to cloud function
+      const createReviewer = firebase
+        .functions()
+        .httpsCallable("createReviewer");
 
-      await firebase.firestore().collection("Reviewers").add(newUser);
-      console.log(newUser);
-      this.returnToPreviousScreen();
+      //Call cloud function to create a user in the authentication DB
+      await createReviewer({
+        email: this.form.email,
+        password: this.form.password,
+      })
+        .then((result) => {
+          console.log("The new users uid is " + result.data.uid);
+          let newUser = {
+            firstName: this.form.fname,
+            lastName: this.form.lname,
+            email: this.form.email,
+            isAdmin: this.form.isAdmin,
+          };
+
+          //Call function to add the user to the reviewers collection
+          //Auth DB and Reviewer DB
+          firebase
+            .firestore()
+            .collection("Reviewers")
+            .doc(result.data.uid)
+            .set(newUser);
+
+          this.returnToPreviousScreen();
+        })
+        .catch((err) => alert(err));
     },
     returnToPreviousScreen() {
       this.$router.push({ path: "/managereviewers" });
+    },
+
+    async addUserToDB() {
+      //Get cloud function reference
     },
   },
 };
@@ -193,4 +218,4 @@ button {
   margin-right: 10px;
 }
 /* TODO: Add in breakpoints for the width */
-</style>ß
+</style>

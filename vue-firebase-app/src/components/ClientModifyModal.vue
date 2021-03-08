@@ -1,14 +1,13 @@
 <!--
-* ClientModal.vue
+* ClientModifyModal.vue
 *
 * Description: Provides a modal window to allow an admin user
-* to create a client
+* to edit a client
 *
 * the following fields: First Name, Last Name, Email, and Organization
 *
 * Organization is a drop down: relies on project being created.
 -->
-
 <template>
   <transition name="modal">
     <div class="modal-mask">
@@ -16,7 +15,7 @@
         <div class="modal-container">
           <div class="modal-header">
             <slot name="header">
-              Add Client
+              Edit Client
             </slot>
           </div>
 
@@ -32,7 +31,7 @@
                       type="text"
                       required
                       placeholder="First Name"
-                      v-model="firstName"
+                      v-model="update.value.firstName"
                     />
                   </div>
                 </div>
@@ -45,7 +44,7 @@
                       type="text"
                       required
                       placeholder="Last Name"
-                      v-model="lastName"
+                      v-model="update.value.lastName"
                     />
                   </div>
                 </div>
@@ -54,12 +53,7 @@
                     >Email</label
                   >
                   <div class="col-md-6">
-                    <input
-                      type="email"
-                      required
-                      placeholder="Email"
-                      v-model="email"
-                    />
+                    <input type="email" required v-model="update.value.email" />
                   </div>
                 </div>
                 <div class="form-group row">
@@ -68,10 +62,11 @@
                   >
 
                   <div class="col-md-6">
-                    <select required v-model="organization">
+                    <select required v-model="update.value.organization">
                       <option
                         v-for="organization in organizations"
-                        v-bind:key="organization.title"
+                        :value="organization.title"
+                        :key="organization.title"
                       >
                         {{ organization.title }}
                       </option>
@@ -88,7 +83,7 @@
                 class="btn btn-primary"
                 @click="handleSubmit(), $emit('close')"
               >
-                Add Client
+                Save Client
               </button>
               <button class="btn btn-primary" @click="$emit('close')">
                 Cancel
@@ -102,44 +97,34 @@
 </template>
 
 <script>
-  import firebase from 'firebase'
-  import 'firebase/firestore'
-  import { ref } from 'vue'
+  import { reactive } from 'vue'
+  import modifyDocument from '../composables/modifyDocument'
   import getCollection from '../composables/getCollection'
 
   export default {
-    setup() {
-      const firstName = ref('')
-      const lastName = ref('')
-      const email = ref('')
-      const organization = ref('')
+    emits: ['close'],
+    props: ['update_client'],
+    setup(props) {
+      const update = reactive({ ...props.update_client })
+
+      const handleSubmit = async () => {
+        const modified_client = {
+          firstName: update.value.firstName,
+          lastName: update.value.lastName,
+          email: update.value.email,
+          organization: update.value.organization,
+        }
+
+        modifyDocument('Clients', update.value.id).updateDoc(modified_client)
+      }
 
       const { documents: organizations, error } = getCollection('Organizations')
 
-      // creates the client document in firebase
-      const handleSubmit = async () => {
-        const newClient = {
-          firstName: firstName.value,
-          lastName: lastName.value,
-          email: email.value,
-          organization: organization.value,
-        }
+      // loads the current organizations from firebase for the dropdown
+      // menu when mounted
+      //onMounted(loadOrganizations)
 
-        await firebase
-          .firestore()
-          .collection('Clients')
-          .add(newClient)
-      }
-
-      return {
-        organizations,
-        error,
-        handleSubmit,
-        firstName,
-        lastName,
-        email,
-        organization,
-      }
+      return { update, organizations, error, handleSubmit }
     },
   }
 </script>
