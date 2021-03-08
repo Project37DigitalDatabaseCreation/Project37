@@ -118,10 +118,10 @@ const routes = [
     path: '/manage-clients',
     name: 'ManageClients',
     component: ManageClients,
-    props: true,
     meta: {
       requiresAuth: true
-    }
+    },
+    props: true
   },
   {
     path: '/modifyreviewer',
