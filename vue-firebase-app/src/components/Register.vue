@@ -24,6 +24,21 @@
                                         v-model="form.name" />
                                 </div>
                             </div>
+                            <div class="form-group row">
+                                <label for="organization"
+                                    class="col-md-4 col-form-label text-md-right">Organization</label>
+                                <div class="col-md-6">
+                                    <select name="organization" required
+                                        v-model="form.organization"
+                                        style="width:inherit; height:40px; border-radius:4px; border-color:rgb(206, 212, 218);">
+                                        <option v-for="organization in organizations"
+                                            :value="organization"
+                                            :key="organization.title">
+                                            {{ organization.title }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
 
                             <div class="form-group row">
                                 <label for="email"
@@ -60,8 +75,6 @@
         </div>
     </div>
 </template>
-
-
 <script>
 import firebase from 'firebase'
 
@@ -71,9 +84,18 @@ export default {
             form: {
                 name: '',
                 email: '',
+                organization: null,
                 password: ''
             },
             error: null
+        }
+    },
+    mounted() {
+        this.$store.dispatch('fetchOrganizations')
+    },
+    computed: {
+        organizations() {
+            return this.$store.getters.organizations
         }
     },
     methods: {
@@ -83,12 +105,15 @@ export default {
                 .auth()
                 .createUserWithEmailAndPassword(this.form.email, this.form.password)
                 .then((data) => {
-                    //  Create a user in Firestore Users collection
-                    firebase
-                        .firestore()
-                        .collection('Users')
-                        .doc(data.user.uid)
-                        .set({ displayName: this.form.name })
+                    //  Create an Invitation
+                    firebase.firestore().collection('Invitations').add({
+                        name: this.form.name,
+                        email: this.form.email,
+                        uid: data.user.uid,
+                        //  This stores a map of the id and name
+                        //  This is ok because Invitations are temporary documents
+                        organization: this.form.organization
+                    })
 
                     //  Also update the user's profile
                     data.user
@@ -97,8 +122,8 @@ export default {
                         })
                         .then(() => {})
 
-                    //  Now route the user to the dashboard
-                    this.$router.replace({ name: 'Dashboard' })
+                    //  This user doesn't have any permissions so we have to route them to a default page
+                    this.$router.replace({ name: 'InvitationPending' })
                 })
                 .catch((err) => {
                     this.error = err.message
