@@ -12,21 +12,18 @@
 
 <template>
   <div class="container">
-     <router-view></router-view>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-
 import firebase from "firebase";
 import "firebase/firestore";
 
 export default {
   data() {
     return {
-      
       reviewerData: [],
-      
     };
   },
   methods: {
@@ -43,14 +40,14 @@ export default {
 
     // modifyReviewer(reviewer){
     //     this.$router.push({ name: 'ModifyReviewer' })
-    //    console.log(`TODO - Edit user ${reviewer}`)   
+    //    console.log(`TODO - Edit user ${reviewer}`)
     // },
 
-
-    getReviewers(){
-
-    this.reviewerData = [];
-      firebase.firestore().collection("Reviewers")
+    getReviewers() {
+      this.reviewerData = [];
+      firebase
+        .firestore()
+        .collection("Reviewers")
         .get()
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
@@ -65,14 +62,11 @@ export default {
         .catch((error) => {
           console.log("Error getting documents: ", error);
         });
-        console.log(this.reviewerData)
-
+      console.log(this.reviewerData);
     },
-
-  
   },
-    mounted() {
-    this.getReviewers();
+  mounted() {
+    // this.getReviewers();
   },
 };
 </script>

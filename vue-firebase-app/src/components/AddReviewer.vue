@@ -183,11 +183,13 @@ export default {
       })
         .then((result) => {
           console.log("The new users uid is " + result.data.uid);
+
+          let isAdminSet = this.form.isAdmin === "true";
           let newUser = {
             firstName: this.form.fname,
             lastName: this.form.lname,
             email: this.form.email,
-            isAdmin: this.form.isAdmin,
+            isAdmin: isAdminSet,
           };
 
           //Call function to add the user to the reviewers collection

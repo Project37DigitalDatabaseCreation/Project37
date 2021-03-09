@@ -19,7 +19,8 @@
         type="button"
         class="btn btn-primary"
         @click.prevent="AddReviewer"
-      style="float: right;">
+        style="float: right"
+      >
         + Add Reviewer
       </button>
     </div>
@@ -40,7 +41,7 @@
         >
           <td>{{ reviewer.first_name + " " + reviewer.last_name }}</td>
           <td>{{ reviewer.email }}</td>
-          <td>{{ reviewer.is_admin === "true" ? "Yes" : "No" }}</td>
+          <td>{{ reviewer.is_admin === true ? "Yes" : "No" }}</td>
         </tr>
       </tbody>
     </table>
