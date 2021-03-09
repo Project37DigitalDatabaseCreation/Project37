@@ -197,11 +197,12 @@ export default {
     //Method to modify a existing user
     async updateClicked() {
       console.log("Update clicked");
+      let isAdminSet = this.form.isAdmin === "true";
       let modifiedUser = {
         firstName: this.form.fname,
         lastName: this.form.lname,
         email: this.form.email,
-        isAdmin: this.form.isAdmin,
+        isAdmin: isAdminSet,
       };
 
       await firebase
