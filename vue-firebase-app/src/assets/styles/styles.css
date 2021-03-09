@@ -18,7 +18,7 @@
     
   }
 
-  /* Hover Color*/
+  /* Hover Color */
 .topnav a:hover {
     background-color: rgb(57, 63, 51);
     color: #f2f2f2;
@@ -33,4 +33,68 @@
 /* spacing for UI */
 #p {
   word-spacing: 5em;
+}
+
+ /* Hover Color */
+tr:hover {
+  background-color: #ddd;
+}
+
+ /* Edit Button */
+.edit {
+  font-size: 1.1em;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: greenyellow;
+}
+
+ /* Delete Button */
+.delete {
+  font-size: 1.1em;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #f44336;
+}
+
+ /* Submit Button */
+ .sub {
+  font-size: 1.1em;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #0000FF;
+}
+
+ /* Card Header */
+div.card-header {
+    text-align: center;
+    font-size: 1.5em;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+ /* Form Rows */
+div.form-group{
+  font-size: 1.1em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+ /* Table Info Format */
+.project-info {
+  position:fixed;
+  left:200px;
+  width:90%;
+  justify-content: center;
+}
+
+ /* Project Table Head Format */
+ .project-head {
+  font-size: 1.1em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+ /* Project Table Body Format */
+ .project-body {
+  font-size: 1.1em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+ /* Column Format */
+.col-md-10 {
+  padding: 0 !important;
 }

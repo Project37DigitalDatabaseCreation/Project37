@@ -8,11 +8,10 @@
 <template>
     <!-- Form to input new Project -->
     <div class="container">
-    <div style="position:fixed; left:200px; width:90%;">
-    <div class="justify-content-center">
-    <div class="col-md-10" style="padding:0 !important;">
+    <div class="project-info">
+    <div class="col-md-10">
     <div class="card">
-    <div class="card-header text-center">New Project</div>
+    <div class="card-header">New Project</div>
     <div class="card-body">
     <div v-if="error" class="alert alert-danger">{{error}}</div>
         <!-- Input fields for form -->
@@ -85,7 +84,6 @@
     </div>
     </div>
     </div>
-    </div>
 
 </template>
 
@@ -93,6 +91,7 @@
   var submission = false
   import firebase from 'firebase'
   import Multiselect from '@vueform/multiselect'
+  import '../assets/styles/styles.css';
   export default {
       components: {
         Multiselect,
