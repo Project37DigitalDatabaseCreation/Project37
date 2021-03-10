@@ -6,7 +6,9 @@
 *
 * Description: Component to manage reviewers in the system. 
 * This is the main landing page to manage reviewers
-* 
+*
+*
+* This component is the parent of the ReviewerList.vue component. 
 *
 -->
 
@@ -17,58 +19,6 @@
 </template>
 
 <script>
-import firebase from "firebase";
-import "firebase/firestore";
-
-export default {
-  data() {
-    return {
-      reviewerData: [],
-    };
-  },
-  methods: {
-    // edit(reviewer) {
-    //   db.collection("Reviewers").get();
-    // },
-
-    // prevPage() {
-    //   alert("TODO - previous page");
-    // },
-    // nextPage() {
-    //   alert("TODO - next page");
-    // },
-
-    // modifyReviewer(reviewer){
-    //     this.$router.push({ name: 'ModifyReviewer' })
-    //    console.log(`TODO - Edit user ${reviewer}`)
-    // },
-
-    getReviewers() {
-      this.reviewerData = [];
-      firebase
-        .firestore()
-        .collection("Reviewers")
-        .get()
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            this.reviewerData.push({
-              email: doc.data().email,
-              first_name: doc.data().first_name,
-              last_name: doc.data().last_name,
-              is_admin: doc.data().is_admin,
-            });
-          });
-        })
-        .catch((error) => {
-          console.log("Error getting documents: ", error);
-        });
-      console.log(this.reviewerData);
-    },
-  },
-  mounted() {
-    // this.getReviewers();
-  },
-};
 </script>
 
 <style scoped>
