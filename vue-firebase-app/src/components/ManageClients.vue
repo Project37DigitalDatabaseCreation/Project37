@@ -7,7 +7,11 @@
 
 <template>
   <div class="container">
-    <div>
+    <div class="container-layout">
+      <div class="col-md-10">
+      <div class="card">
+    <div class="card-header"> Manage Clients
+          <div style="float:right;">
       <button @click="showModal = true" class="btn btn-primary btn-sm">
         Add Clients
       </button>
@@ -17,16 +21,19 @@
         @close="showEditModal = false"
       ></client-modify-modal>
     </div>
-    <table class="table table-hover table-borderless table-striped">
-      <thead>
+    </div>
+    <table class="table">
+      <thead class="project-head">
         <tr>
           <th>First Name</th>
           <th>Last Name</th>
           <th>Email Address</th>
           <th>Organization</th>
+          <th></th>
+          <th></th>
         </tr>
       </thead>
-      <tbody>
+      <tbody class="project-body">
         <tr v-for="client in clients" :key="client.id">
           <td>{{ client.firstName }}</td>
           <td>{{ client.lastName }}</td>
@@ -35,13 +42,15 @@
           <td>
             <button
               @click="modifyClient(client), (showEditModal = true)"
-              class="btn btn-primary btn-sm"
+              class="btn edit"
             >
               Modify
             </button>
+          </td>
+          <td>
             <button
               @click="handleDelete(client.id)"
-              class="btn btn-warning btn-sm"
+              class="btn delete"
             >
               Delete
             </button>
@@ -50,6 +59,9 @@
       </tbody>
     </table>
     <p class="mt-3">Current Page: {{ currentPage }}</p>
+    </div>
+    </div>
+    </div>
   </div>
 
   <!-- modal definition -->
@@ -113,3 +125,5 @@
     },
   }
 </script>
+
+<style scoped src="../assets/styles/styles.css"></style>

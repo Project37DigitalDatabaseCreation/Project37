@@ -8,7 +8,10 @@
 -->
 <template>
   <div class="container">
-    <h1 class="mt-4 text-center">Project Reviews</h1>
+    <div class="container-layout">
+            <div class="col-md-10">
+            <div class="card">
+            <div class="card-header">Project Reviews</div>
     <span style="color: red">{{ error }}</span>
     <div class="form-group row">
       <label for="organization" class="col-md-4 col-form-label text-md-right">Organization</label>
@@ -53,17 +56,17 @@
           Add Review to Project
         </button>
     </div>
-    <table class="table mt-5">
-      <thead>
+    <table class="table">
+      <thead class="project-head">
         <tr>
-          <th scope="col">Course Name</th>
-          <th scope="col">Reviewer</th>
-          <th scope="col">Status</th>
-          <th scope="col"></th>
-          <th scope="col"></th>
+          <th>Course Name</th>
+          <th>Reviewer</th>
+          <th>Status</th>
+          <th></th>
+          <th></th>
         </tr>
       </thead>
-      <tbody>
+      <tbody class="project-body">
         <tr v-for="review in reviews" :key="review.id">
           <td>{{ review.course_name }}</td>
           <td>{{ review.reviewer.lastName + ", " + review.reviewer.firstName}}</td>
@@ -82,6 +85,9 @@
       @close="showModal = false"
     />
   </div>
+  </div>
+        </div>
+        </div>
 </template>
 
 <script>
@@ -256,3 +262,5 @@ export default {
   },
 };
 </script>
+
+<style scoped src="../assets/styles/styles.css"></style>

@@ -8,7 +8,7 @@
 <template>
     <!-- Form to input new Project -->
     <div class="container">
-    <div class="project-info">
+    <div class="container-layout">
     <div class="col-md-10">
     <div class="card">
     <div class="card-header">New Project</div>
@@ -20,7 +20,7 @@
             <!-- Title label and textbox -->
             <div class="form-group row">
               <label for="title" class="col-md-4 col-form-label text-md-right">Title</label>
-                <div class="col-md-8">
+                <div class="col-md-6">
                   <input id="title" type="text" class="form-control" name="title" value required v-model="form.title" />
                 </div>
             </div>
@@ -28,7 +28,7 @@
             <!-- Organization label and dropdown menu -->
             <div class="form-group row">
               <label for="organization" class="col-md-4 col-form-label text-md-right">Organization</label>
-                <div class="col-md-8">
+                <div class="col-md-6">
                   <select id="organization" class="form-control" name="organization" required v-model="form.organization" v-on:change="clearSelectedClients">
                     <option value="" disabled hidden> Select Organization </option>
                     <option v-for="organization in organizations" :value="organization.title" :key="organization.key"> {{organization.title}}</option>
@@ -39,7 +39,7 @@
             <!-- Clients label and dropdown menu -->
             <div class="form-group row">
               <label for="selectedClients" class="col-md-4 col-form-label text-md-right">Clients</label>
-                  <div class="col-md-8">
+                  <div class="col-md-6">
                     <multiselect
                     :v-model="selectedClients"
                     :options="clients"
@@ -67,14 +67,14 @@
             <!-- Description label and textbox -->
             <div class="form-group row">
               <label for="description" class="col-md-4 col-form-label text-md-right">Description</label>
-                <div class="col-md-8">
+                <div class="col-md-6">
                   <input id="description" type="text" class="form-control" name="description" value required v-model="form.description" />
                 </div>
             </div>
 
             <!-- Submit new project -->
             <div class="form-group row mb-0">
-              <div class="col-md-8 offset-md-4">
+              <div class="col-md-6 offset-md-4">
                 <button type="submit" class="btn btn-primary">Create New Project</button>
               </div>
             </div>

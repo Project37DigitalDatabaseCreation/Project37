@@ -40,22 +40,29 @@ tr:hover {
   background-color: #ddd;
 }
 
+ /* Save Button */
+ .save {
+  font-size: 1.0em;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #0000FF;
+}
+
  /* Edit Button */
 .edit {
-  font-size: 1.1em;
+  font-size: 1.0em;
   font-family: Arial, Helvetica, sans-serif;
   background-color: greenyellow;
 }
 
  /* Delete Button */
 .delete {
-  font-size: 1.1em;
+  font-size: 1.0em;
   font-family: Arial, Helvetica, sans-serif;
   background-color: #f44336;
 }
 
  /* Submit Button */
- .sub {
+ button.submit {
   font-size: 1.1em;
   font-family: Arial, Helvetica, sans-serif;
   background-color: #0000FF;
@@ -72,10 +79,17 @@ div.card-header {
 div.form-group{
   font-size: 1.1em;
   font-family: Arial, Helvetica, sans-serif;
+  justify-content: center;
+}
+
+form {
+  margin-left: 25%;
+  margin-right:25%;
+  width: 50%;
 }
 
  /* Table Info Format */
-.project-info {
+.container-layout {
   position:fixed;
   left:200px;
   width:90%;
@@ -97,4 +111,47 @@ div.form-group{
  /* Column Format */
 .col-md-10 {
   padding: 0 !important;
+}
+
+/* Margin Radio Button */
+.radioButton {
+  margin-right: 10px;
+}
+
+/* Place all buttons on same line */
+div button{
+  display:inline-block;
+}
+
+h4 {
+  text-align: center;
+}
+
+th {
+  padding-top: 12px;
+  text-align: center;
+  padding-bottom: 12px;
+  background-color: #f2f2f2;
+  color: black;
+}
+
+td {
+  text-align: center;
+  padding: 10px;
+}
+
+table {
+  padding: 12px;
+  width: 100%;
+  border: 1px solid #ddd;
+}
+
+button {
+  margin: 0 auto;
+}
+
+.paginationContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

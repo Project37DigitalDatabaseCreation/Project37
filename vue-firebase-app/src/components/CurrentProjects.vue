@@ -8,8 +8,8 @@
 
 <template>
     <!-- Card which displays all  -->
-    <div id="project-info" class="container">
-    <div class="project-info">
+    <div class="container">
+    <div class="container-layout">
     <div class="col-md-10">
     <div class="card">
     <div class="card-header">Current Projects</div>
@@ -22,6 +22,8 @@
             <th style="text-align:center">Reviews</th>
             <th>Status</th>
             <th>Organization</th>
+            <th></th>
+            <th></th>
             </tr>
         </thead>
         <tbody class="project-body">
