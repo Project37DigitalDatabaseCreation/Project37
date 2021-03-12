@@ -112,7 +112,7 @@ export default {
                         uid: data.user.uid,
                         //  This stores a map of the id and name
                         //  This is ok because Invitations are temporary documents
-                        organization: this.form.organization
+                        organization_ref: this.form.organization
                     })
 
                     //  Also update the user's profile
