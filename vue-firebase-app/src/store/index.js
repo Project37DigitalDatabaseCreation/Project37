@@ -20,8 +20,11 @@ export default createStore({
     sortedStandards: null,
     standards: null,
     user: {
-      loggedIn: false,
-      data: null
+      displayName: "",
+      email: "",
+      isClient: false,
+      isAdmin: false,
+      loggedIn: false
     },
   },
   getters: {
@@ -89,20 +92,44 @@ export default createStore({
       console.log('standards set')
     },
     SET_USER(state, data) {
-      state.user.data = data;
+      data.loggedIn = state.user.loggedIn;
+      state.user = data;
     }
   },
   actions: {
     fetchUser({ commit }, user) {
-      commit("SET_LOGGED_IN", user !== null);
-      if (user) {
-        commit("SET_USER", {
-          displayName: user.displayName,
-          email: user.email
-        });
-      } else {
-        commit("SET_USER", null);
-      }
+      return new Promise((resolve) => {
+        commit("SET_LOGGED_IN", user !== null);
+        if (user) {
+          firebase.firestore().collection("Reviewers").where("email", "==", user.email).get()
+          .then(result => {
+            if(result.size === 0) {
+              commit("SET_USER", {
+                displayName: user.displayName,
+                email: user.email,
+                isClient: true,
+                isAdmin: false
+              });          
+            } else if(result.docs[0].data().isAdmin === true) {
+              commit("SET_USER", {
+                displayName: user.displayName,
+                email: user.email,
+                isClient: false,
+                isAdmin: true
+              });    
+            } else {
+              commit("SET_USER", {
+                displayName: user.displayName,
+                email: user.email,
+                isClient: false,
+                isAdmin: false
+              });            
+            }
+      
+            resolve(this.state.user);
+          });        
+        }        
+      });
     },
     async fetchGeneralStandards({ dispatch }) {
       //  Our collection of general Standards

@@ -1,8 +1,8 @@
 <!--
-* Dashboard.vue
+* AdminDashboard.vue
 *
 * Description: Provides a landing place
-* once a user has logged in.
+* once a system admin has logged in.
 *
 -->
 <template>

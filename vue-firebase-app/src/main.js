@@ -34,8 +34,18 @@ if (location.hostname === "localhost") {
   firebase.firestore().useEmulator("localhost", 8080);
 }
 
-firebase.auth().onAuthStateChanged(user => {
-    store.dispatch("fetchUser", user);
+var unsubscribe = firebase.auth().onAuthStateChanged(user => {
+    store.dispatch("fetchUser", user).then(storeUser => {
+      if(storeUser && storeUser.isAdmin === true) {
+        router.replace({ name: 'AdminDashboard' });
+      } else if(storeUser && storeUser.isClient === true) {
+        router.replace({ name: 'ClientDashboard' });
+      } else {
+        router.replace({ name: 'ReviewerDashboard' });
+      }
+
+      unsubscribe();
+    });
 });
 
 

@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import firebase from 'firebase'
+import firebase from 'firebase';
 
 export default {
     data() {
@@ -67,14 +67,26 @@ export default {
     methods: {
         submit() {
             firebase
-                .auth()
-                .signInWithEmailAndPassword(this.form.email, this.form.password)
-                .then(() => {
-                    this.$router.replace({ name: 'Dashboard' })
-                })
-                .catch((err) => {
-                    this.error = err.message
-                })
+            .auth()
+            .signInWithEmailAndPassword(this.form.email, this.form.password)
+            .then((userCredential) => {
+                this.$store.dispatch('fetchUser', userCredential.user).then(storeUser => {
+                    if(storeUser && storeUser.isAdmin === true) {
+                        this.$router.replace({ name: 'AdminDashboard' });
+                    }
+
+                    if(storeUser && storeUser.isClient === true) {
+                        this.$router.replace({ name: 'ClientDashboard' });
+                    } 
+
+                    if(storeUser) {
+                        this.$router.replace({ name: 'ReviewerDashboard' });
+                    } 
+                });           
+            })
+            .catch((err) => {
+                this.error = err.message
+            })
         }
     }
 }

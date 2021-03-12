@@ -69,7 +69,7 @@
                   >Current Projects</router-link
                 >
               </li>
-              <div class="nav-item">{{ user.data.displayName }}</div>
+              <div class="nav-item">{{ user.displayName }}</div>
 
               <li class="nav-item">
                 <a class="nav-link" @click.prevent="signOut">Sign out</a>
