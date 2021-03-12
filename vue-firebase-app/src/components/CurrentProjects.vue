@@ -8,35 +8,36 @@
 
 <template>
     <!-- Card which displays all  -->
-    <div id="project-info" class="container">
-    <div style="position:fixed; left:200px; width:90%;">
-    <div class="justify-content-center">
-    <div class="col-md-10" style="padding:0 !important;">
+    <div class="container">
+    <div class="container-layout">
+    <div class="col-md-10">
     <div class="card">
-    <div class="card-header text-center" style="font-size: 1.5em">Current Projects</div>
-      <table ref="table">
-        <thead>
+    <div class="card-header">Current Projects</div>
+      <table class="table">
+        <thead class="project-head">
           <tr>
             <th>Project</th>
             <th>Description</th>
             <th>Clients</th>
-            <th>Reviews</th>
+            <th style="text-align:center">Reviews</th>
             <th>Status</th>
             <th>Organization</th>
+            <th></th>
+            <th></th>
             </tr>
-            </thead>
-          <tbody>
-              <tr v-for="project in projects" :key="project">
-                <td>{{project.title}}</td>
-                <td>{{project.description}}</td>
-                <td>{{project.clients.join(', ')}}</td>
-                <td>{{project.num_reviews}}</td>
-                <td>{{project.status}}</td>
-                <td>{{project.organization}}</td>
-                <td><button class="btn btn-primary" id="show-modal" @click="openModal(project)">Edit</button></td>
-                <td><button class="btn delete" id="delete-project" @click="deleteProject(project)">Delete</button></td>
-              </tr>
-          </tbody>
+        </thead>
+        <tbody class="project-body">
+            <tr v-for="project in projects" :key="project">
+              <td>{{project.title}}</td>
+              <td>{{project.description}}</td>
+              <td>{{project.clients.join(', ')}}</td>
+              <td style="text-align:center">{{project.num_reviews}}</td>
+              <td>{{project.status}}</td>
+              <td>{{project.organization}}</td>
+              <td><button class="btn edit" id="show-modal" @click="openModal(project)">Edit</button></td>
+              <td><button class="btn delete" id="delete-project" @click="deleteProject(project)">Delete</button></td>
+            </tr>
+        </tbody>
       </table>
       <modal
         v-if="this.showModal"
@@ -45,7 +46,6 @@
         :organizations="this.organizations"
         @close="closeModal"
       ></modal>
-    </div>
     </div>
     </div>
     </div>
@@ -137,9 +137,4 @@ export default {
 };
 </script>
 
-<style scoped>
-tr:hover {
-  background-color: #ddd;
-}
-.delete {background-color: #f44336;} /* Red */
-</style>
+<style scoped src="../assets/styles/styles.css"></style>
