@@ -22,6 +22,7 @@ import ManageReviewers from '../components/ManageReviewers'
 import ManageClients from '../components/ManageClients'
 import ReviewerList from '../components/ReviewerList'
 import Organizations from '../components/Organizations'
+import ClientLanding from '../components/ClientLanding'
 import store from '../store/index'
 
 const routes = [
@@ -87,8 +88,8 @@ const routes = [
     name: 'Reviews',
     component: Reviews,
     children: [
-        { path: '', name: 'ReviewsList', component: ReviewsList },
-        { path: '/review', name: 'Review', component: Review, props: true }
+      { path: '', name: 'ReviewsList', component: ReviewsList },
+      { path: '/review', name: 'Review', component: Review, props: true }
     ],
     meta: {
       requiresAuth: true
@@ -125,18 +126,18 @@ const routes = [
     props: true
   },
   {
-      path: '/invitations',
-      name: 'Invitations',
-      component: Invitations,
-      meta: {
-          requiresAuth: true
-      },
+    path: '/invitations',
+    name: 'Invitations',
+    component: Invitations,
+    meta: {
+      requiresAuth: true
+    },
   },
   {
     path: '/modifyreviewer',
     name: 'ModifyReviewer',
     component: ModifyReviewer,
-    props:true,
+    props: true,
     meta: {
       requiresAuth: true
     }
@@ -145,7 +146,13 @@ const routes = [
     path: '/organizations',
     name: 'Organizations',
     component: Organizations,
-    
+
+  },
+  {
+    path: '/client-landing',
+    name: 'ClientLanding',
+    component: ClientLanding,
+
   },
 
 ]
@@ -159,7 +166,7 @@ router.beforeEach(async (to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
   if (requiresAuth && !store.state.user.loggedIn) {
     next('Login');
-  }else{
+  } else {
     next();
   }
 });
