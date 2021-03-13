@@ -5,6 +5,7 @@
  * contains records for each navigation item.
 *******************************************************/
 import { createRouter, createWebHashHistory } from 'vue-router'
+import Invitations from '../components/Invitations'
 import Login from '../components/Login'
 import Register from '../components/Register'
 import Review from '../components/Review'
@@ -146,6 +147,14 @@ const routes = [
       requiresAdmin: true
     },
     props: true
+  },
+  {
+      path: '/invitations',
+      name: 'Invitations',
+      component: Invitations,
+      meta: {
+          requiresAuth: true
+      },
   },
   {
     path: '/modifyreviewer',
