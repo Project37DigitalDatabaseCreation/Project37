@@ -127,7 +127,9 @@ export default createStore({
             }
       
             resolve(this.state.user);
-          });        
+          }).catch(err => {
+            console.log(err);
+          });   
         }        
       });
     },

@@ -194,13 +194,11 @@ router.beforeEach(async (to, from, next) => {
       next("ClientDashboard");
     } else if(to.name === "Default") {      
       next("ReviewerDashboard");
-    }
-
-    if (requiresAdmin && store.state.user.isAdmin !== true) {
+    } else if (requiresAdmin && store.state.user.isAdmin !== true) {
       next("AccessDenied");
+    } else {
+      next();
     }
-
-    next();
   }
 });
 

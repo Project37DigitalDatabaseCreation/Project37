@@ -73,15 +73,13 @@ export default {
                 this.$store.dispatch('fetchUser', userCredential.user).then(storeUser => {
                     if(storeUser && storeUser.isAdmin === true) {
                         this.$router.replace({ name: 'AdminDashboard' });
-                    }
-
-                    if(storeUser && storeUser.isClient === true) {
+                    } else if(storeUser && storeUser.isClient === true) {
                         this.$router.replace({ name: 'ClientDashboard' });
-                    } 
-
-                    if(storeUser) {
+                    } else if(storeUser) {
                         this.$router.replace({ name: 'ReviewerDashboard' });
-                    } 
+                    } else {
+                        this.$router.replace({ name: 'AccessDenied' });
+                    }
                 });           
             })
             .catch((err) => {
