@@ -1,6 +1,11 @@
 <!--
 * ForgotPassword.vue
 *
+* Author: Ben McElyea
+* bmcelyea@gmail.com 
+*
+* Date: March 2021
+*
 * Description: Allows users to reset their password. 
 *
 *
@@ -69,21 +74,28 @@
 </template>
 
 <script>
-//import firebase from "firebase";
+import firebase from "firebase";
 
 export default {
   data() {
     return {
       form: {
         email: "",
-        password: "",
       },
       error: null,
     };
   },
   methods: {
     submit() {
-      alert("todo");
+      firebase
+        .auth()
+        .sendPasswordResetEmail(this.form.email)
+        .then(function () {
+          // Email sent.
+        })
+        .catch(function (error) {
+          alert(error);
+        });
     },
   },
 };
