@@ -1,5 +1,5 @@
 <!--
-* EditProject.vue
+* EditProjectModal.vue
 *
 * Description: Overview for Edit Project Modal,
 * allows the user to edit an existing project.
@@ -7,13 +7,14 @@
 -->
 
 <template>
-  <transition name="modal">
+  <transition name="modal" style="font-size: .68em;
+  font-family: Arial, Helvetica, sans-serif;">
     <div class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-container">
           <div class="modal-header">
             <slot name="header">
-              Edit Project
+              Edit Project {{selectedClients}}
             </slot>
           </div>
 
@@ -30,7 +31,7 @@
                     name="project_name"
                     value
                     required
-                    v-model="project.title"
+                    v-model="update.value.title"
                     />
                 </div>
               </div>
@@ -48,7 +49,7 @@
                     value
                     required
                     autofocus
-                    v-model="project.description"
+                    v-model="update.value.description"
                     />
                 </div>
               </div>
@@ -62,7 +63,7 @@
                     class="form-control"
                     name="organization_name"
                     required
-                    v-model="project.organization"
+                    v-model="update.value.organization"
                     v-on:change="clearSelectedClients"
                     >
                     <option v-for="organization in organizations" :value="organization.title" :key="organization.id"> {{organization.title}}</option>
@@ -109,7 +110,7 @@
                     class="form-control"
                     name="project_status"
                     required
-                    v-model="project.status"
+                    v-model="update.value.status"
                     >
                     <option v-for="status in statusOptions" :value="status" :key="status">
                       {{ status}}
@@ -122,7 +123,7 @@
 
           <div class="modal-footer">
             <slot name="footer">
-              <button class="btn save" @click="saveEdit()">Save</button>
+              <button class="btn save" @click="handleSubmit(), $emit('close')">Save</button>
               <button class="btn cancel" @click="$emit('close')">Close</button>
             </slot>
           </div>
@@ -131,47 +132,96 @@
     </div>
   </transition>
 </template>
- 
+
 <script>
-import firebase from 'firebase'
-import Multiselect from '@vueform/multiselect'
+  import { reactive } from 'vue'
+  import firebase from 'firebase'
+  import modifyDocument from '../composables/modifyDocument'
+  import getCollection from '../composables/getCollection'
+  import Multiselect from '@vueform/multiselect'
+
   export default {
-    name: "EditProject",
-    props: {
-    selectedProject: Object,
-    organizations: Array,
-    },
+    emits: ['close'],
+    props: ['update_project'],
     components: {
       Multiselect,
     },
+    setup(props) {
+      const update = reactive({ ...props.update_project })
+      const handleSubmit = async () => {
+        const modified_project = {
+          title: update.value.title,
+          description: update.value.description,
+          status: update.value.status,
+          organization: update.value.organization,
+          org_ref: firebase.firestore().doc("/Organizations/" + update.value.org_ref),
+          clients: update.value.clients
+        }
+        modifyDocument('Projects', update.value.id).updateDoc(modified_project)
+      }
+
+      const { documents: organizations, error } = getCollection('Organizations')
+
+      // loads the current organizations from firebase for the dropdown
+      // menu when mounted
+      //onMounted(loadOrganizations)
+
+      return { update, organizations, error, handleSubmit }
+    },
     data() {
         return {
-          project: this.selectedProject,
-          statusOptions: ["New", "In Progress", "Complete"],
           clients: [],
-          selectedClients: this.selectedProject.clients,
+          selectedClients: this.update.value.clients,
+          statusOptions: ["New", "In Progress", "Complete"],
           exists: null
         };
       },
     methods: {
-      saveEdit() {
-        this.project.clients = this.selectedClients
-        this.$emit("edit-project", this.project);
-        this.$emit('close');
+      readClients() {
+          this.clients = [];
+          firebase.firestore().collection("Clients")
+          .where("organization", "==", this.update.value.organization).get()
+          .then((result) => {
+            result.forEach((doc) => {
+              this.clients.push({
+                id: doc.id,
+                firstName: doc.data().firstName,
+                lastName: doc.data().lastName,
+                organization: doc.data().organization,
+              });
+            });
+            this.getOrganizationId();
+          })
+          .catch((error) => {
+            console.log("Error retrieving documents: ", error);
+          });
       },
-      load(){
-        this.selectedClients = this.project.clients;
-      },
-      loadSelected(){
-        this.selectedClients = this.project.clients;
+      getOrganizationId() {
+        this.organizationId = [];
+        firebase.firestore().collection("Organizations")
+        .where("title", "==", this.update.value.organization).get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                this.organizationId.push({
+                    id: doc.id,
+                    title: doc.data().title,
+                });
+                this.update.value.org_ref = doc.id
+            });
+        })
+        .catch((error) => {
+            console.log("Error retrieving documents: ", error);
+        });
       },
       updateSelected(value) {
         this.checkIfExists(value)
         if (!this.exists) {
-            this.selectedClients.push(value)
+          this.selectedClients.push(value)
+          this.update.value.clients = this.selectedClients
         }
         else {
           this.selectedClients.splice(this.selectedClients.indexOf(value), 1);
+          this.update.value.clients = this.selectedClients
         }
       },
       checkIfExists(val) {
@@ -179,47 +229,11 @@ import Multiselect from '@vueform/multiselect'
           return val === item
         })
       },
-      readClients() {
-        this.clients = [];
-        firebase.firestore().collection("Clients")
-        .where("organization", "==", this.project.organization).get()
-        .then((result) => {
-          result.forEach((doc) => {
-            this.clients.push({
-              id: doc.id,
-              email: doc.data().email,
-              firstName: doc.data().firstName,
-              lastName: doc.data().lastName,
-              organization: doc.data().organization,
-            });
-          });
-          this.getOrganizationId();
-        })
-        .catch((error) => {
-          console.log("Error retrieving documents: ", error);
-          });
-        },
-        clearSelectedClients(){
-          this.selectedClients = []
-          this.readClients();
-        },
-        getOrganizationId() {
-                this.organizationId = [];
-                firebase.firestore().collection("Organizations")
-                .where("title", "==", this.project.organization).get()
-                .then((querySnapshot) => {
-                    querySnapshot.forEach((doc) => {
-                        this.organizationId.push({
-                            id: doc.id,
-                            title: doc.data().title,
-                        });
-                        this.project.org_ref = doc.id
-                    });
-                })
-                .catch((error) => {
-                    console.log("Error retrieving documents: ", error);
-                });
-            },
+      clearSelectedClients(){
+        this.selectedClients = []
+        this.update.value.clients = []
+        this.readClients();
+      },
     },
     created() {
       this.readClients();
