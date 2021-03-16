@@ -27,7 +27,7 @@
             </tr>
         </thead>
         <tbody class="project-body">
-            <tr v-for="project in projects" :key="project">
+            <tr v-for="project in projects" :key="project.id">
               <td>{{project.title}}</td>
               <td>{{project.description}}</td>
               <td>{{project.clients.join(', ')}}</td>
@@ -54,63 +54,30 @@
 
 <script>
 
-import firebase from 'firebase'
-import modal from "@/components/EditProject";
+import getCollection from '../composables/getCollection'
+
 export default {
   name: "CurrentProject",
   components: {
-    modal
+
   },
+
+  setup() {
+        const { documents: projects, error } = getCollection('Projects')
+        return {
+            projects,
+            error,
+        }
+    },
   data() {
     return {
       showModal: false,
       selectedProject: {},
       organizations: [],
-      projects: [],
       mounted: null,
-      error: null
     };
   },
   methods: {
-    updateProject(project){
-      firebase.firestore().collection("Projects").doc(project.id).update({
-        title: project.title,
-        description: project.description,
-        org_ref: firebase.firestore().doc("/Organizations/" + project.org_ref),
-        organization: project.organization,
-        status: project.status,
-        clients: project.clients
-      })
-      .then(function() {})
-        .catch(function(error) {
-          console.error("Error writing document: ", error);
-        });
-    },
-    deleteProject(project){
-      if(confirm("Delete " + project.title + "?")) {
-        firebase.firestore().collection("Projects").doc(project.id).delete()
-        .then(() => {})
-          .catch(function(error) {
-            console.error("Error deleting document: ", error);
-          });
-      }
-    },
-    readOrganizations() {
-      let organizations = [];
-      firebase.firestore().collection("Organizations").get()
-        .then((result) => {
-          result.forEach((doc) => {
-            this.organizations.push({
-              id: doc.id,
-              title: doc.data().title,
-            });
-          });
-            return organizations
-        })
-        .catch((error) => {
-          console.log("Error retrieving documents: ", error);
-        });
-    },
     openModal(project){
       this.selectedProject = Object.assign({}, project);
       this.showModal = true
@@ -118,21 +85,6 @@ export default {
     closeModal(){
       this.showModal = false
     }
-  },
-  created() {
-    this.projects = []
-    const ref = firebase.firestore().collection('Projects').orderBy("title", "asc")
-    ref.onSnapshot(querySnapshot => {
-      var projectsArray = [];
-      querySnapshot.forEach(doc => {
-        let p = doc.data();
-        p.id = doc.id;
-        projectsArray.push(p);
-      });
-        this.projects = projectsArray;
-    });
-    this.readOrganizations();
-
   },
 };
 </script>
