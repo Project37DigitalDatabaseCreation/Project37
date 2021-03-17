@@ -1,5 +1,5 @@
 <!--
-* NewProject.vue
+* NewProjectModal.vue
 *
 * Description: Overview for New Project Landing Page
 * allows the user to create a new project with multiple clients.
@@ -90,6 +90,7 @@
 <script>
   var submission = false
   import firebase from 'firebase'
+  import { ref } from 'vue'
   import Multiselect from '@vueform/multiselect'
   import '../assets/styles/styles.css';
   export default {

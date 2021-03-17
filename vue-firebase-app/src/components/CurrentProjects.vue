@@ -14,9 +14,10 @@
     <div class="card">
     <div class="card-header">Current Projects
       <div style="float:right;">
-          <edit-project-modal v-if="showEditModal"
-              :update_project="update_project"
-              @close="showEditModal = false"></edit-project-modal>
+          <button @click="showModal = true"
+              class="btn btn-primary btn-sm">
+              Add Clients
+          </button>
       </div>
     </div>
       <table class="table">
@@ -49,21 +50,29 @@
     </div>
     </div>
     </div>
-    <modal
-        v-if="showModal"
-        @close="showModal = false"
-      ></modal>
+    <new-project-modal
+      v-if="showModal"
+      :new_project="new_project"
+      @close="showModal = false"
+    ></new-project-modal>
+    <edit-project-modal
+      v-if="showEditModal"
+      :update_project="update_project"
+      @close="showEditModal = false"
+    ></edit-project-modal>
 </template>
 
 <script>
 import modifyDocument from '../composables/modifyDocument'
 import getCollection from '../composables/getCollection'
+import NewProjectModal from '../components/NewProjectModal'
 import EditProjectModal from '../components/EditProjectModal'
 import { ref, reactive } from 'vue'
 
 export default {
   name: "CurrentProjects",
   components: {
+    NewProjectModal,
     EditProjectModal,
   },
 
@@ -72,12 +81,17 @@ export default {
     const showEditModal = ref(false)
     const { documents: projects, error } = getCollection('Projects')
     const update_project = reactive({})
+    const new_project = reactive({
+            firstName: '',
+            lastName: '',
+            email: '',
+            organization: ''
+        })
     const editProject = (project) => {
             let updates = {}
             updates = Object.assign({}, project)
             update_project.value = updates
     }
-
     const deleteProject = async (id) => {
         if (confirm('Are you sure?')) {
             modifyDocument('Projects', id).deleteDoc()
@@ -92,8 +106,10 @@ export default {
         showEditModal,
         deleteProject,
         editProject,
+        NewProjectModal,
         EditProjectModal,
         update_project,
+        new_project
     }
   },
 };

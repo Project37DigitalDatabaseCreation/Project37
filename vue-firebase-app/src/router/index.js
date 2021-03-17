@@ -15,7 +15,6 @@ import Dashboard from '../components/Dashboard'
 import ProjectReviews from '../components/ProjectReviews'
 import AddReviewer from '../components/AddReviewer'
 import ModifyReviewer from '../components/ModifyReviewer'
-import NewProject from '../components/NewProject'
 import CurrentProjects from '../components/CurrentProjects'
 import ViewProject from '../components/ViewProject'
 import ManageReviewers from '../components/ManageReviewers'
@@ -52,14 +51,6 @@ const routes = [
     path: '/project-reviews',
     name: 'Project Reviews',
     component: ProjectReviews,
-    meta: {
-      requiresAuth: true
-    }
-  },
-  {
-    path: '/newProject',
-    name: 'NewProject',
-    component: NewProject,
     meta: {
       requiresAuth: true
     }
