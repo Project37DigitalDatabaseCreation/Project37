@@ -64,7 +64,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="review in in_progress_reviews" :key="review.id">
+        <tr v-for="review in inProgressReviews" :key="review.id">
           <td>{{ review.org.title }}</td>
           <td>{{ review.course_name }}</td>
           <td>{{ review.reviewer.lastName + ", " + review.reviewer.firstName }}</td>
@@ -75,6 +75,10 @@
         </tr>
       </tbody>          
     </table>
+    <div v-if="in_progress_reviews.length > PAGE_SIZE">
+      <button @click="prevInProgressPage" :disabled="in_progress_page === 1">Previous</button> 
+      <button @click="nextInProgressPage" :disabled="in_progress_reviews.length <= in_progress_page * PAGE_SIZE">Next</button>
+    </div>
     <h4 class="mt-4 text-center">Completed Reviews:</h4>
     <table class="table mt-5">
       <thead>
@@ -89,7 +93,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="review in completed_reviews" :key="review.id">
+        <tr v-for="review in completedReviews" :key="review.id">
           <td>{{ review.org.title }}</td>
           <td>{{ review.course_name }}</td>
           <td>{{ review.reviewer.lastName + ", " + review.reviewer.firstName }}</td>
@@ -99,7 +103,11 @@
           <td></td>
         </tr>
       </tbody>          
-    </table>    
+    </table>
+    <div v-if="completed_reviews.length > PAGE_SIZE">
+      <button @click="prevCompletedPage" :disabled="completed_page === 1">Previous</button> 
+      <button @click="nextCompletedPage" :disabled="completed_reviews.length <= completed_page * PAGE_SIZE">Next</button>
+    </div>  
   </div>
 </template>
 <script>
@@ -113,10 +121,41 @@ export default {
       standards: [],
       reviewStats: {},
       projectStats: {},
+      in_progress_page: 1,
+      completed_page: 1,
+      PAGE_SIZE: 10,
       error: null
     };
   },
+  computed: {
+    inProgressReviews: function() {
+      return this.in_progress_reviews.filter((row, index) => {
+        let start = (this.in_progress_page-1)*this.PAGE_SIZE;
+        let end = this.in_progress_page*this.PAGE_SIZE;
+        if(index >= start && index < end) return true;
+      });
+    },
+    completedReviews: function() {
+      return this.completed_reviews.filter((row, index) => {
+        let start = (this.completed_page-1)*this.PAGE_SIZE;
+        let end = this.completed_page*this.PAGE_SIZE;
+        if(index >= start && index < end) return true;
+      });
+    }    
+  },
   methods: {
+    prevInProgressPage() {
+      if(this.in_progress_page > 1) this.in_progress_page--;
+    },
+    nextInProgressPage() {
+      if((this.in_progress_page*this.PAGE_SIZE) < this.in_progress_reviews.length) this.in_progress_page++;
+    },
+    prevCompletedPage() {
+      if(this.completed_page > 1) this.completed_page--;
+    },
+    nextCompletedPage() {
+      if((this.completed_page*this.PAGE_SIZE) < this.completed_reviews.length) this.completed_page++;
+    },    
     addReviewToCollection(collection, review) {
       let index = collection.push(review) - 1;   
 
@@ -194,7 +233,7 @@ export default {
       this.projectStats = result.data();
     });
 
-    await db.collection("Reviews").orderBy("modified", "desc").limit(10).get()
+    await db.collection("Reviews").orderBy("modified", "desc").get()
     .then(result => {
       result.forEach(doc => {
         let review = doc.data();
