@@ -6,6 +6,7 @@
 *******************************************************/
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Invitations from '../components/Invitations'
+import InvitationPending from '../components/InvitationPending'
 import Login from '../components/Login'
 import Register from '../components/Register'
 import Review from '../components/Review'
@@ -28,7 +29,10 @@ const routes = [
   {
     path: '/',
     name: 'Default',
-    component: Dashboard
+    component: Dashboard,
+    meta: {
+        requiresAuth: true
+    }
   },
   {
     path: '/Login',
@@ -39,6 +43,11 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: Register
+  },
+  {
+      path: '/pending',
+      name: 'InvitationPending',
+      component: InvitationPending
   },
   {
     path: '/dashboard',
@@ -157,9 +166,15 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-  if (requiresAuth && !store.state.user.loggedIn) {
+  
+  if (requiresAuth && !store.getters.user.loggedIn) {
     next('Login');
-  }else{
+  }
+  else if (requiresAuth && store.getters.user.loggedIn && !store.getters.userDocument) {
+    next('Pending')
+  } 
+  else{
+      console.log('MAKING IT',requiresAuth,store.getters.user.loggedIn,store.getters.userDocument)
     next();
   }
 });
