@@ -16,7 +16,7 @@
       <div class="col-md-8">
         <div class="card">
           <div class="card-header">Forgot Password?</div>
-          <div class="card-body">
+          <div v-if="showMain" class="card-body">
             <div v-if="error" class="alert alert-danger">{{ error }}</div>
             <form action="#" @submit.prevent="submit">
               <div class="row justify-content-center">
@@ -67,6 +67,47 @@
               </div>
             </form>
           </div>
+          <div v-if="showSuccess" class="card-body">
+            <div v-if="error" class="alert alert-danger">{{ error }}</div>
+            <form action="#" @submit.prevent="submit">
+              <div class="row justify-content-center">
+                <div class="col-8 text-center mb-4 mt-1">
+                  <h5>Email sent</h5>
+                  <p>Check your email for a link to reset your password.</p>
+                </div>
+              </div>
+
+              <div class="form-group row mb-0">
+                <div class="col text-center">
+                  <router-link :to="{ name: 'Login' }"
+                    >Back to Login</router-link
+                  >
+                </div>
+              </div>
+            </form>
+          </div>
+          <div v-if="showError" class="card-body">
+            <div v-if="error" class="alert alert-danger">{{ error }}</div>
+            <form action="#" @submit.prevent="submit">
+              <div class="row justify-content-center">
+                <div class="col-8 text-center mb-4 mt-1">
+                  <h5>Error</h5>
+                  <p>{{ errorMessage.message }}</p>
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <div class="col text-center">
+                  <button
+                    class="btn btn-primary"
+                    @click.prevent="returnClicked"
+                  >
+                    Return
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
@@ -83,6 +124,10 @@ export default {
         email: "",
       },
       error: null,
+      showMain: true,
+      showError: false,
+      showSuccess: false,
+      errorMessage: "",
     };
   },
   methods: {
@@ -90,12 +135,21 @@ export default {
       firebase
         .auth()
         .sendPasswordResetEmail(this.form.email)
-        .then(function () {
-          // Email sent.
+        .then(() => {
+          this.showMain = false;
+          this.showSuccess = true;
         })
-        .catch(function (error) {
-          alert(error);
+        .catch((error) => {
+          this.showMain = false;
+          this.showSuccess = false;
+          this.errorMessage = error;
+          this.showError = true;
         });
+    },
+    returnClicked() {
+      this.showError = false;
+      this.showMain = true;
+      this.showSuccess = false;
     },
   },
 };
