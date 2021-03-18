@@ -22,7 +22,7 @@ import ManageReviewers from '../components/ManageReviewers'
 import ManageClients from '../components/ManageClients'
 import ReviewerList from '../components/ReviewerList'
 import Organizations from '../components/Organizations'
-import ClientLanding from '../components/ClientLanding'
+import ClientDashboard from '../components/ClientDashboard'
 import store from '../store/index'
 
 const routes = [
@@ -149,9 +149,9 @@ const routes = [
 
   },
   {
-    path: '/client-landing',
-    name: 'ClientLanding',
-    component: ClientLanding,
+    path: '/client-dashboard',
+    name: 'ClientDashboard',
+    component: ClientDashboard,
 
   },
 
