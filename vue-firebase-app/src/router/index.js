@@ -6,6 +6,7 @@
 *******************************************************/
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Invitations from '../components/Invitations'
+import InvitationPending from '../components/InvitationPending'
 import Login from '../components/Login'
 import Register from '../components/Register'
 import Review from '../components/Review'
@@ -68,9 +69,9 @@ const routes = [
     path: '/ReviewerDashboard',
     name: 'ReviewerDashboard',
     component: ReviewerDashboard,
-    meta: {
-      requiresAuth: true
-    }
+      path: '/pending',
+      name: 'InvitationPending',
+      component: InvitationPending
   },
   {
     path: '/project-reviews',
@@ -187,6 +188,8 @@ router.beforeEach(async (to, from, next) => {
 
   if (requiresAuth && !store.state.user.loggedIn) {
     next("Login");
+  } else if (requiresAuth && store.getters.user.loggedIn && !store.getters.userDocument) {
+    next('Pending')
   } else {
     if(to.name === "Default" && store.state.user.isAdmin === true) {      
       next("AdminDashboard");
