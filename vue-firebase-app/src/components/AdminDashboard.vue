@@ -71,7 +71,7 @@
           <td>{{ review.project.title }}</td>
           <td>{{ review.points }}</td>
           <td>{{ review.met_status }}</td>
-          <td></td>
+          <td><button @click="openReview(review.id)">Open</button></td>
         </tr>
       </tbody>          
     </table>
@@ -100,7 +100,7 @@
           <td>{{ review.project.title }}</td>
           <td>{{ review.points }}</td>
           <td>{{ review.met_status }}</td>
-          <td></td>
+          <td><button @click="openReview(review.id)">Open</button></td>
         </tr>
       </tbody>          
     </table>
@@ -155,7 +155,10 @@ export default {
     },
     nextCompletedPage() {
       if((this.completed_page*this.PAGE_SIZE) < this.completed_reviews.length) this.completed_page++;
-    },    
+    },
+    openReview(reviewId) {
+      this.$router.push({ name: 'Review', params: { review: reviewId}});
+    },
     addReviewToCollection(collection, review) {
       let index = collection.push(review) - 1;   
 
