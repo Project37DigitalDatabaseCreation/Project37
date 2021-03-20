@@ -199,16 +199,12 @@ router.beforeEach(async (to, from, next) => {
     next("Login");
   } else {
     if(to.name === "Default" && store.state.user.isAdmin === true) {      
-        console.log('here1')
       next("AdminDashboard");
     } else if(to.name === "Default" && store.state.user.isClient === true) {      
-        console.log('here2')
         next("ClientDashboard");
     } else if(to.name === "Default" && store.state.user.isReviewer === true) {      
-        console.log('here3')
         next("ReviewerDashboard");
     } else if (requiresAdmin && store.state.user.isAdmin !== true || requiresReviewer && store.state.user.isReviewer !== true) {
-        console.log('here4')
         next("AccessDenied");
     } else if (to.name === "Default" && store.state.user.isClient === false && store.state.user.isReviewer === false) {
       next('Pending');

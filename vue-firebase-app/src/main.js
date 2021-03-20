@@ -40,8 +40,10 @@ var unsubscribe = firebase.auth().onAuthStateChanged(user => {
         router.replace({ name: 'AdminDashboard' });
       } else if(storeUser && storeUser.isClient === true) {
         router.replace({ name: 'ClientDashboard' });
-      } else {
+      } else if(storeUser && storeUser.isReviewer === true) {
         router.replace({ name: 'ReviewerDashboard' });
+      } else {
+        router.replace({ name: 'Pending' })
       }
 
       unsubscribe();
