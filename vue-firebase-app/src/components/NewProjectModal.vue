@@ -6,219 +6,230 @@
 *
 -->
 <template>
-    <!-- Form to input new Project -->
-    <div class="container">
-    <div class="container-layout">
-    <div class="col-md-10">
-    <div class="card">
-    <div class="card-header">New Project</div>
-    <div class="card-body">
-    <div v-if="error" class="alert alert-danger">{{error}}</div>
-        <!-- Input fields for form -->
-        <form ref="OrgForm" action="#" @submit.prevent="submit">
-
-            <!-- Title label and textbox -->
-            <div class="form-group row">
-              <label for="title" class="col-md-4 col-form-label text-md-right">Title</label>
-                <div class="col-md-6">
-                  <input id="title" type="text" class="form-control" name="title" value required v-model="form.title" />
-                </div>
+  <transition name="modal">
+    <div class="modal-mask">
+    <div class="modal-wrapper">
+    <div class="modal-container">
+    <div class="modal-header">
+      <slot name="header"> New Project </slot>
+    </div>
+    <div class="modal-body">
+      <slot name="body">
+        <div class="form-group row">
+          <label class="col-md-4 col-form-label text-md-right">Title</label>
+            <div class="col-md-6">
+              <input
+                type="text"
+                class="form-control"
+                value
+                required
+                placeholder="Title"
+                v-model="title"
+              />
             </div>
+        </div>
 
-            <!-- Organization label and dropdown menu -->
-            <div class="form-group row">
-              <label for="organization" class="col-md-4 col-form-label text-md-right">Organization</label>
-                <div class="col-md-6">
-                  <select id="organization" class="form-control" name="organization" required v-model="form.organization" v-on:change="clearSelectedClients">
-                    <option value="" disabled hidden> Select Organization </option>
-                    <option v-for="organization in organizations" :value="organization.title" :key="organization.key"> {{organization.title}}</option>
-                  </select>
-                </div>
+        <div class="form-group row">
+          <label class="col-md-4 col-form-label text-md-right">Description</label>
+            <div class="col-md-6">
+              <input
+                type="text"
+                class="form-control"
+                value
+                required
+                placeholder="Last Name"
+                v-model="description"
+              />
             </div>
+        </div>
 
-            <!-- Clients label and dropdown menu -->
-            <div class="form-group row">
-              <label for="selectedClients" class="col-md-4 col-form-label text-md-right">Clients</label>
-                  <div class="col-md-6">
-                    <multiselect
-                    :v-model="selectedClients"
-                    :options="clients"
-                    :value="selectedClients"
-                    @select="updateSelected"
-                    @deselect="updateSelected"
-                    :multiple="true"
-                    :caret="true"
-                    :searchable="true"
-                    :allow-empty="false"
-                    no-results-text="No Clients Found"
-                    label="firstName"
-                    track-by="firstName"
-                    value-prop="firstName"
-                    :show-labels="true"
-                    :can-deselect="true"
-                    :max=-1
-                    :min=1
-                    mode="tags"
-                    placeholder="Choose Client(s)"
-                    ></multiselect>
-                  </div>
-            </div>
+        <div class="form-group row">
+          <label class="col-md-4 col-form-label text-md-right">Organization</label>
+          <div class="col-md-6">
+            <select
+            class="form-control"
+            required
+            v-model="organization"
+            v-on:change="clearSelectedClients">
+              <option
+                v-for="organization in organizations"
+                v-bind:key="organization.title"
+              >
+                {{ organization.title }}
+              </option>
+            </select>
+          </div>
+        </div>
 
-            <!-- Description label and textbox -->
-            <div class="form-group row">
-              <label for="description" class="col-md-4 col-form-label text-md-right">Description</label>
-                <div class="col-md-6">
-                  <input id="description" type="text" class="form-control" name="description" value required v-model="form.description" />
-                </div>
-            </div>
+      <div class="form-group row">
+        <label class="col-md-4 col-form-label text-md-right">Clients</label>
+          <div class="col-md-6">
+              <multiselect
+                  :v-model="clients"
+                  :options="newClients"
+                  :value="selectedClients"
+                  @select="updateSelected"
+                  @deselect="updateSelected"
+                  @open="updateSelected"
+                  @close="updateSelected"
+                  :show-options="true"
+                  :caret="true"
+                  :multiple="true"
+                  :clear="true"
+                  no-results-text="No Clients Found"
+                  label="firstName"
+                  track-by="firstName"
+                  value-prop="firstName"
+                  :show-labels="true"
+                  :hide-selected="true"
+                  :clearable="true"
+                  :max=-1
+                  :min=1
+                  :limit=-1
+                  mode="tags"
+                  :autofocus="true"
+                  placeholder="Choose Client(s)"
+                  ref="multiselect"
+                  ></multiselect>
+          </div>
+      </div>
 
-            <!-- Submit new project -->
-            <div class="form-group row mb-0">
-              <div class="col-md-6 offset-md-4">
-                <button type="submit" class="btn btn-primary">Create New Project</button>
-              </div>
-            </div>
-        </form>
+      </slot>
+    </div>
+
+    <div class="modal-footer">
+      <slot name="footer">
+        <button class="btn save" @click="handleSubmit(), $emit('close')">
+          Save
+        </button>
+        <button class="btn cancel" @click="$emit('close')">
+          Cancel
+        </button>
+      </slot>
     </div>
     </div>
     </div>
     </div>
-    </div>
-
+  </transition>
 </template>
 
 <script>
-  var submission = false
   import firebase from 'firebase'
+  import 'firebase/firestore'
   import { ref } from 'vue'
+  import getCollection from '../composables/getCollection'
   import Multiselect from '@vueform/multiselect'
-  import '../assets/styles/styles.css';
+
   export default {
-      components: {
-        Multiselect,
-      },
-      data() {
-        return {
-          organizations: [],
-          organizationId: [],
-          clients: [],
-          selectedClients: [],
-          exists: null,
-          error: null,
-          form: {
-            title: "",
-            organization: "",
-            description: "",
-            org_ref: ""
-          },
+    components: {
+      Multiselect,
+    },
+    setup() {
+      const title = ref('')
+      const description = ref('')
+      const organization = ref('')
+      const org_ref = ref('')
+      const clients = ref('')
+      const num_reviews = ref('')
+      const status = ref('')
+
+      const { documents: organizations, error } = getCollection('Organizations')
+
+      const handleSubmit = async () => {
+        const newProject = {
+          title: title.value,
+          description: description.value,
+          organization: organization.value,
+          org_ref: org_ref.value,
+          clients: clients.value,
+          num_reviews: 0,
+          status: 'New'
         }
-      },
-      methods: {
-        submit() {
-          submission = true
-          var navigate = this.$router;
-          firebase.firestore().collection("Projects").add({
-            description: this.form.description,
-            num_reviews: 0,
-            org_ref: firebase.firestore().doc("/Organizations/" + this.form.org_ref),
-            organization: this.form.organization,
-            status: "New",
-            title: this.form.title,
-            clients: this.selectedClients
-          })
-          .then(function() {
-            navigate.replace({ name: "NewProject" });
-            if (submission){
-              alert("New Project added successfully!")
-            }
-          })
-          .catch(function(error) {
-              console.error("Error writing document: ", error);
-          });
-          this.form.organization = ""
-          this.form.title = ""
-          this.form.description = ""
-          this.clients = []
-          this.selectedClients = []
-        },
-        updateSelected(value) {
-          this.checkIfExists(value)
-          if (!this.exists) {
-            this.selectedClients.push(value)
-          }
-          else {
-            this.selectedClients.splice(this.selectedClients.indexOf(value), 1);
-          }
-        },
-        checkIfExists(val) {
-          this.exists = this.selectedClients.some((item) => {
-            return val === item
-          })
-        },
-        readClients() {
-          this.clients = [];
+        await firebase.firestore().collection('Projects').add(newProject)
+      }
+      return {
+        organizations,
+        error,
+        handleSubmit,
+        title,
+        description,
+        organization,
+        org_ref,
+        clients,
+        num_reviews,
+        status
+      }
+    },
+    data() {
+      return {
+        newClients: [],
+        selectedClients: [],
+        exists: null
+      };
+    },
+    methods: {
+      readClients() {
+          this.newClients = [];
           firebase.firestore().collection("Clients")
-          .where("organization", "==", this.form.organization).get()
+          .where("organization", "==", this.organization).get()
           .then((result) => {
             result.forEach((doc) => {
-              this.clients.push({
+              this.newClients.push({
                 id: doc.id,
-                email: doc.data().email,
                 firstName: doc.data().firstName,
                 lastName: doc.data().lastName,
-                organization: doc.data().organization
               });
             });
-            this.getOrganizationId()
+            this.getOrganizationId();
           })
           .catch((error) => {
             console.log("Error retrieving documents: ", error);
           });
-        },
-        clearSelectedClients() {
-          this.selectedClients = []
-          this.readClients();
-        },
-        readOrganizations() {
-          let organizations = [];
-          firebase.firestore().collection("Organizations")
-          .get()
-          .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-              this.organizations.push({
-                id: doc.id,
-                title: doc.data().title,
-              });
-            });
-            return organizations
-          })
-          .catch((error) => {
-            console.log("Error retrieving documents: ", error);
-          });
-        },
-        getOrganizationId() {
-          this.organizationId = [];
-          firebase.firestore().collection("Organizations")
-          .where("title", "==", this.form.organization).get()
-          .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-              this.organizationId.push({
-                id: doc.id,
-                title: doc.data().title,
-              });
-              this.form.org_ref = doc.id
-            });
-          })
-          .catch((error) => {
-              console.log("Error retrieving documents: ", error);
-          });
-        },
       },
-      created() {
-        this.readOrganizations(),
+      getOrganizationId() {
+        this.organizationId = [];
+        firebase.firestore().collection("Organizations")
+        .where("title", "==", this.organization).get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                this.organizationId.push({
+                    id: doc.id,
+                    title: doc.data().title,
+                });
+                this.org_ref = doc.id
+            });
+        })
+        .catch((error) => {
+            console.log("Error retrieving documents: ", error);
+        });
+      },
+      updateSelected(value) {
+        this.checkIfExists(value)
+        if (!this.exists) {
+          if(value != null){
+            this.selectedClients.push(value)
+          }
+        }
+        else {
+          this.selectedClients.splice(this.selectedClients.indexOf(value), 1);
+        }
+        this.clients = this.selectedClients
+      },
+      checkIfExists(val) {
+        this.exists = this.selectedClients.some((item) => {
+          return val === item
+        })
+      },
+      clearSelectedClients(){
+        this.selectedClients = []
+        this.clients = []
         this.readClients();
       },
-}
+    },
+    created() {
+      this.readClients();
+    },
+  }
 </script>
 
 <style src="@vueform/multiselect/themes/default.css"></style>

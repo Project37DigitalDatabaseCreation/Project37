@@ -76,28 +76,27 @@
 
                 <div class="col-md-6">
                     <multiselect
-                        :v-model="selectedClients"
+                        :v-model="update.value.clients"
                         :options="clients"
                         :value="selectedClients"
                         @select="updateSelected"
                         @deselect="updateSelected"
-                        @open="updateSelected"
+                        @open="openOptions"
                         @close="updateSelected"
+                        :caret="true"
                         :multiple="true"
                         no-results-text="No Clients Found"
                         label="firstName"
                         track-by="firstName"
                         value-prop="firstName"
-                        :show-labels="true"
                         :hide-selected="true"
-                        :clearable="false"
+                        :focus="false"
                         :max=-1
                         :min=1
+                        :limit=-1
                         mode="tags"
-                        :autofocus="true"
                         placeholder="Choose Client(s)"
                         ></multiselect>
-                        
                 </div>
               </div>
 
@@ -139,7 +138,6 @@
   import modifyDocument from '../composables/modifyDocument'
   import getCollection from '../composables/getCollection'
   import Multiselect from '@vueform/multiselect'
-
   export default {
     emits: ['close'],
     props: ['update_project'],
@@ -159,13 +157,10 @@
         }
         modifyDocument('Projects', update.value.id).updateDoc(modified_project)
       }
-
       const { documents: organizations, error } = getCollection('Organizations')
-
       // loads the current organizations from firebase for the dropdown
       // menu when mounted
       //onMounted(loadOrganizations)
-
       return { update, organizations, error, handleSubmit }
     },
     data() {
@@ -216,13 +211,18 @@
       updateSelected(value) {
         this.checkIfExists(value)
         if (!this.exists) {
-          this.selectedClients.push(value)
-          this.update.value.clients = this.selectedClients
+            if(value != null){
+            this.selectedClients.push(value)
+          }
         }
         else {
           this.selectedClients.splice(this.selectedClients.indexOf(value), 1);
-          this.update.value.clients = this.selectedClients
         }
+        this.update.value.clients = this.selectedClients
+      },
+      openOptions() {
+        this.selectedClients = []
+        this.update.value.clients = []
       },
       checkIfExists(val) {
         this.exists = this.selectedClients.some((item) => {
@@ -241,4 +241,4 @@
   }
 </script>
 
-<style scoped src="../assets/styles/styles.css"></style>
+<style src="@vueform/multiselect/themes/default.css"></style>

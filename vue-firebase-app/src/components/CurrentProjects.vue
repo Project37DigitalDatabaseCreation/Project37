@@ -14,10 +14,9 @@
     <div class="card">
     <div class="card-header">Current Projects
       <div style="float:right;">
-          <button @click="showModal = true"
-              class="btn btn-primary btn-sm">
-              Add Clients
-          </button>
+        <button @click="showModal = true" class="btn btn-primary btn-sm">
+          New Project
+        </button>
       </div>
     </div>
       <table class="table">
@@ -33,11 +32,13 @@
             <th></th>
             </tr>
         </thead>
-        <tbody class="project-body">
-            <tr v-for="project in projects" :key="project.id">
+        <tbody class="project-body" v-for="project in projects" :key="project.id">
+            <tr>
               <td>{{project.title}}</td>
               <td>{{project.description}}</td>
-              <td>{{project.clients.join(', ')}}</td>
+              <div v-for="client in project.clients" :key="client.id">
+                <td>{{client}}</td>
+              </div>
               <td style="text-align:center">{{project.num_reviews}}</td>
               <td>{{project.status}}</td>
               <td>{{project.organization}}</td>
@@ -55,8 +56,7 @@
       :new_project="new_project"
       @close="showModal = false"
     ></new-project-modal>
-    <edit-project-modal
-      v-if="showEditModal"
+    <edit-project-modal v-if="showEditModal"
       :update_project="update_project"
       @close="showEditModal = false"
     ></edit-project-modal>
@@ -68,24 +68,28 @@ import getCollection from '../composables/getCollection'
 import NewProjectModal from '../components/NewProjectModal'
 import EditProjectModal from '../components/EditProjectModal'
 import { ref, reactive } from 'vue'
+import('../assets/styles/styles.css') 
 
 export default {
   name: "CurrentProjects",
   components: {
     NewProjectModal,
-    EditProjectModal,
+    EditProjectModal
   },
-
   setup() {
     const showModal = ref(false)
     const showEditModal = ref(false)
     const { documents: projects, error } = getCollection('Projects')
     const update_project = reactive({})
     const new_project = reactive({
-            firstName: '',
-            lastName: '',
-            email: '',
-            organization: ''
+            title: '',
+            description: '',
+            status: 'New',
+            num_reviews: 0,
+            organization: '',
+            org_ref: '',
+            clients: [],
+
         })
     const editProject = (project) => {
             let updates = {}
