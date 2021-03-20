@@ -23,10 +23,10 @@ export default createStore({
       displayName: "",
       email: "",
       isClient: false,
+      isReviewer: false,
       isAdmin: false,
       loggedIn: false
     },
-    userDocument: null,
     userLoading: false
   },
   getters: {
@@ -56,9 +56,6 @@ export default createStore({
     },
     user(state){
       return state.user
-    },
-    userDocument(state) {
-        return state.userDocument
     },
     userLoading(state) {
         return state.userLoading
@@ -100,11 +97,9 @@ export default createStore({
       console.log('standards set')
     },
     SET_USER(state, data) {
-      data.loggedIn = state.user.loggedIn;
+        //  This will default to use loggedIn if provided, if not, use the state
+      data.loggedIn = Object.prototype.hasOwnProperty.call(data,'loggedIn') ? data.loggedIn : state.user.loggedIn;
       state.user = data;
-    },
-    SET_USER_DOCUMENT(state, userDoc) {
-        state.userDocument = userDoc
     },
     SET_USER_LOADING(state, bool) {
         console.log('bool',bool)
@@ -112,64 +107,64 @@ export default createStore({
     }
   },
   actions: {
-    fetchUser({ commit }, user) {
-      return new Promise((resolve) => {
+    async fetchUser({ commit }, user) {
         commit("SET_LOGGED_IN", user !== null);
+
         if (user) {
-          firebase.firestore().collection("Reviewers").where("email", "==", user.email).get()
-          .then(result => {
-            if(result.size === 0) {
-              commit("SET_USER", {
-                displayName: user.displayName,
-                email: user.email,
-                isClient: true,
-                isAdmin: false
-              });          
-            } else if(result.docs[0].data().isAdmin === true) {
-              commit("SET_USER", {
+            //  Get an invitation first because non auth users don't have access to other docs
+            const invitation = await firebase.firestore().collection('Invitations').where('uid', '==', user.uid).get()
+
+            if (invitation.docs && invitation.docs.length) {
+                //  Commit our user as an Invited user
+                return commit("SET_USER", {
+                    displayName: user.displayName,
+                    email: user.email,
+                    isClient: false,
+                    isReviewer: false,
+                    isAdmin: false,
+                });
+            }
+
+        //  If no invitations, then continue to get a Reviewer
+        const reviewers = await firebase.firestore().collection("Reviewers").doc(user.uid).get()
+
+        if(!reviewers.data()) {
+            const clients = await firebase.firestore().collection('Clients').doc(user.uid).get()
+            //  If result size is 0, then this is an invitation
+            if (clients.size === 0) {
+                return commit("SET_USER", {
+                    displayName: user.displayName,
+                    email: user.email,
+                    isClient: false,
+                    isReviewer: false,
+                    isAdmin: false
+                });
+            } else {
+                return commit("SET_USER", {
+                    displayName: user.displayName,
+                    email: user.email,
+                    isClient: true,
+                    isReviewer: false,
+                    isAdmin: false
+                });
+            }
+        } else if(reviewers.data().isAdmin === true) {
+              return commit("SET_USER", {
                 displayName: user.displayName,
                 email: user.email,
                 isClient: false,
+                isReviewer: true,
                 isAdmin: true
               });    
             } else {
-              commit("SET_USER", {
+              return commit("SET_USER", {
                 displayName: user.displayName,
                 email: user.email,
                 isClient: false,
+                isReviewer: true,
                 isAdmin: false
-              });            
+              });
             }
-      
-            resolve(this.state.user);
-          }).catch(err => {
-            console.log(err);
-          });   
-        }        
-      });
-      state.user.data = data;
-    },
-    async fetchUserDocument({ commit }, uid) {
-        commit('SET_USER_LOADING', true)
-
-        //  Grab the reviewer matching this uid
-        try {
-            const reviewer = await firebase.firestore().collection('Reviewers').doc(uid).get()
-            //  If the reviewer exists, commit
-            if (reviewer) commit("SET_USER_DOCUMENT", reviewer)
-
-            //  Else, get the client matching this uid
-            const client = await firebase.firestore().collection('Client').doc(uid).get()
-            //  If the client exists, commit
-            if (client) commit("SET_USER_DOCUMENT", client)
-
-            //  Else set to null
-            if (!client && !reviewer) commit("SET_USER_DOCUMENT", null)
-        } catch (e) {
-            console.log("No user document.")
-        }
-        finally {
-            commit('SET_USER_LOADING', false)
         }
     },
     async fetchGeneralStandards({ dispatch }) {

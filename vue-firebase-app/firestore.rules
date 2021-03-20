@@ -2,7 +2,7 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /Clients/{clientId} {
-        allow read: if request.auth != null && clientExists();
+        allow read: if request.auth != null;
         //  Only allow admins to write Clients
         allow create: if request.auth != null && reviewerIsAdmin();
         //  Allow updates and writes if admin OR this is the current client
@@ -10,10 +10,10 @@ service cloud.firestore {
     }
     //  Rules for accessing Invitations
     match /Invitations/{invitationId} {
-        //  Everyone can create invitations
-        allow write;
+        //  Everyone can create invitations and read invitations
+        allow read,write;
         //  Only admins can read, update, and delete invitations
-        allow read,update,delete: if request.auth != null && reviewerIsAdmin();
+        allow update,delete: if request.auth != null && reviewerIsAdmin();
     }
     //  Rules for accessing Organizations
     match /Organizations/{organizationId} {
@@ -31,6 +31,8 @@ service cloud.firestore {
     }
     //  Rules for accessing Reviewers
     match /Reviewers/{reviewerId} {
+        //  We allow reads from anyone who is signed in
+        allow read: if request.auth != null;
         //	Only allow write, delete, create, and update if admin OR same UID
         allow write,delete,create,update: if request.auth != null && (reviewerIsAdmin() || request.auth.uid == reviewerId);
     }

@@ -30,9 +30,9 @@ firebase.initializeApp({
     appId: "1:46311260060:web:1e381fb482afc30c955259"
 })
 
-if (location.hostname === "localhost") {
-  firebase.firestore().useEmulator("localhost", 8080);
-}
+// if (location.hostname === "localhost") {
+//   firebase.firestore().useEmulator("localhost", 8080);
+// }
 
 var unsubscribe = firebase.auth().onAuthStateChanged(user => {
     store.dispatch("fetchUser", user).then(storeUser => {

@@ -15,16 +15,27 @@ import { mapGetters } from 'vuex'
 export default {
     computed: {
         ...mapGetters({
-            loading: 'userLoading',
-            userDoc: 'userDocument'
+            user: 'user'
         })
     },
     mounted() {
-        if (this.userDoc) this.$router.push('/Dashboard')
+        //  Route the user accordingly
+        this.routeUser()
+    },
+    methods: {
+        routeUser() {
+            if (this.user.isAdmin) {
+                this.$router.replace({ name: 'AdminDashboard' })
+            } else if (this.user.isReviewer) {
+                this.$router.replace({ name: 'ReviewerDashboard' })
+            } else if (this.user.isClient) {
+                this.$router.replace({ name: 'ClientDashboard' })
+            }
+        }
     },
     watch: {
-        userDoc(val) {
-            if (val) this.$router.push('/Dashboard')
+        user() {
+            this.routeUser()
         }
     }
 }
