@@ -27,8 +27,9 @@
                                         :to="item.link" class="nav-link">
                                         {{ item.name }}
                                     </router-link>
-                                    <div v-else-if="item.display" class="nav-item">
-                                        {{ user.data.displayName }}
+                                    <div v-else-if="item.display && user.loggedIn"
+                                        class="nav-item">
+                                        {{ user.displayName }}
                                     </div>
                                     <a v-else-if="item.method" class="nav-link"
                                         @click.prevent="signOut">Sign Out</a>
@@ -55,50 +56,49 @@ import { mapGetters } from 'vuex'
 import firebase from 'firebase'
 export default {
     mounted() {
-        console.log('USER DOC', this.userDocument)
+        console.log('USER', this.user)
     },
     computed: {
         ...mapGetters({
             // map `this.user` to `this.$store.getters.user`
-            user: 'user',
-            userDocument: 'userDocument'
+            user: 'user'
         }),
         navLinks() {
             const links = [
                 {
                     link: '/manage-clients',
                     name: 'Manage Client',
-                    hidden: !this.userDocument
+                    hidden: !this.user.isAdmin
                 },
                 {
                     link: '/project-reviews',
                     name: 'Project Reviews',
-                    hidden: !this.userDocument
+                    hidden: !this.user.isAdmin
                 },
                 {
                     link: '/addreviewer',
                     name: 'Add Reviewer',
-                    hidden: !this.userDocument
+                    hidden: !this.user.isAdmin
                 },
                 {
                     link: '/modifyreviewer',
                     name: 'Modify Reviewers',
-                    hidden: !this.userDocument
+                    hidden: !this.user.isAdmin
                 },
                 {
                     link: '/managereviewers',
                     name: 'Manage Reviewers',
-                    hidden: !this.userDocument
+                    hidden: !this.user.isAdmin
                 },
                 {
                     link: '/reviews',
                     name: 'Reviews',
-                    hidden: !this.userDocument
+                    hidden: !this.user.isReviewer
                 },
                 {
                     link: '/currentprojects',
                     name: 'Current Projects',
-                    hidden: !this.userDocument
+                    hidden: !this.user.isAdmin
                 },
                 {
                     display: true
@@ -117,6 +117,15 @@ export default {
                 .auth()
                 .signOut()
                 .then(() => {
+                    this.$store.commit('SET_USER', {
+                        displayName: '',
+                        email: '',
+                        isClient: false,
+                        isReviewer: false,
+                        isAdmin: false,
+                        loggedIn: false
+                    })
+                    console.log('userasdf', this.user)
                     this.$router.push({ path: 'login' })
                 })
         }

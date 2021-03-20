@@ -44,6 +44,11 @@ const routes = [
     component: AccessDenied
   },
   {
+    path: '/Pending',
+    name: 'Pending',
+    component: InvitationPending
+  },
+  {
     path: '/register',
     name: 'Register',
     component: Register
@@ -53,7 +58,8 @@ const routes = [
     name: 'AdminDashboard',
     component: AdminDashboard,
     meta: {
-      requiresAdmin: true
+        requiresAuth: true,
+        requiresAdmin: true
     }
   },
   {
@@ -61,23 +67,24 @@ const routes = [
     name: 'ClientDashboard',
     component: ClientDashboard,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
     }
   },
   {
     path: '/ReviewerDashboard',
     name: 'ReviewerDashboard',
     component: ReviewerDashboard,
-      path: '/pending',
-      name: 'InvitationPending',
-      component: InvitationPending
+    meta: {
+        requiresAuth: true,
+        requiresReviewer: true
+    }
   },
   {
     path: '/project-reviews',
     name: 'Project Reviews',
     component: ProjectReviews,
     meta: {
-      requiresAdmin: true
+      requiresAdmin: true,
     }
   },
   {
@@ -107,7 +114,8 @@ const routes = [
         { path: '/review', name: 'Review', component: Review, props: true }
     ],
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      requiresReviewer: true
     }
   },
   {
@@ -176,20 +184,21 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
   const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin);
+  const requiresReviewer = to.matched.some(record => record.meta.requiresReviewer)
 
   if (requiresAuth && !store.state.user.loggedIn) {
     next("Login");
-  } else if (requiresAuth && store.getters.user.loggedIn && !store.getters.userDocument) {
-    next('Pending')
   } else {
     if(to.name === "Default" && store.state.user.isAdmin === true) {      
       next("AdminDashboard");
     } else if(to.name === "Default" && store.state.user.isClient === true) {      
-      next("ClientDashboard");
-    } else if(to.name === "Default") {      
-      next("ReviewerDashboard");
-    } else if (requiresAdmin && store.state.user.isAdmin !== true) {
-      next("AccessDenied");
+        next("ClientDashboard");
+    } else if(to.name === "Default" && store.state.user.isReviewer === true) {      
+        next("ReviewerDashboard");
+    } else if (requiresAdmin && store.state.user.isAdmin !== true || requiresReviewer && store.state.user.isReviewer !== true) {
+        next("AccessDenied");
+    } else if (to.name === "Default" && store.state.user.isClient === false && store.state.user.isReviewer === false) {
+      next('Pending');
     } else {
       next();
     }

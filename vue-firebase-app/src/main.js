@@ -30,9 +30,9 @@ firebase.initializeApp({
     appId: "1:46311260060:web:1e381fb482afc30c955259"
 })
 
-if (location.hostname === "localhost") {
-  firebase.firestore().useEmulator("localhost", 8080);
-}
+// if (location.hostname === "localhost") {
+//   firebase.firestore().useEmulator("localhost", 8080);
+// }
 
 var unsubscribe = firebase.auth().onAuthStateChanged(user => {
     store.dispatch("fetchUser", user).then(storeUser => {
@@ -40,8 +40,10 @@ var unsubscribe = firebase.auth().onAuthStateChanged(user => {
         router.replace({ name: 'AdminDashboard' });
       } else if(storeUser && storeUser.isClient === true) {
         router.replace({ name: 'ClientDashboard' });
-      } else {
+      } else if(storeUser && storeUser.isReviewer === true) {
         router.replace({ name: 'ReviewerDashboard' });
+      } else {
+        router.replace({ name: 'Pending' })
       }
 
       unsubscribe();
