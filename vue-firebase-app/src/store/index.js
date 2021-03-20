@@ -20,9 +20,14 @@ export default createStore({
     sortedStandards: null,
     standards: null,
     user: {
-      loggedIn: false,
-      data: null
+      displayName: "",
+      email: "",
+      isClient: false,
+      isAdmin: false,
+      loggedIn: false
     },
+    userDocument: null,
+    userLoading: false
   },
   getters: {
     generalStandards(state) {
@@ -51,6 +56,12 @@ export default createStore({
     },
     user(state){
       return state.user
+    },
+    userDocument(state) {
+        return state.userDocument
+    },
+    userLoading(state) {
+        return state.userLoading
     }
   },
   mutations: {
@@ -89,20 +100,77 @@ export default createStore({
       console.log('standards set')
     },
     SET_USER(state, data) {
-      state.user.data = data;
+      data.loggedIn = state.user.loggedIn;
+      state.user = data;
+    },
+    SET_USER_DOCUMENT(state, userDoc) {
+        state.userDocument = userDoc
+    },
+    SET_USER_LOADING(state, bool) {
+        console.log('bool',bool)
+        state.userLoading = bool
     }
   },
   actions: {
     fetchUser({ commit }, user) {
-      commit("SET_LOGGED_IN", user !== null);
-      if (user) {
-        commit("SET_USER", {
-          displayName: user.displayName,
-          email: user.email
-        });
-      } else {
-        commit("SET_USER", null);
-      }
+      return new Promise((resolve) => {
+        commit("SET_LOGGED_IN", user !== null);
+        if (user) {
+          firebase.firestore().collection("Reviewers").where("email", "==", user.email).get()
+          .then(result => {
+            if(result.size === 0) {
+              commit("SET_USER", {
+                displayName: user.displayName,
+                email: user.email,
+                isClient: true,
+                isAdmin: false
+              });          
+            } else if(result.docs[0].data().isAdmin === true) {
+              commit("SET_USER", {
+                displayName: user.displayName,
+                email: user.email,
+                isClient: false,
+                isAdmin: true
+              });    
+            } else {
+              commit("SET_USER", {
+                displayName: user.displayName,
+                email: user.email,
+                isClient: false,
+                isAdmin: false
+              });            
+            }
+      
+            resolve(this.state.user);
+          }).catch(err => {
+            console.log(err);
+          });   
+        }        
+      });
+      state.user.data = data;
+    },
+    async fetchUserDocument({ commit }, uid) {
+        commit('SET_USER_LOADING', true)
+
+        //  Grab the reviewer matching this uid
+        try {
+            const reviewer = await firebase.firestore().collection('Reviewers').doc(uid).get()
+            //  If the reviewer exists, commit
+            if (reviewer) commit("SET_USER_DOCUMENT", reviewer)
+
+            //  Else, get the client matching this uid
+            const client = await firebase.firestore().collection('Client').doc(uid).get()
+            //  If the client exists, commit
+            if (client) commit("SET_USER_DOCUMENT", client)
+
+            //  Else set to null
+            if (!client && !reviewer) commit("SET_USER_DOCUMENT", null)
+        } catch (e) {
+            console.log("No user document.")
+        }
+        finally {
+            commit('SET_USER_LOADING', false)
+        }
     },
     async fetchGeneralStandards({ dispatch }) {
       //  Our collection of general Standards

@@ -51,36 +51,87 @@
     </nav>
 </template>
 <script>
-  import { mapGetters } from 'vuex'
-  import firebase from 'firebase'
-  export default {
+import { mapGetters } from 'vuex'
+import firebase from 'firebase'
+export default {
+    mounted() {
+        console.log('USER DOC', this.userDocument)
+    },
     computed: {
-      ...mapGetters({
-        // map `this.user` to `this.$store.getters.user`
-        user: 'user',
-      }),
+        ...mapGetters({
+            // map `this.user` to `this.$store.getters.user`
+            user: 'user',
+            userDocument: 'userDocument'
+        }),
+        navLinks() {
+            const links = [
+                {
+                    link: '/manage-clients',
+                    name: 'Manage Client',
+                    hidden: !this.userDocument
+                },
+                {
+                    link: '/project-reviews',
+                    name: 'Project Reviews',
+                    hidden: !this.userDocument
+                },
+                {
+                    link: '/addreviewer',
+                    name: 'Add Reviewer',
+                    hidden: !this.userDocument
+                },
+                {
+                    link: '/modifyreviewer',
+                    name: 'Modify Reviewers',
+                    hidden: !this.userDocument
+                },
+                {
+                    link: '/managereviewers',
+                    name: 'Manage Reviewers',
+                    hidden: !this.userDocument
+                },
+                {
+                    link: '/reviews',
+                    name: 'Reviews',
+                    hidden: !this.userDocument
+                },
+                {
+                    link: '/currentprojects',
+                    name: 'Current Projects',
+                    hidden: !this.userDocument
+                },
+                {
+                    display: true
+                },
+                {
+                    method: 'signOut'
+                }
+            ]
+
+            return links
+        }
     },
     methods: {
-      signOut() {
-        firebase
-          .auth()
-          .signOut()
-          .then(() => {
-            this.$router.push({ path: 'login' })
-          })
-      },
-    },
-  }
+        signOut() {
+            firebase
+                .auth()
+                .signOut()
+                .then(() => {
+                    this.$router.push({ path: 'login' })
+                })
+        }
+    }
+}
 </script>
 <style>
-  .navbar {
+.navbar {
     height: 56px !important;
-  }
-  .nav-item {
+}
+.nav-item {
     margin-left: 6px;
     margin-right: 6px;
     display: flex;
     justify-content: center;
     align-items: center;
-  }
+}
 </style>

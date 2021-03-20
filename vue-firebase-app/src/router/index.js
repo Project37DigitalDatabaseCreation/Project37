@@ -6,12 +6,16 @@
 *******************************************************/
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Invitations from '../components/Invitations'
+import InvitationPending from '../components/InvitationPending'
 import Login from '../components/Login'
 import Register from '../components/Register'
 import Review from '../components/Review'
 import ReviewsList from '../components/ReviewsList'
 import Reviews from '../components/Reviews'
-import Dashboard from '../components/Dashboard'
+import AccessDenied from '../components/AccessDenied'
+import AdminDashboard from '../components/AdminDashboard'
+import ClientDashboard from '../components/ClientDashboard'
+import ReviewerDashboard from '../components/ReviewerDashboard'
 import ProjectReviews from '../components/ProjectReviews'
 import AddReviewer from '../components/AddReviewer'
 import ModifyReviewer from '../components/ModifyReviewer'
@@ -27,7 +31,7 @@ const routes = [
   {
     path: '/',
     name: 'Default',
-    component: Dashboard
+    component: Login
   },
   {
     path: '/Login',
@@ -35,24 +39,45 @@ const routes = [
     component: Login
   },
   {
+    path: '/AccessDenied',
+    name: 'AccessDenied',
+    component: AccessDenied
+  },
+  {
     path: '/register',
     name: 'Register',
     component: Register
   },
   {
-    path: '/dashboard',
-    name: 'Dashboard',
-    component: Dashboard,
+    path: '/AdminDashboard',
+    name: 'AdminDashboard',
+    component: AdminDashboard,
+    meta: {
+      requiresAdmin: true
+    }
+  },
+  {
+    path: '/ClientDashboard',
+    name: 'ClientDashboard',
+    component: ClientDashboard,
     meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: '/ReviewerDashboard',
+    name: 'ReviewerDashboard',
+    component: ReviewerDashboard,
+      path: '/pending',
+      name: 'InvitationPending',
+      component: InvitationPending
   },
   {
     path: '/project-reviews',
     name: 'Project Reviews',
     component: ProjectReviews,
     meta: {
-      requiresAuth: true
+      requiresAdmin: true
     }
   },
   {
@@ -61,7 +86,7 @@ const routes = [
     component: CurrentProjects,
     props: true,
     meta: {
-      requiresAuth: true
+      requiresAdmin: true
     }
   },
   {
@@ -70,7 +95,7 @@ const routes = [
     component: ViewProject,
     props: true,
     meta: {
-      requiresAuth: true
+      requiresAdmin: true
     }
   },
   {
@@ -90,7 +115,7 @@ const routes = [
     name: 'AddReviewer',
     component: AddReviewer,
     meta: {
-      requiresAuth: true
+      requiresAdmin: true
     }
   },
   {
@@ -103,7 +128,7 @@ const routes = [
 
     ],
     meta: {
-      requiresAuth: true
+      requiresAdmin: true
     }
   },
   {
@@ -111,7 +136,7 @@ const routes = [
     name: 'ManageClients',
     component: ManageClients,
     meta: {
-      requiresAuth: true
+      requiresAdmin: true
     },
     props: true
   },
@@ -129,14 +154,16 @@ const routes = [
     component: ModifyReviewer,
     props:true,
     meta: {
-      requiresAuth: true
+      requiresAdmin: true
     }
   },
   {
     path: '/organizations',
     name: 'Organizations',
     component: Organizations,
-    
+    meta: {
+      requiresAdmin: true
+    }
   },
 
 ]
@@ -148,10 +175,24 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin);
+
   if (requiresAuth && !store.state.user.loggedIn) {
-    next('Login');
-  }else{
-    next();
+    next("Login");
+  } else if (requiresAuth && store.getters.user.loggedIn && !store.getters.userDocument) {
+    next('Pending')
+  } else {
+    if(to.name === "Default" && store.state.user.isAdmin === true) {      
+      next("AdminDashboard");
+    } else if(to.name === "Default" && store.state.user.isClient === true) {      
+      next("ClientDashboard");
+    } else if(to.name === "Default") {      
+      next("ReviewerDashboard");
+    } else if (requiresAdmin && store.state.user.isAdmin !== true) {
+      next("AccessDenied");
+    } else {
+      next();
+    }
   }
 });
 
