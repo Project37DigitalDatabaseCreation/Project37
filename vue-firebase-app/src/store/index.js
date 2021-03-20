@@ -20,8 +20,11 @@ export default createStore({
     sortedStandards: null,
     standards: null,
     user: {
-      loggedIn: false,
-      data: null
+      displayName: "",
+      email: "",
+      isClient: false,
+      isAdmin: false,
+      loggedIn: false
     },
     userDocument: null,
     userLoading: false
@@ -97,7 +100,8 @@ export default createStore({
       console.log('standards set')
     },
     SET_USER(state, data) {
-      state.user.data = data;
+      data.loggedIn = state.user.loggedIn;
+      state.user = data;
     },
     SET_USER_DOCUMENT(state, userDoc) {
         state.userDocument = userDoc
@@ -108,18 +112,42 @@ export default createStore({
     }
   },
   actions: {
-    fetchUser({ commit, dispatch }, user) {
-      commit("SET_LOGGED_IN", user !== null);
-      if (user) {
-        commit("SET_USER", {
-          displayName: user.displayName,
-          email: user.email
-        });
-        //  We also want to fetch the document for this user
-        dispatch('fetchUserDocument', user.uid)
-      } else {
-        commit("SET_USER", null);
-      }
+    fetchUser({ commit }, user) {
+      return new Promise((resolve) => {
+        commit("SET_LOGGED_IN", user !== null);
+        if (user) {
+          firebase.firestore().collection("Reviewers").where("email", "==", user.email).get()
+          .then(result => {
+            if(result.size === 0) {
+              commit("SET_USER", {
+                displayName: user.displayName,
+                email: user.email,
+                isClient: true,
+                isAdmin: false
+              });          
+            } else if(result.docs[0].data().isAdmin === true) {
+              commit("SET_USER", {
+                displayName: user.displayName,
+                email: user.email,
+                isClient: false,
+                isAdmin: true
+              });    
+            } else {
+              commit("SET_USER", {
+                displayName: user.displayName,
+                email: user.email,
+                isClient: false,
+                isAdmin: false
+              });            
+            }
+      
+            resolve(this.state.user);
+          }).catch(err => {
+            console.log(err);
+          });   
+        }        
+      });
+      state.user.data = data;
     },
     async fetchUserDocument({ commit }, uid) {
         commit('SET_USER_LOADING', true)
