@@ -8,16 +8,12 @@
 
 <template>
   <div class="container">
-    <!-- <div class="row justify-content-center">
-      <h3>Welcome: {{ user.data.displayName }}</h3>
-    </div> -->
     <div class="row justify-content-center">
       <div class="col-sm-2">
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Reviews in Progress</h5>
-            <!-- <h1>{{ reviewStats.NewReviewsCount }}</h1> -->
-            <h1>00</h1>
+            <h1>4</h1>
           </div>
         </div>
       </div>
@@ -25,8 +21,7 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Reviews Completed</h5>
-            <!-- <h1>{{}}</h1> -->
-            <h1>11</h1>
+            <h1>3</h1>
           </div>
         </div>
       </div>
@@ -42,7 +37,6 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">% Project Complete</h5>
-            <!-- <h1>{{ projectStats.CurrentProjectsCount }}</h1> -->
             <h1>33</h1>
           </div>
         </div>
@@ -87,15 +81,15 @@
   export default {
     setup() {
       const in_progress_reviews = ref([])
-      // const completed_reviews = ref([])
+      const completed_reviews = ref([])
       const percentage_completed = 0
       const { documents: reviews_in_project, error } = getCollection('Reviews')
 
       console.log(reviews_in_project)
 
-      const completed_reviews = reviews_in_project.value.filter((review) => {
-        return review.status.includes('In-Progress')
-      })
+      // const completed_reviews = reviews_in_project.value.filter((review) => {
+      //   return review.status.includes('In-Progress')
+      // })
 
       return {
         in_progress_reviews,
