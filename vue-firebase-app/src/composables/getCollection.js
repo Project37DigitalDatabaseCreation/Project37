@@ -11,8 +11,8 @@ const getCollection = (collection, query) => {
     let collectionRef = firebase.firestore().collection(collection)
 
 
-    // If a second parameter of query is included then it will use reference the query
-    // pass the query as an array i.e. ['organization.id', '==', 'organization.value.id']
+    // If a second parameter is included then it will reference the query passed
+    // as an array i.e. ['organization.id', '==', 'organization.value.id']
     if (query) {
         collectionRef = collectionRef.where(...query)
     }

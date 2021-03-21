@@ -47,7 +47,7 @@
             <h1>{{ projectStats.CompletedProjectsCount }}</h1>
           </div>
         </div>
-      </div>                  
+      </div>
     </div>
     <h4 class="mt-4 text-center">Latest Reviews:</h4>
     <span style="color: red">{{ error }}</span>
@@ -65,115 +65,125 @@
       <tbody>
         <tr v-for="review in reviews" :key="review.id">
           <td>{{ review.org.title }}</td>
-          <td>{{ review.reviewer.lastName + ", " + review.reviewer.firstName }}</td>
+          <td>
+            {{ review.reviewer.lastName + ', ' + review.reviewer.firstName }}
+          </td>
           <td>{{ review.project.title }}</td>
           <td>{{ review.points }}</td>
           <td>{{ review.met_status }}</td>
           <td></td>
         </tr>
-      </tbody>          
+      </tbody>
     </table>
   </div>
 </template>
 <script>
-import firebase from "firebase";
+  import firebase from 'firebase'
 
-export default {
+  export default {
     data() {
-    return {
-      reviews: [],
-      standards: [],
-      reviewStats: {},
-      projectStats: {},
-      error: null
-    };
-  },
-  async mounted() {
-    const db = firebase.firestore();
-    
-    db.doc('Stats/ReviewsByStatus').get()
-    .then(result => {
-      this.reviewStats = result.data();
-    });
+      return {
+        reviews: [],
+        standards: [],
+        reviewStats: {},
+        projectStats: {},
+        error: null,
+      }
+    },
+    async mounted() {
+      const db = firebase.firestore()
 
-    db.doc('Stats/ProjectsByStatus').get()
-    .then(result => {
-      this.projectStats = result.data();
-    });
+      db.doc('Stats/ReviewsByStatus')
+        .get()
+        .then((result) => {
+          this.reviewStats = result.data()
+        })
 
-    await db.collection("Reviews").orderBy("modified", "desc").limit(10).get()
-    .then(result => {
-      result.forEach(doc => {
-        let review = doc.data();
-        review.id = doc.id;
-        review.org = {};
-        review.org.title = "";
-        review.reviewer = {};
-        review.reviewer.lastName = "";
-        review.reviewer.firstName = "";
-        review.project = {};
-        review.project.title = "";
+      db.doc('Stats/ProjectsByStatus')
+        .get()
+        .then((result) => {
+          this.projectStats = result.data()
+        })
 
-        let index = this.reviews.push(review) - 1;   
+      await db
+        .collection('Reviews')
+        .orderBy('modified', 'desc')
+        .limit(10)
+        .get()
+        .then((result) => {
+          result.forEach((doc) => {
+            let review = doc.data()
+            review.id = doc.id
+            review.org = {}
+            review.org.title = ''
+            review.reviewer = {}
+            review.reviewer.lastName = ''
+            review.reviewer.firstName = ''
+            review.project = {}
+            review.project.title = ''
 
-        review.project_ref.get()
-        .then(doc => {
-          let proj = doc.data();
-          proj.id = doc.id;
-          this.reviews[index].project = proj;
+            let index = this.reviews.push(review) - 1
 
-          proj.org_ref.get()
-          .then(doc => {
-            let org = doc.data();
-            org.id = doc.id;
-            this.reviews[index].org = org;
+            review.project_ref.get().then((doc) => {
+              let proj = doc.data()
+              proj.id = doc.id
+              this.reviews[index].project = proj
 
-            review.reviewer_ref.get()
-            .then(doc => {
-              let reviewer = doc.data();
-              reviewer.id = doc.id;
-              this.reviews[index].reviewer = reviewer;                                       
-            });            
-          });              
-        });        
-      })}).catch(err => { console.error(err) });
+              proj.org_ref.get().then((doc) => {
+                let org = doc.data()
+                org.id = doc.id
+                this.reviews[index].org = org
 
-    let querySnapshot = await db.collection("Standards").get();
+                review.reviewer_ref.get().then((doc) => {
+                  let reviewer = doc.data()
+                  reviewer.id = doc.id
+                  this.reviews[index].reviewer = reviewer
+                })
+              })
+            })
+          })
+        })
+        .catch((err) => {
+          console.error(err)
+        })
 
-    querySnapshot.forEach(doc => {
-      let standard = {};
-      standard.id = doc.id;
-      standard.points = doc.data().points;
-      this.standards.push(standard);
-    });        
+      let querySnapshot = await db.collection('Standards').get()
 
-    for (let i = 0; i < this.reviews.length; i++) {
-      let reviewRef = db.doc("/Reviews/" + this.reviews[i].id);          
-      this.reviews[i].points = 0;
-      this.reviews[i].met_status = "Met";
-      
-      db.collection("Scores").where("review_ref", "==", reviewRef).get()
-      .then(result => {        
-        result.forEach(doc => {
-          let score = doc.data();
-          
-          if(score.standard_ref) {            
-            const scoreStandard = this.standards.find(function(standard) {
-              return standard.id === score.standard_ref.id;
-            });
-            
-            if (scoreStandard && score.met) {
-              this.reviews[i].points += scoreStandard.points;
-            }
-            
-            if (scoreStandard && !score.met && scoreStandard.points == 3) {
-              this.reviews[i].met_status = "Not Met";
-            }
-          }
-        });
-      });        
-    }
+      querySnapshot.forEach((doc) => {
+        let standard = {}
+        standard.id = doc.id
+        standard.points = doc.data().points
+        this.standards.push(standard)
+      })
+
+      for (let i = 0; i < this.reviews.length; i++) {
+        let reviewRef = db.doc('/Reviews/' + this.reviews[i].id)
+        this.reviews[i].points = 0
+        this.reviews[i].met_status = 'Met'
+
+        db.collection('Scores')
+          .where('review_ref', '==', reviewRef)
+          .get()
+          .then((result) => {
+            result.forEach((doc) => {
+              let score = doc.data()
+
+              if (score.standard_ref) {
+                const scoreStandard = this.standards.find(function(standard) {
+                  return standard.id === score.standard_ref.id
+                })
+
+                if (scoreStandard && score.met) {
+                  this.reviews[i].points += scoreStandard.points
+                }
+
+                if (scoreStandard && !score.met && scoreStandard.points == 3) {
+                  this.reviews[i].met_status = 'Not Met'
+                }
+              }
+            })
+          })
+      }
+    },
   }
-};
 </script>
- 

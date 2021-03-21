@@ -42,6 +42,14 @@ const routes = [
     component: Register
   },
   {
+    path: '/ClientDashboard',
+    name: 'ClientDashboard',
+    component: ClientDashboard,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
     path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard,
@@ -146,12 +154,6 @@ const routes = [
     path: '/organizations',
     name: 'Organizations',
     component: Organizations,
-
-  },
-  {
-    path: '/client-dashboard',
-    name: 'ClientDashboard',
-    component: ClientDashboard,
 
   },
 
