@@ -20,9 +20,14 @@ export default createStore({
     sortedStandards: null,
     standards: null,
     user: {
-      loggedIn: false,
-      data: null
+      displayName: "",
+      email: "",
+      isClient: false,
+      isReviewer: false,
+      isAdmin: false,
+      loggedIn: false
     },
+    userLoading: false
   },
   getters: {
     generalStandards(state) {
@@ -51,6 +56,9 @@ export default createStore({
     },
     user(state){
       return state.user
+    },
+    userLoading(state) {
+        return state.userLoading
     }
   },
   mutations: {
@@ -89,20 +97,75 @@ export default createStore({
       console.log('standards set')
     },
     SET_USER(state, data) {
-      state.user.data = data;
+        //  This will default to use loggedIn if provided, if not, use the state
+      data.loggedIn = Object.prototype.hasOwnProperty.call(data,'loggedIn') ? data.loggedIn : state.user.loggedIn;
+      state.user = data;
+    },
+    SET_USER_LOADING(state, bool) {
+        console.log('bool',bool)
+        state.userLoading = bool
     }
   },
   actions: {
-    fetchUser({ commit }, user) {
-      commit("SET_LOGGED_IN", user !== null);
-      if (user) {
-        commit("SET_USER", {
-          displayName: user.displayName,
-          email: user.email
-        });
-      } else {
-        commit("SET_USER", null);
-      }
+    async fetchUser({ commit }, user) {
+        commit("SET_LOGGED_IN", user !== null);
+
+        if (user) {
+            //  Get an invitation first because non auth users don't have access to other docs
+            const invitation = await firebase.firestore().collection('Invitations').where('uid', '==', user.uid).get()
+
+            if (invitation.docs && invitation.docs.length) {
+                //  Commit our user as an Invited user
+                return commit("SET_USER", {
+                    displayName: user.displayName,
+                    email: user.email,
+                    isClient: false,
+                    isReviewer: false,
+                    isAdmin: false,
+                });
+            }
+
+        //  If no invitations, then continue to get a Reviewer
+        const reviewers = await firebase.firestore().collection("Reviewers").doc(user.uid).get()
+
+        if(!reviewers.data()) {
+            const clients = await firebase.firestore().collection('Clients').doc(user.uid).get()
+            //  If result size is 0, then this is an invitation
+            if (clients.size === 0) {
+                return commit("SET_USER", {
+                    displayName: user.displayName,
+                    email: user.email,
+                    isClient: false,
+                    isReviewer: false,
+                    isAdmin: false
+                });
+            } else {
+                return commit("SET_USER", {
+                    displayName: user.displayName,
+                    email: user.email,
+                    isClient: true,
+                    isReviewer: false,
+                    isAdmin: false
+                });
+            }
+        } else if(reviewers.data().isAdmin === true) {
+              return commit("SET_USER", {
+                displayName: user.displayName,
+                email: user.email,
+                isClient: false,
+                isReviewer: true,
+                isAdmin: true
+              });    
+            } else {
+              return commit("SET_USER", {
+                displayName: user.displayName,
+                email: user.email,
+                isClient: false,
+                isReviewer: true,
+                isAdmin: false
+              });
+            }
+        }
     },
     async fetchGeneralStandards({ dispatch }) {
       //  Our collection of general Standards

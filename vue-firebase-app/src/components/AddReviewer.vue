@@ -11,10 +11,10 @@
 -->
 <template>
   <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-8">
+    <div class="container-layout">
+      <div class="col-md-10">
         <div class="card">
-          <div class="card-header">Add a new reviewer</div>
+          <div class="card-header">Add Reviewer</div>
           <div class="card-body">
             <div v-if="error" class="alert alert-danger">{{ error }}</div>
             <form action="#" @submit.prevent="submit">
@@ -101,8 +101,8 @@
               <div class="form-group row">
                 <label
                   for="password"
-                  class="col-md-4 col-form-label text-md-right"
-                  >Administror Access</label
+                  class="col-md-6 col-form-label text-md-right"
+                  >Administrator Access</label
                 >
                 <div class="col-md-6">
                   <input
@@ -127,8 +127,11 @@
                 </div>
               </div>
 
-              <div class="form-group row mb-0">
-                <div class="col-md-8 offset-md-4">
+              <div class="form-group row">
+                  <button type="submit" class="btn btn-primary">
+                    Create Reviewer
+                  </button>
+                  &nbsp;
                   <button
                     type="button"
                     class="btn btn-primary"
@@ -136,10 +139,6 @@
                   >
                     Cancel
                   </button>
-                  <button type="submit" class="btn btn-primary">
-                    Create reviewer
-                  </button>
-                </div>
               </div>
             </form>
           </div>
@@ -214,10 +213,6 @@ export default {
   },
 };
 </script>
-<style scoped>
-.radioButton,
-button {
-  margin-right: 10px;
-}
-/* TODO: Add in breakpoints for the width */
-</style>
+
+<style scoped src="../assets/styles/styles.css">
+/* TODO: Add in breakpoints for the width */</style>

@@ -1,8 +1,63 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    match /Clients/{clientId} {
+        allow read: if request.auth != null;
+        //  Only allow admins to write Clients
+        allow create: if request.auth != null && reviewerIsAdmin();
+        //  Allow updates and writes if admin OR this is the current client
+        allow write,update: if request.auth != null && (reviewerIsAdmin() || request.auth.uid == clientId);
+    }
+    //  Rules for accessing Invitations
+    match /Invitations/{invitationId} {
+        //  Everyone can create invitations and read invitations
+        allow read,write;
+        //  Only admins can read, update, and delete invitations
+        allow update,delete: if request.auth != null && reviewerIsAdmin();
+    }
+    //  Rules for accessing Organizations
+    match /Organizations/{organizationId} {
+        //  Everyone can read organizations so a user can pick one in Registration
+        allow read;
+        //  Only admins can create organizations
+        allow write,create,update: if request.auth != null && reviewerIsAdmin();
+    }
+    //  Rules for accessing Reviews
+    match /Reviews/{reviewId} {
+        //  Only allow reviewers to create, update, write, and delete reviews
+        allow create,delete,update,write: if request.auth != null && reviewerExists();
+        //  Allow read if reviewer OR the client is assigned to the same project
+        allow read: if request.auth != null && (reviewerExists || (clientExists && client().data.project_ref == review().data.project_ref))
+    }
+    //  Rules for accessing Reviewers
+    match /Reviewers/{reviewerId} {
+        //  We allow reads from anyone who is signed in
+        allow read: if request.auth != null;
+        //	Only allow write, delete, create, and update if admin OR same UID
+        allow write,delete,create,update: if request.auth != null && (reviewerIsAdmin() || request.auth.uid == reviewerId);
+    }
+    //  Rules for accessing all Documents
     match /{document=**} {
-      allow read, write: if request.auth != null;
+        //  Only allow read create and update if signed in and user exists
+        allow read: if request.auth != null && reviewerExists();
+        //  Only allow write and delete if signed in and the admin
+        allow write, delete: if request.auth != null && reviewerIsAdmin();
+    }
+    //  Helper functions
+    function clientExists() {
+        return exists(/databases/$(database)/documents/Clients/$(request.auth.uid));
+    }
+    function client() {
+        return get(/databases/$(database)/documents/Clients/$(request.auth.uid));
+    }
+    function review() {
+        return get(/databases/$(database)/documents/Reviews/$(request.auth.uid));
+    }
+    function reviewerExists() {
+        return exists(/databases/$(database)/documents/Reviewers/$(request.auth.uid));
+    }
+    function reviewerIsAdmin() {
+        return get(/databases/$(database)/documents/Reviewers/$(request.auth.uid)).data.isAdmin;
     }
   }
 }

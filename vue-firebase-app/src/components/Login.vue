@@ -85,13 +85,26 @@ export default {
       error: null,
     };
   },
+
   methods: {
     submit() {
       firebase
         .auth()
         .signInWithEmailAndPassword(this.form.email, this.form.password)
-        .then(() => {
-          this.$router.replace({ name: "Dashboard" });
+        .then((userCredential) => {
+          this.$store
+            .dispatch("fetchUser", userCredential.user)
+            .then((storeUser) => {
+              if (storeUser && storeUser.isAdmin === true) {
+                this.$router.replace({ name: "AdminDashboard" });
+              } else if (storeUser && storeUser.isClient === true) {
+                this.$router.replace({ name: "ClientDashboard" });
+              } else if (storeUser && storeUser.isReviewer) {
+                this.$router.replace({ name: "ReviewerDashboard" });
+              } else {
+                this.$router.replace({ name: "Pending" });
+              }
+            });
         })
         .catch((err) => {
           this.error = err.message;

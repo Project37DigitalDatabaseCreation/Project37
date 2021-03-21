@@ -13,8 +13,11 @@
 <template>
   <div class="container">
     <router-view></router-view>
-    <h4>Reviewers</h4>
-    <div>
+    <div class="container-layout">
+    <div class="col-md-10">
+    <div class="card">
+    <div class="card-header">Reviewers
+          <div style="float:right;">
       <button
         type="button"
         class="btn btn-primary"
@@ -24,8 +27,9 @@
         + Add Reviewer
       </button>
     </div>
-    <table>
-      <thead>
+    </div>
+    <table class="table">
+      <thead class="project-head">
         <tr>
           <th>Name</th>
           <th>Email Address</th>
@@ -33,7 +37,7 @@
           <!-- <th>Last Login</th> -->
         </tr>
       </thead>
-      <tbody>
+      <tbody class="project-body">
         <tr
           v-for="(reviewer, index) in reviewerData"
           :key="index"
@@ -51,6 +55,9 @@
         <button class="btn" @click="nextPage">Next</button>
       </p>
     </div> -->
+    </div>
+    </div>
+    </div>
   </div>
 </template>
 
@@ -115,38 +122,4 @@ export default {
 };
 </script>
 
-<style scoped>
-h4 {
-  text-align: center;
-}
-th {
-  padding-top: 12px;
-  text-align: center;
-  padding-bottom: 12px;
-  background-color: #f2f2f2;
-  color: black;
-}
-tr:hover {
-  background-color: #ddd;
-}
-
-td {
-  text-align: center;
-  padding: 10px;
-}
-
-table {
-  padding: 12px;
-  width: 100%;
-  border: 1px solid #ddd;
-}
-
-button {
-  margin-bottom: 10px;
-}
-.paginationContainer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-</style>
+<style scoped src="../assets/styles/styles.css"></style>
