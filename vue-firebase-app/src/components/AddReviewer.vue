@@ -181,7 +181,7 @@ export default {
         password: this.form.password,
       })
         .then((result) => {
-          console.log("The new users uid is " + result.data.uid);
+          // console.log("The new users uid is " + result.data.uid);
 
           let isAdminSet = this.form.isAdmin === "true";
           let newUser = {

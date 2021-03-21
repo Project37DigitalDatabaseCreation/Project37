@@ -1,8 +1,8 @@
 <!--
-* AddReviewer.vue
+* ModifyReviewer.vue
 *
 * Author: Ben McElyea
-* Date: January 2021
+* Date: February 2021
 *
 * Description: Component to modify existing reviewers. 
 * Contains the fields First Name, Last Name and email address and a checkbox
@@ -14,8 +14,7 @@
     <div class="container-layout">
       <div class="col-md-10">
         <div class="card">
-          <div class="card-header"> Modify Reviewer
-          </div>
+          <div class="card-header">Modify Reviewer</div>
           <div class="card-body">
             <div v-if="error" class="alert alert-danger">{{ error }}</div>
             <form action="#" @submit.prevent="submit">
@@ -111,8 +110,11 @@
 
               <div class="form-group row">
                 <div class="col-md-14">
-                  <button type="button" class="btn btn-primary"
-                    @click.prevent="updateClicked" >
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    @click.prevent="updateClicked"
+                  >
                     Update
                   </button>
                   &nbsp;
@@ -120,13 +122,19 @@
                     Reset Password
                   </button>
                   &nbsp;
-                  <button type="button" class="btn btn-primary"
-                    @click.prevent="returnToPreviousScreen" >
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    @click.prevent="returnToPreviousScreen"
+                  >
                     Cancel
                   </button>
                   &nbsp;
-                  <button type="button" class="btn btn-danger"
-                    @click.prevent="showDeleteUserModal" >
+                  <button
+                    type="button"
+                    class="btn btn-danger"
+                    @click.prevent="showDeleteUserModal"
+                  >
                     Delete User
                   </button>
                 </div>
@@ -155,7 +163,6 @@
 
 
 <script>
-//import firebase from "firebase";
 import firebase from "firebase";
 import "firebase/firestore";
 import modal from "@/components/DeleteReviewerModal";
@@ -166,7 +173,7 @@ export default {
   },
   props: {
     // The Firestore doc id of the reviewer is passed into this prop
-    // when the user is clicked on in the ReviewerList.vue
+    // when the user is clicked on in the ReviewerList.vue table
     passedReviewerId: {
       type: String, //The Firestore doc id of the reviewer
     },
@@ -189,7 +196,7 @@ export default {
   methods: {
     //Method to modify a existing user
     async updateClicked() {
-      console.log("Update clicked");
+      // console.log("Update clicked");
       let isAdminSet = this.form.isAdmin === "true";
       let modifiedUser = {
         firstName: this.form.fname,
@@ -203,7 +210,7 @@ export default {
         .collection("Reviewers")
         .doc(this.passedReviewerId)
         .set(modifiedUser);
-      console.log(modifiedUser);
+      // console.log(modifiedUser);
       this.returnToPreviousScreen();
     },
 
@@ -221,9 +228,9 @@ export default {
         .doc(this.passedReviewerId)
         .get()
         .then((snapshot) => {
-          console.log(snapshot.empty);
+          // console.log(snapshot.empty);
           const reviewer = snapshot.data();
-          console.log(reviewer);
+          // console.log(reviewer);
           this.form.fname = reviewer.firstName;
           this.form.lname = reviewer.lastName;
           this.form.email = reviewer.email;
@@ -237,9 +244,9 @@ export default {
     },
 
     async deleteUserConfirmed() {
-      console.log(
-        "Function called to delete the user " + this.passedReviewerId
-      );
+      // console.log(
+      //   "Function called to delete the user " + this.passedReviewerId
+      // );
       //Get reference to cloud function to delete user
       const deleteReviewer_ref = firebase
         .functions()
@@ -250,8 +257,8 @@ export default {
         uid: this.passedReviewerId,
         email: this.form.email,
       })
-        .then((result) => {
-          console.log(result);
+        .then(() => {
+          // console.log(result);
 
           //Delete reviewer from reviewers collection
           firebase

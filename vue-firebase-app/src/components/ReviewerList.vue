@@ -1,11 +1,11 @@
 <!--
-* AddReviewer.vue
+* ReviewerList.vue
 *
 * Author: Ben McElyea
-* Date: January 2021
+* Date: February 2021
 *
 * Description: Component to manage reviewers in the system. 
-* This is the main landing page to manage reviewers
+* This page loads all the reviewers from the Firestore database and displays them in a table. 
 * 
 *
 -->
@@ -74,10 +74,6 @@ export default {
     };
   },
   methods: {
-    // edit(reviewer) {
-    //   db.collection("Reviewers").get();
-    // },
-
     AddReviewer() {
       this.$router.push({ name: "AddReviewer" });
     },
@@ -111,16 +107,16 @@ export default {
               is_admin: doc.data().isAdmin,
               id: doc.id,
             });
-            console.log(doc.id, " => ", doc.data());
+            // console.log(doc.id, " => ", doc.data());
           });
         })
         .catch((error) => {
-          console.log("Error getting documents: ", error);
+          alert("Error in ReviewerList.vue : ", error);
         });
     },
   },
   mounted() {
-    console.log("In mount");
+    // console.log("In mount");
     this.getReviewers();
   },
 };
