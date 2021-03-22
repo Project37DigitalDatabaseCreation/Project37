@@ -53,9 +53,12 @@ exports.deleteReviewer = functions.https.onCall((request, context) => {
 
 });
 
-
 const db = admin.firestore();
 
+// Function Author: Steve Kizer
+// Date: March 2021
+// reviewCreateStatusCounter - Aggregates Review counts by status on document creation
+// To update this function you must run the command firebase deploy --only functions 
 exports.reviewCreateStatusCounter = functions.firestore.document('Reviews/{reviewId}')
     .onCreate(async (snap, context) => {
         try {
@@ -92,6 +95,10 @@ exports.reviewCreateStatusCounter = functions.firestore.document('Reviews/{revie
     }
     );
 
+// Function Author: Steve Kizer
+// Date: March 2021
+// reviewUpdateStatusCounter - Aggregates Review counts by status on document updates
+// To update this function you must run the command firebase deploy --only functions 
 exports.reviewUpdateStatusCounter = functions.firestore.document('Reviews/{reviewId}')
     .onUpdate(async (change, context) => {
         try {
@@ -159,6 +166,10 @@ exports.reviewUpdateStatusCounter = functions.firestore.document('Reviews/{revie
     }
     );
 
+// Function Author: Steve Kizer
+// Date: March 2021
+// reviewDeleteStatusCounter - Aggregates Review counts by status on document deletion
+// To update this function you must run the command firebase deploy --only functions 
 exports.reviewDeleteStatusCounter = functions.firestore.document('Reviews/{reviewId}')
     .onDelete(async (snap, context) => {
         try {
@@ -211,6 +222,143 @@ exports.reviewDeleteStatusCounter = functions.firestore.document('Reviews/{revie
                         {
                             merge: true
                         });
+                }
+                else {
+                    return null;
+                }
+            }
+        } catch (error) {
+            console.log(error);
+            return null;
+        }
+    }
+);
+
+// Function Author: Steve Kizer
+// Date: March 2021
+// projectCreateStatusCounter - Aggregates Project counts by status on document creation
+// To update this function you must run the command firebase deploy --only functions 
+exports.projectCreateStatusCounter = functions.firestore.document('Projects/{projectId}')
+    .onCreate(async (snap, context) => {
+        try {
+            const col = db.collection("Stats");
+            const doc = db.doc('Stats/ProjectsByStatus');
+            const arrayUnion = admin.firestore.FieldValue.arrayUnion;
+            const increment = admin.firestore.FieldValue.increment(1);
+
+            let newReview = snap.data();
+            let docId = snap.id;
+
+            // handle a new project
+            let result = await col.where("CurrentProjects", "array-contains", docId).get();
+                
+            if(result.size === 0) {
+                return doc.set({
+                    CurrentProjectsCount: increment,
+                    CurrentProjects: arrayUnion(docId)
+                },
+                {
+                    merge: true
+                });
+            } else {
+                return null;
+            }
+        } catch (error) {
+            console.log(error);
+            return null;
+        }
+    }
+    );
+
+// Function Author: Steve Kizer
+// Date: March 2021
+// projectUpdateStatusCounter - Aggregates Project counts by status on document updates
+// To update this function you must run the command firebase deploy --only functions 
+exports.projectUpdateStatusCounter = functions.firestore.document('Projects/{projectId}')
+    .onUpdate(async (change, context) => {
+        try {
+            const col = db.collection("Stats");
+            const doc = db.doc('Stats/ProjectsByStatus');
+            const arrayUnion = admin.firestore.FieldValue.arrayUnion;
+            const arrayRemove = admin.firestore.FieldValue.arrayRemove;
+            const increment = admin.firestore.FieldValue.increment(1);
+            const decrement = admin.firestore.FieldValue.increment(-1);
+
+            // the review has been updated, check if status changed
+            let projectBefore = change.before.data();
+            let projectAfter = change.after.data();
+
+            projectAfter.id = change.after.id;
+
+            if (projectBefore.status !== projectAfter.status && projectAfter.status === "Complete") {
+                // handle project going to Complete
+                let result = await col.where("CurrentProjects", "array-contains", projectAfter.id).get();
+
+                if (result.size > 0) {
+                    return doc.set({
+                        CurrentProjectsCount: decrement,
+                        CompletedProjectsCount: increment,
+                        CurrentProjects: arrayRemove(projectAfter.id),
+                        CompletedProjects: arrayUnion(projectAfter.id)
+                    },
+                    {
+                        merge: true
+                    });
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        } catch (error) {
+            console.log(error);
+            return null;
+        }
+    }
+    );
+
+// Function Author: Steve Kizer
+// Date: March 2021
+// projectDeleteStatusCounter - Aggregates Project counts by status on document deletion
+// To update this function you must run the command firebase deploy --only functions 
+exports.projectDeleteStatusCounter = functions.firestore.document('Projects/{projectId}')
+    .onDelete(async (snap, context) => {
+        try {
+            const col = db.collection("Stats");
+            const doc = db.doc('Stats/ProjectsByStatus');
+            const arrayRemove = admin.firestore.FieldValue.arrayRemove;
+            const decrement = admin.firestore.FieldValue.increment(-1);
+
+            // a review must have been deleted
+            let deletedProject = snap.data();
+            let docId = snap.id;
+
+            // each possible status needs to be handled
+            if(deletedProject.status === "Complete") {          
+                let result = await col.where("CompletedProjects", "array-contains", docId).get();
+
+                if (result.size > 0) {
+                    return doc.set({
+                        CompletedProjectsCount: decrement,
+                        CompletedProjects: arrayRemove(docId)
+                    },
+                    {
+                        merge: true
+                    });
+                } else {
+                    return null;
+                }
+            } else {
+                let result = await col.where("CurrentProjects", "array-contains", docId).get();
+
+                if (result.size > 0) {
+                    return doc.set({
+                        CurrentProjectsCount: decrement,
+                        CurrentProjects: arrayRemove(docId)
+                    },
+                    {
+                        merge: true
+                    });
                 }
                 else {
                     return null;

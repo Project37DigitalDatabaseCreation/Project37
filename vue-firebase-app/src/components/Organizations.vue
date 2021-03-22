@@ -63,7 +63,7 @@ export default {
   },
   mounted() {
     // Get all of the organizations    
-    this.$store.dispatch('fetchOrganizations')
+    this.$store.dispatch('fetchOrganizations');
   },
   computed: {
     ...mapGetters(['organizations'])

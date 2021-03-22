@@ -5,16 +5,20 @@
  * contains records for each navigation item.
 *******************************************************/
 import { createRouter, createWebHashHistory } from 'vue-router'
+import Invitations from '../components/Invitations'
+import InvitationPending from '../components/InvitationPending'
 import Login from '../components/Login'
 import Register from '../components/Register'
 import Review from '../components/Review'
 import ReviewsList from '../components/ReviewsList'
 import Reviews from '../components/Reviews'
-import Dashboard from '../components/Dashboard'
+import AccessDenied from '../components/AccessDenied'
+import AdminDashboard from '../components/AdminDashboard'
+import ClientDashboard from '../components/ClientDashboard'
+import ReviewerDashboard from '../components/ReviewerDashboard'
 import ProjectReviews from '../components/ProjectReviews'
 import AddReviewer from '../components/AddReviewer'
 import ModifyReviewer from '../components/ModifyReviewer'
-import NewProject from '../components/NewProject'
 import CurrentProjects from '../components/CurrentProjects'
 import ViewProject from '../components/ViewProject'
 import ManageReviewers from '../components/ManageReviewers'
@@ -22,12 +26,13 @@ import ManageClients from '../components/ManageClients'
 import ReviewerList from '../components/ReviewerList'
 import Organizations from '../components/Organizations'
 import store from '../store/index'
+import ForgotPassword from '../components/ForgotPassword'
 
 const routes = [
   {
     path: '/',
     name: 'Default',
-    component: Dashboard
+    component: Login
   },
   {
     path: '/Login',
@@ -35,16 +40,44 @@ const routes = [
     component: Login
   },
   {
+    path: '/AccessDenied',
+    name: 'AccessDenied',
+    component: AccessDenied
+  },
+  {
+    path: '/Pending',
+    name: 'Pending',
+    component: InvitationPending
+  },
+  {
     path: '/register',
     name: 'Register',
     component: Register
   },
   {
-    path: '/dashboard',
-    name: 'Dashboard',
-    component: Dashboard,
+    path: '/AdminDashboard',
+    name: 'AdminDashboard',
+    component: AdminDashboard,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      requiresAdmin: true
+    }
+  },
+  {
+    path: '/ClientDashboard',
+    name: 'ClientDashboard',
+    component: ClientDashboard,
+    meta: {
+      requiresAuth: true,
+    }
+  },
+  {
+    path: '/ReviewerDashboard',
+    name: 'ReviewerDashboard',
+    component: ReviewerDashboard,
+    meta: {
+      requiresAuth: true,
+      requiresReviewer: true
     }
   },
   {
@@ -52,15 +85,7 @@ const routes = [
     name: 'Project Reviews',
     component: ProjectReviews,
     meta: {
-      requiresAuth: true
-    }
-  },
-  {
-    path: '/newProject',
-    name: 'NewProject',
-    component: NewProject,
-    meta: {
-      requiresAuth: true
+      requiresAdmin: true,
     }
   },
   {
@@ -69,7 +94,7 @@ const routes = [
     component: CurrentProjects,
     props: true,
     meta: {
-      requiresAuth: true
+      requiresAdmin: true
     }
   },
   {
@@ -78,7 +103,7 @@ const routes = [
     component: ViewProject,
     props: true,
     meta: {
-      requiresAuth: true
+      requiresAdmin: true
     }
   },
   {
@@ -86,11 +111,12 @@ const routes = [
     name: 'Reviews',
     component: Reviews,
     children: [
-        { path: '', name: 'ReviewsList', component: ReviewsList },
-        { path: '/review', name: 'Review', component: Review, props: true }
+      { path: '', name: 'ReviewsList', component: ReviewsList },
+      { path: '/review', name: 'Review', component: Review, props: true }
     ],
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      requiresReviewer: true
     }
   },
   {
@@ -98,7 +124,7 @@ const routes = [
     name: 'AddReviewer',
     component: AddReviewer,
     meta: {
-      requiresAuth: true
+      requiresAdmin: true
     }
   },
   {
@@ -111,7 +137,7 @@ const routes = [
 
     ],
     meta: {
-      requiresAuth: true
+      requiresAdmin: true
     }
   },
   {
@@ -119,25 +145,40 @@ const routes = [
     name: 'ManageClients',
     component: ManageClients,
     meta: {
-      requiresAuth: true
+      requiresAdmin: true
     },
     props: true
+  },
+  {
+    path: '/invitations',
+    name: 'Invitations',
+    component: Invitations,
+    meta: {
+      requiresAuth: true
+    },
   },
   {
     path: '/modifyreviewer',
     name: 'ModifyReviewer',
     component: ModifyReviewer,
-    props:true,
+    props: true,
     meta: {
-      requiresAuth: true
+      requiresAdmin: true
     }
   },
   {
     path: '/organizations',
     name: 'Organizations',
     component: Organizations,
-    
+    meta: {
+      requiresAdmin: true
+    }
   },
+  {
+    path: '/forgotpassword',
+    name: 'ForgotPassword',
+    component: ForgotPassword,
+  }
 
 ]
 
@@ -148,10 +189,25 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin);
+  const requiresReviewer = to.matched.some(record => record.meta.requiresReviewer)
+
   if (requiresAuth && !store.state.user.loggedIn) {
-    next('Login');
-  }else{
-    next();
+    next("Login");
+  } else {
+    if (to.name === "Default" && store.state.user.isAdmin === true) {
+      next("AdminDashboard");
+    } else if (to.name === "Default" && store.state.user.isClient === true) {
+      next("ClientDashboard");
+    } else if (to.name === "Default" && store.state.user.isReviewer === true) {
+      next("ReviewerDashboard");
+    } else if (requiresAdmin && store.state.user.isAdmin !== true || requiresReviewer && store.state.user.isReviewer !== true) {
+      next("AccessDenied");
+    } else if (to.name === "Default" && store.state.user.isClient === false && store.state.user.isReviewer === false) {
+      next('Pending');
+    } else {
+      next();
+    }
   }
 });
 
