@@ -1,18 +1,19 @@
 <template>
     <div class="container">
-        <div class="row justify-content-center mt-4" style="display:flex; width:100%;">
-            <h4>All Reviews</h4>
-            <table class="table mt-1">
-                <thead>
+        <div class="container-layout">
+            <div class="col-md-10">
+            <div class="card">
+            <div class="card-header">All Reviews</div>
+            <table class="table">
+                <thead class="project-head">
                     <tr>
-                        <th scope="col">Course Name</th>
-                        <th scope="col">Reviewer</th>
-                        <th scope="col">Status</th>
-                        <th scope="col"></th>
-                        <!-- <th scope="col"></th> -->
+                        <th>Course Name</th>
+                        <th>Reviewer</th>
+                        <th>Status</th>
+                        <th></th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="project-body">
                     <tr v-for="review in reviews" :key="review.id">
                         <td>{{ review.course_name }}</td>
                         <td>{{ reviewerName(review) }}
@@ -43,6 +44,8 @@
                     the standards right now, you can create a review once
                     they're all loaded.</div>
             </span>
+        </div>
+        </div>
         </div>
         <router-view></router-view>
     </div>
@@ -78,3 +81,5 @@ export default {
     }
 }
 </script>
+
+<style scoped src="../assets/styles/styles.css"></style>
