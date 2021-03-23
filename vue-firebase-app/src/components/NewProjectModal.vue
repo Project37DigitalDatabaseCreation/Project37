@@ -11,7 +11,7 @@
     <div class="modal-wrapper">
     <div class="modal-container">
     <div class="modal-header">
-      <slot name="header"> New Project </slot>
+      <slot name="header"> New Project</slot>
     </div>
     <div class="modal-body">
       <slot name="body">
@@ -79,7 +79,7 @@
                   no-results-text="No Clients Found"
                   label="firstName"
                   track-by="firstName"
-                  value-prop="firstName"
+                  value-prop="email"
                   :show-labels="true"
                   :hide-selected="true"
                   :clearable="true"
@@ -140,7 +140,7 @@
           title: title.value,
           description: description.value,
           organization: organization.value,
-          org_ref: org_ref.value,
+          org_ref: firebase.firestore().doc("/Organizations/" + org_ref.value),
           clients: clients.value,
           num_reviews: 0,
           status: 'New'
@@ -164,6 +164,7 @@
       return {
         newClients: [],
         selectedClients: [],
+        clientObj: [],
         exists: null
       };
     },
@@ -178,6 +179,7 @@
                 id: doc.id,
                 firstName: doc.data().firstName,
                 lastName: doc.data().lastName,
+                email: doc.data().email,
               });
             });
             this.getOrganizationId();
@@ -213,7 +215,8 @@
         else {
           this.selectedClients.splice(this.selectedClients.indexOf(value), 1);
         }
-        this.clients = this.selectedClients
+        this.getClientInfo()
+        this.clients = this.clientObj
       },
       checkIfExists(val) {
         this.exists = this.selectedClients.some((item) => {
@@ -225,6 +228,29 @@
         this.clients = []
         this.readClients();
       },
+      getClientInfo(){
+        this.clientObj = []
+        var i = 0;
+        var len = this.selectedClients.length;
+        for (; i < len; ) {
+          firebase.firestore().collection("Clients")
+          .where("email", "==", this.selectedClients[i]).get()
+          .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                  this.clientObj.push({
+                      id: doc.id,
+                      firstName: doc.data().firstName,
+                      lastName: doc.data().lastName,
+                      email: doc.data().email,
+                  });
+              });
+          })
+          .catch((error) => {
+              console.log("Error retrieving documents: ", error);
+          });
+          i++;
+        }
+      }
     },
     created() {
       this.readClients();

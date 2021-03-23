@@ -14,7 +14,7 @@
         <div class="modal-container">
           <div class="modal-header">
             <slot name="header">
-              Edit Project {{selectedClients}}
+              Edit Project {{clientObj}}
             </slot>
           </div>
 
@@ -83,19 +83,24 @@
                         @deselect="updateSelected"
                         @open="openOptions"
                         @close="updateSelected"
+                        :show-options="true"
                         :caret="true"
                         :multiple="true"
+                        :clear="true"
                         no-results-text="No Clients Found"
                         label="firstName"
                         track-by="firstName"
-                        value-prop="firstName"
+                        value-prop="email"
+                        :show-labels="true"
                         :hide-selected="true"
-                        :focus="false"
+                        :clearable="true"
                         :max=-1
                         :min=1
                         :limit=-1
                         mode="tags"
+                        :autofocus="true"
                         placeholder="Choose Client(s)"
+                        ref="multiselect"
                         ></multiselect>
                 </div>
               </div>
@@ -166,6 +171,7 @@
     data() {
         return {
           clients: [],
+          clientObj: [],
           selectedClients: this.update.value.clients,
           statusOptions: ["New", "In Progress", "Complete"],
           exists: null
@@ -183,6 +189,7 @@
                 firstName: doc.data().firstName,
                 lastName: doc.data().lastName,
                 organization: doc.data().organization,
+                email: doc.data().email,
               });
             });
             this.getOrganizationId();
@@ -218,11 +225,13 @@
         else {
           this.selectedClients.splice(this.selectedClients.indexOf(value), 1);
         }
-        this.update.value.clients = this.selectedClients
+        this.getClientInfo()
+        this.update.value.clients = this.clientObj
       },
       openOptions() {
         this.selectedClients = []
         this.update.value.clients = []
+        this.clientObj = []
       },
       checkIfExists(val) {
         this.exists = this.selectedClients.some((item) => {
@@ -234,6 +243,29 @@
         this.update.value.clients = []
         this.readClients();
       },
+      getClientInfo(){
+        this.clientObj = []
+        var i = 0;
+        var len = this.selectedClients.length;
+        for (; i < len; ) {
+          firebase.firestore().collection("Clients")
+          .where("email", "==", this.selectedClients[i]).get()
+          .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                  this.clientObj.push({
+                      id: doc.id,
+                      firstName: doc.data().firstName,
+                      lastName: doc.data().lastName,
+                      email: doc.data().email,
+                  });
+              });
+          })
+          .catch((error) => {
+              console.log("Error retrieving documents: ", error);
+          });
+          i++;
+        }
+      }
     },
     created() {
       this.readClients();
