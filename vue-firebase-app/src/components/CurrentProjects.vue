@@ -37,7 +37,7 @@
               <td>{{project.title}}</td>
               <td>{{project.description}}</td>
               <div v-for="client in project.clients" :key="client.id">
-                <td>{{client}}</td>
+                <td>{{client.firstName}}</td>
               </div>
               <td style="text-align:center">{{project.num_reviews}}</td>
               <td>{{project.status}}</td>
