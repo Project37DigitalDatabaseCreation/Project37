@@ -112,13 +112,13 @@
 </template>
 <script>
 import firebase from "firebase";
+import { mapGetters } from 'vuex';
 
 export default {
     data() {
     return {
       in_progress_reviews: [],
       completed_reviews: [],
-      standards: [],
       reviewStats: {},
       projectStats: {},
       in_progress_page: 1,
@@ -128,6 +128,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(['standards']),
     inProgressReviews: function() {
       return this.in_progress_reviews.filter((row, index) => {
         let start = (this.in_progress_page-1)*this.PAGE_SIZE;
@@ -205,7 +206,7 @@ export default {
           result.forEach(doc => {
             let score = doc.data();
             
-            if(score.standard_ref) {            
+            if(score.standard_ref) {    
               const scoreStandard = this.standards.find(function(standard) {
                 return standard.id === score.standard_ref.id;
               });
@@ -257,14 +258,9 @@ export default {
 
       })}).catch(err => { console.error(err) });
 
-    let querySnapshot = await db.collection("Standards").get();
-
-    querySnapshot.forEach(doc => {
-      let standard = {};
-      standard.id = doc.id;
-      standard.points = doc.data().points;
-      this.standards.push(standard);
-    });      
+    if (!this.standards || this.standards.length === 0) {
+      await this.$store.dispatch('fetchStandards');   
+    }   
     
     this.tallyReviewScores(this.in_progress_reviews);
     this.tallyReviewScores(this.completed_reviews);
