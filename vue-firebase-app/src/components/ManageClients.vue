@@ -9,7 +9,7 @@
     <div class="container">
         <div class="container-layout">
             <div class="col-md-10">
-                <div class="card">
+                <div class="card" >
                     <div class="card-header"> Manage Clients
                         <div style="float:right;">
                             <button @click="goToInvitations"

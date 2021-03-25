@@ -43,28 +43,28 @@ tr:hover {
  /* Save Button */
  .save {
   font-size: 1.0em;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Glacial Indifference;
   background-color: #0000FF;
 }
 
  /* Edit Button */
 .edit {
   font-size: 1.0em;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Glacial Indifference;
   background-color: greenyellow;
 }
 
  /* Delete Button */
 .delete {
   font-size: 1.0em;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Glacial Indifference;
   background-color: #f44336;
 }
 
  /* Submit Button */
  button.submit {
   font-size: 1.1em;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Glacial Indifference;
   background-color: #0000FF;
 }
 
@@ -72,13 +72,13 @@ tr:hover {
 div.card-header {
     text-align: center;
     font-size: 1.5em;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Glacial Indifference;
 }
 
  /* Form Rows */
 div.form-group{
   font-size: 1.1em;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Glacial Indifference;
   justify-content: center;
 }
 
@@ -99,18 +99,21 @@ form {
  /* Project Table Head Format */
  .project-head {
   font-size: 1.1em;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Glacial Indifference;
 }
 
  /* Project Table Body Format */
  .project-body {
   font-size: 1.1em;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Glacial Indifference;
 }
 
  /* Column Format */
 .col-md-10 {
   padding: 0 !important;
+  font-family: Glacial Indifference;
+  margin-left: 140px;
+  margin-right: 140px;
 }
 
 /* Margin Radio Button */
@@ -182,7 +185,7 @@ button {
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: Glacial Indifference;
 }
 
 .modal-header h3 {

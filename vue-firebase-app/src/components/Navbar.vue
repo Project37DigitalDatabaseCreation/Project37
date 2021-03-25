@@ -6,21 +6,22 @@
 *
 -->
 <template>
-    <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
+    <nav class="navbar navbar-expand-md navbar-light navbar-laravel" style="font-family: Glacial Indifference;">
         <div class="container">
-            <router-link to="/" class="navbar-brand">eLM Academic Consultants
+            <router-link to="/" class="navbar-brand">
+            <img width="428.25" height="168.5" src="../assets/logos/eLMACADEMICTransparent.png">
             </router-link>
             <button class="navbar-toggler" type="button" data-toggle="collapse"
                 data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label>
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent" style="font-family: Glacial Indifference;">
                 <ul class="navbar-nav mr-auto"></ul>
                 <ul class="navbar-nav ml-auto">
                     <template v-if="user.loggedIn">
                         <ul
-                            style="list-style:none; display:flex; justify-content:space-between;">
+                            style="list-style:none; display:flex; justify-content:space-between; margin-bottom: 30px; text-align: center">
                             <template v-for="(item,i) in navLinks" :key="i">
                                 <li class="nav-item">
                                     <router-link v-if="item.link && !item.hidden"
@@ -67,7 +68,7 @@ export default {
             const links = [
                 {
                     link: '/manage-clients',
-                    name: 'Manage Client',
+                    name: 'Manage Clients',
                     hidden: !this.user.isAdmin
                 },
                 {
@@ -133,8 +134,15 @@ export default {
 }
 </script>
 <style>
+
 .navbar {
+    position: relative;
     height: 56px !important;
+    margin:50px 50px 50px -280px;
+    padding:10px;
+    display:inline-block;
+    font-family: Glacial Indifference;
+    font-size: 1.5em;
 }
 .nav-item {
     margin-left: 6px;
@@ -143,4 +151,5 @@ export default {
     justify-content: center;
     align-items: center;
 }
+
 </style>

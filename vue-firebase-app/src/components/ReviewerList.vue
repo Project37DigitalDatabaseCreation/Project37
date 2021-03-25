@@ -24,7 +24,7 @@
         @click.prevent="AddReviewer"
         style="float: right"
       >
-        + Add Reviewer
+      Add Reviewer
       </button>
     </div>
     </div>
