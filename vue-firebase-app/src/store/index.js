@@ -129,25 +129,19 @@ export default createStore({
         const reviewers = await firebase.firestore().collection("Reviewers").doc(user.uid).get()
 
         if(!reviewers.data()) {
-            const clients = await firebase.firestore().collection('Clients').doc(user.uid).get()
-            //  If result size is 0, then this is an invitation
-            if (clients.size === 0) {
-                return commit("SET_USER", {
-                    displayName: user.displayName,
-                    email: user.email,
-                    isClient: false,
-                    isReviewer: false,
-                    isAdmin: false
-                });
-            } else {
-                return commit("SET_USER", {
-                    displayName: user.displayName,
-                    email: user.email,
-                    isClient: true,
-                    isReviewer: false,
-                    isAdmin: false
-                });
-            }
+          let userToSet = {
+            displayName: user.displayName,
+            email: user.email,
+            isClient: false,
+            isReviewer: false,
+            isAdmin: false
+          };
+
+          const client = await firebase.firestore().collection('Clients').doc(user.uid).get();
+
+          userToSet.isClient = typeof client.data() !== 'undefined';
+
+          return commit("SET_USER", userToSet);
         } else if(reviewers.data().isAdmin === true) {
               return commit("SET_USER", {
                 displayName: user.displayName,

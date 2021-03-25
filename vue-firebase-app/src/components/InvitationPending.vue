@@ -24,11 +24,11 @@ export default {
     },
     methods: {
         routeUser() {
-            if (this.user.isAdmin) {
+            if (this.user.isAdmin === true) {
                 this.$router.replace({ name: 'AdminDashboard' })
-            } else if (this.user.isReviewer) {
+            } else if (this.user.isReviewer === true) {
                 this.$router.replace({ name: 'ReviewerDashboard' })
-            } else if (this.user.isClient) {
+            } else if (this.user.isClient === true) {
                 this.$router.replace({ name: 'ClientDashboard' })
             }
         }
