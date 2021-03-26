@@ -34,23 +34,6 @@ firebase.initializeApp({
 //   firebase.firestore().useEmulator("localhost", 8080);
 // }
 
-var unsubscribe = firebase.auth().onAuthStateChanged(user => {
-    store.dispatch("fetchUser", user).then(storeUser => {
-      if(storeUser && storeUser.isAdmin === true) {
-        router.replace({ name: 'AdminDashboard' });
-      } else if(storeUser && storeUser.isClient === true) {
-        router.replace({ name: 'ClientDashboard' });
-      } else if(storeUser && storeUser.isReviewer === true) {
-        router.replace({ name: 'ReviewerDashboard' });
-      } else {
-        router.replace({ name: 'Pending' })
-      }
-
-      unsubscribe();
-    });
-});
-
-
 const app = createApp(App)
 
 app.mixin(globalMixin())
