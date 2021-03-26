@@ -6,8 +6,7 @@
 -->
 
 <template>
-    <div class="container">
-        <div class="container-layout">
+    <div class="container scrollcontainer">
             <div class="col-md-10">
                 <div class="card" >
                     <div class="card-header"> Manage Clients
@@ -61,7 +60,6 @@
                     <p class="mt-3">Current Page: {{ currentPage }}</p>
                 </div>
             </div>
-        </div>
     </div>
 
     <!-- modal definition -->

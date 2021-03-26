@@ -6,13 +6,13 @@
 *
 -->
 <template>
-  <div class="container" style="font-family: Glacial Indifference; margin-left: 731px; margin-right: 731px;">
+  <div class="container scrollcontainer">
     <span style="color: red">{{ error }}</span>
     <div class="row" style="margin-left: 149px;">
       <div class="col-sm-2">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">New <br> Reviews</h5>
+            <h5 class="card-title">New Reviews</h5>
             <h1>{{ reviewStats.NewReviewsCount }}</h1>
           </div>
         </div>
@@ -271,4 +271,5 @@ export default {
   }
 };
 </script>
+
  <style scoped src="../assets/styles/styles.css"></style>

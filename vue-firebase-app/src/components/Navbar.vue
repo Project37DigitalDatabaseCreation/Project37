@@ -138,7 +138,7 @@ export default {
 .navbar {
     position: relative;
     height: 56px !important;
-    margin:50px 50px 50px -280px;
+    margin:50px 50px 50px -350px;
     padding:10px;
     display:inline-block;
     font-family: Glacial Indifference;

@@ -1,6 +1,5 @@
 <template>
-    <div class="container">
-        <div class="container-layout">
+    <div class="container scrollcontainer">
             <div class="col-md-10">
             <div class="card">
             <div class="card-header">All Reviews</div>
@@ -44,7 +43,6 @@
                     the standards right now, you can create a review once
                     they're all loaded.</div>
             </span>
-        </div>
         </div>
         </div>
         <router-view></router-view>

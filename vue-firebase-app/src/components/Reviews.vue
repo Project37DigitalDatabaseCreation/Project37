@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="container scrollcontainer">
         <router-view></router-view>
     </div>
 </template>
@@ -18,3 +18,5 @@ export default {
     }
 }
 </script>
+
+<style scoped src="../assets/styles/styles.css"></style>

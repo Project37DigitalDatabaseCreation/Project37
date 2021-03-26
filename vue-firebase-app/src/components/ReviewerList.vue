@@ -11,9 +11,8 @@
 -->
 
 <template>
-  <div class="container">
+  <div class="container scrollcontainer">
     <router-view></router-view>
-    <div class="container-layout">
     <div class="col-md-10">
     <div class="card">
     <div class="card-header">Reviewers
@@ -55,7 +54,6 @@
         <button class="btn" @click="nextPage">Next</button>
       </p>
     </div> -->
-    </div>
     </div>
     </div>
   </div>

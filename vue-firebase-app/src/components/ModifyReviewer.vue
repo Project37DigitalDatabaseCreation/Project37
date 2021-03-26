@@ -10,8 +10,7 @@
 *
 -->
 <template>
-  <div class="container">
-    <div class="container-layout">
+  <div class="container scrollcontainer">
       <div class="col-md-10">
         <div class="card">
           <div class="card-header">Modify Reviewer</div>
@@ -142,7 +141,6 @@
             </form>
           </div>
         </div>
-      </div>
     </div>
     <modal
       v-if="showModal"
@@ -281,5 +279,4 @@ export default {
 };
 </script>
 
-<style scoped src="../assets/styles/styles.css">
-</style>
+<style scoped src="../assets/styles/styles.css"></style>

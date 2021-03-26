@@ -75,13 +75,14 @@ div.card-header {
     font-family: Glacial Indifference;
 }
 
- /* Form Rows */
+ /* Form Group */
 div.form-group{
   font-size: 1.1em;
   font-family: Glacial Indifference;
   justify-content: center;
 }
 
+/* Form */
 form {
   margin-left: 25%;
   margin-right:25%;
@@ -94,6 +95,15 @@ form {
   left:200px;
   width:90%;
   justify-content: center;
+}
+
+.scrollcontainer {
+  font-family: Glacial Indifference;
+  min-width: 1000px;
+  max-width: 2000px;
+  margin-left: 685px;
+  margin-right: 685px;
+  margin: 0 auto;
 }
 
  /* Project Table Head Format */
@@ -126,9 +136,11 @@ div button{
   display:inline-block;
 }
 
+/* Header */
 h4 {
   text-align: center;
 }
+
 
 th {
   padding-top: 12px;
@@ -138,28 +150,32 @@ th {
   color: black;
 }
 
+/* Data Cell */
 td {
   text-align: center;
   padding: 10px;
 }
 
+/* Table */
 table {
   padding: 12px;
   width: 100%;
   border: 1px solid #ddd;
 }
 
+/* Button */
 button {
   margin: 0 auto;
 }
 
+/* Paganation container */
 .paginationContainer {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-
+/* Modal */
 .modal-mask {
   position: fixed;
   z-index: 9998;
@@ -202,15 +218,6 @@ button {
   margin-top: 1rem;
 }
 
-/*
- * The following styles are auto-applied to elements with
- * transition="modal" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the modal transition by editing
- * these styles.
- */
-
 .modal-enter {
   opacity: 0;
 }
@@ -225,5 +232,8 @@ button {
   transform: scale(1.1);
 }
 
+/* Save Button */
 .save { background-color: #4CAF50;} /* Green */
+
+/* Cancel Button */
 .cancel {background-color: #e7e7e7; color: black;} /* Gray */

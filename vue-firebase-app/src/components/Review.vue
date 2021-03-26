@@ -1,5 +1,5 @@
 <template>
-    <div style="display:flex;" :style="`height:${contentHeight}px`">
+    <div class="container scrollcontainer" style="display:flex;" :style="`height:${contentHeight}px`">
         <ReviewNav @go-to-item="goToItem"></ReviewNav>
         <ReviewForm v-if="ready" :currentLink="currentLink" :edit="review ? true : false"
             :review="selectedReview" :scores="scores">

@@ -7,7 +7,7 @@
 -->
 
 <template>
-  <div class="container" style="font-family: Glacial Indifference; margin-left: 731px; margin-right: 731px;">
+  <div class="container scrollcontainer">
     <div class="row justify-content-center" style="font-family: Glacial Indifference;">
       <div class="col-sm-2">
         <div class="card">
@@ -102,4 +102,4 @@
   }
 </script>
 
-<style></style>
+<style scoped src="../assets/styles/styles.css"></style>
