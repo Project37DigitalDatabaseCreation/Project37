@@ -7,10 +7,12 @@
 -->
 <template>
     <div id="content">
+        <perfect-scrollbar>
         <navbar></navbar>
         <main>
             <router-view></router-view>
         </main>
+        </perfect-scrollbar>
     </div>
 </template>
 
@@ -34,8 +36,11 @@ body {
     height: 100vh;
 }
 #app {
-    overflow: hidden;
     height: 100vh;
+}
+
+.ps {
+  height: 200px;
 }
 
 .loader {
