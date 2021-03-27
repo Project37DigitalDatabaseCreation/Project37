@@ -118,9 +118,9 @@
                     Update
                   </button>
                   &nbsp;
-                  <button type="submit" class="btn btn-primary">
+                  <!-- <button type="submit" class="btn btn-primary">
                     Reset Password
-                  </button>
+                  </button> -->
                   &nbsp;
                   <button
                     type="button"
