@@ -247,16 +247,41 @@ export default createStore({
         rev.id = obj.docs[i].id
 
         //  Parse the project for this document
-        let proj = await rev.project_ref.get()
+        rev.project_ref.get().then(doc => {
+            let proj = doc.data();
+            
+            if (proj) {
+                proj.id = doc.id;
+                rev.project = proj;
+
+                proj.org_ref.get()
+                .then(doc => {
+                    let org = doc.data();
+
+                    if(org) {
+                        org.id = doc.id;
+                        rev.org = org; 
+                    }
+                });
+            }
+        });
+
+        //  Get our reviewer
+        rev.reviewer_ref.get().then(doc => {
+            let reviewer = doc.data();
+            
+            if(reviewer) {
+                reviewer.id = doc.id;
+                rev.reviewer = reviewer;
+            }
+        });
 
         //  Parse the reviewer for this document
-        let reviewer = await rev.reviewer_ref.get()
+        // let reviewer = await rev.reviewer_ref.get()
 
-        //  Attach to our reviewer
-        rev.project = proj.data()
-        if (rev.project) rev.project.id = proj.id
-        rev.reviewer = reviewer.data()
-        if (rev.reviewer) rev.reviewer.id = reviewer.id
+        // //  Attach to our reviewer
+        // rev.reviewer = reviewer.data()
+        // if (rev.reviewer) rev.reviewer.id = reviewer.id
 
         //  Push the document onto the container
         response.push(rev)
