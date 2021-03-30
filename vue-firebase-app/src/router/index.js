@@ -27,6 +27,7 @@ import ReviewerList from '../components/ReviewerList'
 import Organizations from '../components/Organizations'
 import store from '../store/index'
 import ForgotPassword from '../components/ForgotPassword'
+import ReviewToPDF from '../components/ReviewToPDF'
 
 const routes = [
   {
@@ -181,6 +182,11 @@ const routes = [
     path: '/forgotpassword',
     name: 'ForgotPassword',
     component: ForgotPassword,
+  },
+  {
+    path: '/reviewtopdf',
+    name: 'ReviewToPDF',
+    component: ReviewToPDF
   }
 
 ]
