@@ -127,7 +127,7 @@
               </div>
 
               <div class="form-group row">
-                  <button type="submit" class="btn btn-primary">
+                  <button type="submit" class="btn save">
                     Create Reviewer
                   </button>
                   &nbsp;

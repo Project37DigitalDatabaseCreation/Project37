@@ -40,25 +40,37 @@ tr:hover {
   background-color: #ddd;
 }
 
- /* Save Button */
+ /* Save/View Button */
  .save {
   font-size: 1.0em;
   font-family: Glacial Indifference;
-  background-color: #0000FF;
+  background-color:  #49703b;
 }
 
  /* Edit Button */
 .edit {
-  font-size: 1.0em;
-  font-family: Glacial Indifference;
-  background-color: greenyellow;
+  background: url(../icons/edit-icon.png);
+  background-color: transparent; 
+  background-repeat: no-repeat; 
+  background-position: 0px 0px; 
+  border: none; 
+  cursor: pointer; 
+  height: 16px; 
+  padding-left: 16px; 
+  vertical-align: middle; 
 }
 
  /* Delete Button */
 .delete {
-  font-size: 1.0em;
-  font-family: Glacial Indifference;
-  background-color: #f44336;
+  background: url(../icons/trash-can-icon.png);
+  background-color: transparent; 
+  background-repeat: no-repeat; 
+  background-position: 0px 0px; 
+  border: none; 
+  cursor: pointer; 
+  height: 16px; 
+  padding-left: 16px; 
+  vertical-align: middle; 
 }
 
  /* Submit Button */
@@ -232,8 +244,5 @@ button {
   transform: scale(1.1);
 }
 
-/* Save Button */
-.save { background-color: #4CAF50;} /* Green */
-
-/* Cancel Button */
+/* Delete/Cancel Button */
 .cancel {background-color: #e7e7e7; color: black;} /* Gray */

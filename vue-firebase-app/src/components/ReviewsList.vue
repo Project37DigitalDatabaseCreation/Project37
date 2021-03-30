@@ -19,9 +19,7 @@
                         </td>
                         <td>{{ review.status }}</td>
                         <td>
-                            <button class="btn btn-primary" @click="goToEdit(review)">
-                                Edit Review
-                            </button>
+                            <button class="btn edit" @click="goToEdit(review)"></button>
                         </td>
                         <!-- <td><button class="btn btn-primary" @click="populatePopOut(review)">Edit</button></td>
                 <td><button class="btn btn-primary" @click="deleteReview(review)">Delete</button></td> -->
@@ -30,13 +28,13 @@
             </table>
             <span v-if="sortedStandards"
                 style="display:flex; justify-content:center; align-items:center; flex-direction:column;">
-                <button class="btn btn-primary" @click="goToCreate">
+                <button class="btn save" @click="goToCreate">
                     Create Review
                 </button>
             </span>
             <span v-else
                 style="display:flex; justify-content:center; align-items:center; flex-direction:column;">
-                <button class="btn btn-primary" :disabled="!ready">
+                <button class="btn save" :disabled="!ready">
                     Create Review
                 </button>
                 <div style="font-size:12px; margin-top:6px; color:grey;">We are getting

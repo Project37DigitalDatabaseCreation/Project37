@@ -8,7 +8,7 @@
 <template>
   <div class="container scrollcontainer">
     <span style="color: red">{{ error }}</span>
-    <div class="row" style="margin-left: 149px;">
+    <div class="row" style="margin-left: 255px;">
       <div class="col-sm-2">
         <div class="card">
           <div class="card-body">
@@ -71,7 +71,7 @@
           <td>{{ review.project.title }}</td>
           <td>{{ review.points }}</td>
           <td>{{ review.met_status }}</td>
-          <td><button @click="openReview(review.id)">Open</button></td>
+          <td><button class="btn save" @click="openReview(review.id)">Open</button></td>
         </tr>
       </tbody>          
     </table>
@@ -100,7 +100,7 @@
           <td>{{ review.project.title }}</td>
           <td>{{ review.points }}</td>
           <td>{{ review.met_status }}</td>
-          <td><button @click="openReview(review.id)">Open</button></td>
+          <td><button class="btn save" @click="openReview(review.id)">Open</button></td>
         </tr>
       </tbody>          
     </table>

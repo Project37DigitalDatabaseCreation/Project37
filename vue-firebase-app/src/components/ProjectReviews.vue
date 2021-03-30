@@ -48,7 +48,7 @@
     </div>
     <div>
       <button
-        class="btn btn-primary"
+        class="btn save"
         id="show-modal"
         :disabled="projectNewReviewEnabled == 0"
         @click="populatePopOut()">
@@ -70,8 +70,8 @@
           <td>{{ review.course_name }}</td>
           <td>{{ review.reviewer.lastName + ", " + review.reviewer.firstName}}</td>
           <td>{{ review.status }}</td>
-          <td><button class="btn btn-primary" @click="populatePopOut(review)">Edit</button></td>
-          <td><button class="btn btn-primary" @click="deleteReview(review)">Delete</button></td>
+          <td><button class="btn edit" @click="populatePopOut(review)"></button></td>
+          <td><button class="btn delete" @click="deleteReview(review)"></button></td>
         </tr>
       </tbody>
     </table>    

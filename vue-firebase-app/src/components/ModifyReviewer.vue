@@ -111,7 +111,7 @@
                 <div class="col-md-14">
                   <button
                     type="button"
-                    class="btn btn-primary"
+                    class="btn save"
                     @click.prevent="updateClicked"
                   >
                     Update

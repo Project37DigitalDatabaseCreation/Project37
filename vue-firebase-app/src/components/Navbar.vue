@@ -138,7 +138,10 @@ export default {
 .navbar {
     position: relative;
     height: 56px !important;
-    margin:50px 50px 50px -350px;
+    margin-left: 255px;
+    margin-right: 655px;
+    margin-top: 50px;
+    margin-bottom: 10px;
     padding:10px;
     display:inline-block;
     font-family: Glacial Indifference;
