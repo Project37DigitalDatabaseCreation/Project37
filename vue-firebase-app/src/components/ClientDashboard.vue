@@ -87,10 +87,6 @@
 
       console.log(reviews_in_project)
 
-      // const completed_reviews = reviews_in_project.value.filter((review) => {
-      //   return review.status.includes('In-Progress')
-      // })
-
       return {
         in_progress_reviews,
         reviews_in_project,
