@@ -1,6 +1,5 @@
 <template>
-    <div class="container">
-        <div class="container-layout">
+    <div class="container scrollcontainer">
             <div class="col-md-10">
             <div class="card">
             <div class="card-header">All Reviews</div>
@@ -20,9 +19,7 @@
                         </td>
                         <td>{{ review.status }}</td>
                         <td>
-                            <button class="btn btn-primary" @click="goToEdit(review)">
-                                Edit Review
-                            </button>
+                            <button class="btn edit" @click="goToEdit(review)"></button>
                         </td>
                         <!-- <td><button class="btn btn-primary" @click="populatePopOut(review)">Edit</button></td>
                 <td><button class="btn btn-primary" @click="deleteReview(review)">Delete</button></td> -->
@@ -31,20 +28,19 @@
             </table>
             <span v-if="sortedStandards"
                 style="display:flex; justify-content:center; align-items:center; flex-direction:column;">
-                <button class="btn btn-primary" @click="goToCreate">
+                <button class="btn save" @click="goToCreate">
                     Create Review
                 </button>
             </span>
             <span v-else
                 style="display:flex; justify-content:center; align-items:center; flex-direction:column;">
-                <button class="btn btn-primary" :disabled="!ready">
+                <button class="btn save" :disabled="!ready">
                     Create Review
                 </button>
                 <div style="font-size:12px; margin-top:6px; color:grey;">We are getting
                     the standards right now, you can create a review once
                     they're all loaded.</div>
             </span>
-        </div>
         </div>
         </div>
         <router-view></router-view>

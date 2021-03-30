@@ -15,6 +15,8 @@ import firebase from 'firebase/app'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import { globalMixin } from '@/mixins/global-mixin'
+import PerfectScrollbar from 'vue2-perfect-scrollbar'
+import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css'
 
 require("firebase/auth");
 require("firebase/firestore");
@@ -39,3 +41,5 @@ const app = createApp(App)
 app.mixin(globalMixin())
 
 app.use(router).use(store).mount('#app')
+
+app.use(PerfectScrollbar);
