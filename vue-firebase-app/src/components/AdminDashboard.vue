@@ -6,9 +6,9 @@
 *
 -->
 <template>
-  <div class="container">
+  <div class="container scrollcontainer">
     <span style="color: red">{{ error }}</span>
-    <div class="row">
+    <div class="row" style="margin-left: 255px;">
       <div class="col-sm-2">
         <div class="card">
           <div class="card-body">
@@ -20,7 +20,7 @@
       <div class="col-sm-2">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">In-Progress Reviews</h5>
+            <h5 class="card-title">In Progress Reviews</h5>
             <h1>{{ reviewStats.InProgressReviewsCount }}</h1>
           </div>
         </div>
@@ -71,7 +71,7 @@
           <td>{{ review.project.title }}</td>
           <td>{{ review.points }}</td>
           <td>{{ review.met_status }}</td>
-          <td><button @click="openReview(review.id)">Open</button></td>
+          <td><button class="btn save" @click="openReview(review.id)">Open</button></td>
         </tr>
       </tbody>          
     </table>
@@ -100,7 +100,7 @@
           <td>{{ review.project.title }}</td>
           <td>{{ review.points }}</td>
           <td>{{ review.met_status }}</td>
-          <td><button @click="openReview(review.id)">Open</button></td>
+          <td><button class="btn save" @click="openReview(review.id)">Open</button></td>
         </tr>
       </tbody>          
     </table>
@@ -267,4 +267,5 @@ export default {
   }
 };
 </script>
- 
+
+ <style scoped src="../assets/styles/styles.css"></style>

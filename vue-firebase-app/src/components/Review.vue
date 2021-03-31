@@ -1,5 +1,5 @@
 <template>
-    <div style="display:flex;" :style="`height:${contentHeight}px`">
+    <div class="container scrollcontainer" style="display:flex;" :style="`height:${contentHeight}px`">
         <ReviewNav @go-to-item="goToItem"></ReviewNav>
         <ReviewForm v-if="ready" :currentLink="currentLink" :edit="review ? true : false"
             :review="selectedReview" :scores="scores">
@@ -12,6 +12,7 @@
 </template>
 <script>
 import firebase from 'firebase'
+import { mapGetters } from 'vuex'
 import ReviewForm from './ReviewForm'
 import ReviewNav from './ReviewNav'
 import _ from 'lodash'
@@ -40,7 +41,7 @@ export default {
     async mounted() {
         console.log('REVIEW', this.review)
         //  If we have a review string, we are editing so fetch our scores
-        if (this.review) {
+        if (this.review && this.reviews) {
             //  We have to grab the review that the id points to
             const rev = firebase.firestore().collection('Reviews').doc(this.review)
 
@@ -51,11 +52,7 @@ export default {
                 .where('review_ref', '==', rev)
                 .get()
 
-            //  We also have to get our review
-            const review = await firebase
-                .firestore()
-                .collection('Reviews')
-                .doc(this.review)
+            const review = this.reviews.find(x => x.id === this.review)
 
             //  If the review is set, set our selected, else just null
             this.selectedReview = review || null
@@ -69,16 +66,9 @@ export default {
                     //  Our score
                     const score = doc.data()
                     //  We also have to get our standard
-                    const std = await score.standard_ref.get()
+                    const stdRef = score.standard_ref.split('/')[2]
                     //  Add the standard to our score
-                    score.standard = std.data()
-                    score.standard.id = std.id
-
-                    //  Get the general standard on this standard
-                    const gen = await score.standard.general_standard_ref.get()
-                    //  Add the general standard to our standard
-                    score.standard.generalStandard = gen.data()
-                    score.standard.generalStandard.id = gen.id
+                    score.standard = this.standards.find(x => x.id === stdRef)
                     //  Append our id
                     score.id = doc.id
                     //  Push into our scores array
@@ -95,9 +85,7 @@ export default {
         }
     },
     computed: {
-        sortedStandards() {
-            return this.$store.getters.sortedStandards
-        }
+        ...mapGetters(['generalStandards', 'reviews', 'sortedStandards', 'standards'])
     },
     components: {
         ReviewForm,
