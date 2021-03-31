@@ -21,19 +21,24 @@ export default {
         //doc.text("Hello world!", 10, 10);
         
         const doc = new jsPDF({
-            orientation: 'p', 
-            unit: 'in', 
-            format: [612, 792]
+            orientation: "p", 
+            unit: "px", 
+            format: "letter",
+            hotfixes: ["px_scaling"]
+        });
+
+        let html = "";
+
+        this.standards.forEach(standard => {
+            html += "<div style='width: 811px; font-size: 10px;'>" + standard.annotation + "</div>";
         });        
 
-        doc.setFontSize(8);
-
-        doc.html(this.standards[0].annotation, {
+        doc.html(html, {
             callback: function (doc) {
-                doc.save("a4.pdf");
+                doc.save("review.pdf");
             },
-            x: 10,
-            y: 10
+            x: 5,
+            y: 5
         });    
     }
 }
