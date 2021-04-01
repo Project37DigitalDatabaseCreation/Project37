@@ -93,22 +93,30 @@
                                             style="display:flex; border-bottom:1px solid grey; background-color:#ffffff; flex-direction:column;"
                                             :style="j == scores.length - 1 ? 'border-bottom:unset !important;' : ''">
                                             <div class="standard-container-title col-12 px-0"
-                                                style="display:flex; font-size:12px; color:rgba(0,0,0,.6);">
+                                                style="display:flex; font-size:14px; color:rgba(0,0,0,.6);">
                                                 <button class="collapsible"
-                                                    style="display:flex; font-size:12px; color:rgba(0,0,0,.6);"
+                                                    :id="`collapsible-${i}-${j}`"
+                                                    style="display:flex; font-size:14px; color:rgba(0,0,0,.6);"
                                                     @click="expand(i,j)">
 
                                                     <div class="col-1 px-0"
-                                                        style="justify-content:center; align-items:center; text-align:center;">
-                                                        MET</div>
-                                                    <div class="col-9 px-0">Standard
+                                                        style="justify-content:center; align-items:center; text-align:center; font-weight:bold;"
+                                                        :style="`background-color:${score.met ? 'green' : ''}; color:${score.met ? 'white' : 'rgba(0,0,0,.6)'}`">
+                                                        MET
+                                                    </div>
+                                                    <div class="col-10 pr-0"
+                                                        style="font-weight:bold;">Standard
                                                         {{ `${item.number}.${score.standard.number}` }}
                                                     </div>
-                                                    <div class="col-2 px-0"
-                                                        style="text-align:center;">
-                                                        Points
+                                                    <div class="col-1 px-0"
+                                                        style="text-align:center; font-weight:bold;">
+                                                        Points:
                                                         {{ score.met ? score.standard.points : 0 }}
                                                     </div>
+                                                    <!-- <div class="col-1 px-0"
+                                                        style="text-align:center; font-weight:bold;">
+
+                                                    </div> -->
                                                 </button>
                                             </div>
                                             <span :id="`collapse-content-${i}-${j}`"
@@ -124,17 +132,14 @@
                                                     <div
                                                         class="col-11 col-form-label px-0">
                                                         {{ score.standard.title }}</div>
-                                                    <!-- <div class="col-2 px-0"
-                                                        style="justify-content:center; align-items:center; display:flex;">
-                                                        
-                                                    </div> -->
                                                 </div>
                                                 <div class="standard-container-comments col-12 px-0"
                                                     style="display:flex; justify-content:center; align-items:center; flex-direction:column; margin-bottom:10px;">
                                                     <div
                                                         style="width:100%; text-align:left; padding-left:15px;">
                                                         Comments</div>
-                                                    <textarea cols="75"
+                                                    <textarea cols="75" rows="6"
+                                                        style="resize:none;"
                                                         v-model="score.comment" />
                                                 </div>
                                             </span>
@@ -145,6 +150,8 @@
                                         :style="`background-color:${standardMet(item) ? 'rgb(213, 232, 212);' : 'rgb(232, 213, 212)' }`">
                                         Standard Met:
                                         {{ standardMet(item) ? 'Yes' : 'No' }}
+                                        <br />
+                                        Total Points: {{ pointTotal(item) }}
                                     </div>
                                 </div>
                             </template>
@@ -227,9 +234,8 @@ export default {
     methods: {
         expand(i, j) {
             let doc = document.getElementById(`collapse-content-${i}-${j}`)
-            console.log('doc', doc.style.display)
-            if (doc.style.display === 'block') doc.style.display = 'none'
-            else doc.style.display = 'block'
+            if (doc.style.maxHeight) doc.style.maxHeight = null
+            else doc.style.maxHeight = doc.scrollHeight + 'px'
         },
         filteredScores(genStandard) {
             //  Filters our scores based on general standard
@@ -282,6 +288,18 @@ export default {
                     console.log('Error getting documents: ', error)
                 })
             console.log('OUR REVIEWERS', this.reviewers)
+        },
+        pointTotal(genStandard) {
+            const scores = this.filteredScores(genStandard)
+
+            let points = 0
+
+            //  Iterate through these scores
+            for (let i = 0; i < scores.length; i++) {
+                //  Tally our scores
+                if (scores[i].met) points += scores[i].standard.points
+            }
+            return points
         },
         //  This gets triggered to save it as COMPLETE
         async saveComplete() {
@@ -406,9 +424,11 @@ export default {
         },
         standardMet(genStandard) {
             //  Find all scores that match the genstandard id
-            let scores = this.currScores.filter((x) => {
-                return x.standard.generalStandard.id === genStandard.id
-            })
+            // let scores = this.currScores.filter((x) => {
+            //     return x.standard.generalStandard.id === genStandard.id
+            // })
+            const scores = this.filteredScores(genStandard)
+
             //  Iterate through these scores
             for (let i = 0; i < scores.length; i++) {
                 //  If the score hasn't been met, return false
@@ -439,7 +459,7 @@ export default {
 }
 .collapsible {
     background-color: #eee;
-    color: #444;
+    color: white;
     cursor: pointer;
     padding: 18px;
     width: 100%;
@@ -448,9 +468,14 @@ export default {
     outline: none;
     font-size: 15px;
 }
+.collapsible:hover {
+    background-color: #ccc;
+}
 .collapse-content {
-    display: none;
+    /* display: none; */
     overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.2s ease-out;
 }
 .form-group {
     border-radius: 4px 4px;
