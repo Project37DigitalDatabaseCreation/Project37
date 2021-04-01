@@ -26,9 +26,7 @@
                             <td>{{ review.status }}</td>
                             <td>{{ review.points }}</td>
                             <td>
-                                <button class="btn btn-primary" @click="goToEdit(review)">
-                                    Edit Review
-                                </button>
+                                <button title="edit" class="btn edit" @click="goToEdit(review)"></button>
                             </td>
                             <!-- <td><button class="btn btn-primary" @click="populatePopOut(review)">Edit</button></td>
                 <td><button class="btn btn-primary" @click="deleteReview(review)">Delete</button></td> -->

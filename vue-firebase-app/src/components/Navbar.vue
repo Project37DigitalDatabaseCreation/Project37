@@ -6,38 +6,35 @@
 *
 -->
 <template>
-    <nav class="navbar navbar-expand-md navbar-light navbar-laravel" style="font-family: Glacial Indifference;">
+    <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
             <router-link to="/" class="navbar-brand">
             <img width="428.25" height="168.5" src="../assets/logos/eLMACADEMICTransparent.png">
             </router-link>
-            <button class="navbar-toggler" type="button" data-toggle="collapse"
-                data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent" style="font-family: Glacial Indifference;">
-                <ul class="navbar-nav mr-auto"></ul>
-                <ul class="navbar-nav ml-auto">
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent" style="font-family: Glacial Indifference; font-size: 1.5em;">
+                <ul class="navbar-nav mr-auto">
                     <template v-if="user.loggedIn">
-                        <ul
-                            style="list-style:none; display:flex; justify-content:space-between; margin-bottom: 30px; text-align: center">
                             <template v-for="(item,i) in navLinks" :key="i">
-                                <li class="nav-item">
+                                <li class="nav-item" style="list-style:none; display:flex; justify-content:space-between; margin-bottom: 30px; text-align: center">
                                     <router-link v-if="item.link && !item.hidden"
                                         :to="item.link" class="nav-link">
                                         {{ item.name }}
                                     </router-link>
                                     <div v-else-if="item.display && user.loggedIn"
-                                        class="nav-item">
+                                        class="nav-link disabled" >
                                         {{ user.displayName }}
                                     </div>
                                     <a v-else-if="item.method" class="nav-link"
                                         @click.prevent="signOut">Sign Out</a>
                                 </li>
                             </template>
-                        </ul>
                     </template>
+
                     <template v-else>
                         <li class="nav-item">
                             <router-link to="login" class="nav-link">Login</router-link>
@@ -93,7 +90,7 @@ export default {
                 },
                 {
                     link: '/reviews',
-                    name: 'Reviews',
+                    name: 'View Reviews',
                     hidden: !this.user.isReviewer
                 },
                 {
@@ -134,25 +131,12 @@ export default {
 }
 </script>
 <style>
+.nav {
+  width: auto;
+}
 
 .navbar {
-    position: relative;
-    height: 56px !important;
-    margin-left: 255px;
-    margin-right: 655px;
-    margin-top: 50px;
-    margin-bottom: 10px;
-    padding:10px;
-    display:inline-block;
     font-family: Glacial Indifference;
-    font-size: 1.5em;
-}
-.nav-item {
-    margin-left: 6px;
-    margin-right: 6px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 </style>
