@@ -81,7 +81,8 @@ export default {
                         let score = {
                             standard: _.cloneDeep(curr),
                             met: false,
-                            review_ref: null
+                            review_ref: null,
+                            comment: ''
                         }
                         //  Push onto our array
                         this.scores.push(score)
