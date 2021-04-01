@@ -205,12 +205,18 @@ export default {
         }
     },
     methods: {
-        //  Filters our scores based on general standard
         filteredScores(genStandard) {
-            //  Find all scores that match the genstandard id
-            return this.currScores.filter((x) => {
+            //  Filters our scores based on general standard
+            const filtered = this.currScores.filter((x) => {
                 return x.standard.generalStandard.id === genStandard.id
             })
+
+            filtered.sort((a, b) => {
+                return a.standard.number > b.standard.number ? 1 : -1
+            })
+
+            //  Order our scores
+            return filtered
         },
         getProjects() {
             firebase
