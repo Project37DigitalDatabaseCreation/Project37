@@ -9,16 +9,16 @@ import { mapGetters } from 'vuex';
 
 export default {
     computed: {
-        ...mapGetters(['standards'])
+        ...mapGetters(['standards', 'generalStandards'])
     },
     async mounted() {
+        if (!this.generalStandards || this.generalStandards.length === 0) {
+            await this.$store.dispatch('fetchGeneralStandards');
+        }
+
         if (!this.standards || this.standards.length === 0) {
             await this.$store.dispatch('fetchStandards');   
         }
-        // Default export is a4 paper, portrait, using millimeters for units
-        //const doc = new jsPDF();
-        //doc.setFontSize(10);
-        //doc.text("Hello world!", 10, 10);
         
         const doc = new jsPDF({
             orientation: "p", 
@@ -29,9 +29,19 @@ export default {
 
         let html = "";
 
-        this.standards.forEach(standard => {
-            html += "<div style='width: 811px; font-size: 10px;'>" + standard.annotation + "</div>";
-        });        
+        this.generalStandards.forEach(gs => {
+            html += "<table style='width: 811px; font-size: 8px; margin-bottom: 5px'>";
+            html += "<tr><td style='font-weight: bold; letter-spacing: 2px; letter-spacing: 2px;' colspan=2>Standard " + gs.number + ": " + gs.title + "</td></tr>";
+            html += "<tr><td style='font-weight: bold; letter-spacing: 2px;'>Specific Standards</td><td style='font-weight: bold; letter-spacing: 2px;'>Reviewer Recommendations</td></tr>";
+
+            this.standards.forEach(s => {
+                if (s.general_standard_ref.id === gs.id) {
+                    html += "<tr><td>" + gs.number + "." + s.number + " " + s.title + "</td><td>recommendations placeholder</td></tr>";
+                }
+            });
+
+            html += "</table>";
+        });  
 
         doc.html(html, {
             callback: function (doc) {
