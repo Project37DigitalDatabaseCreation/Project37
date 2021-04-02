@@ -76,23 +76,41 @@
 
 <script>
   import { ref } from 'vue'
-  import getCollection from '../composables/getCollection'
+  import firebase from 'firebase'
+  import 'firebase/firestore'
+  // import getCollection from '../composables/getCollection'
 
   export default {
     setup() {
       const in_progress_reviews = ref([])
       const completed_reviews = ref([])
       const percentage_completed = 0
-      const { documents: reviews_in_project, error } = getCollection('Reviews')
+      const projects = []
+      // const { documents: reviews_in_project, error } = getCollection('Reviews')
 
-      console.log(reviews_in_project)
+      const load = async () => {
+        const res = await firebase
+          .firestore()
+          .collection('Projects')
+          .get()
 
+        projects.value = res.docs.map((doc) => {
+          return { ...doc.data().clients, id: doc.id }
+        })
+      }
+      // const getClientsReference = async (doc) => {
+      //     const clientRefs = doc.filter(client => client.value.email === 'amassart@asu.edu').map(client => client.value.id)
+      // }
+      load()
+
+      console.log(projects)
       return {
         in_progress_reviews,
-        reviews_in_project,
+        // reviews_in_project,
         percentage_completed,
         completed_reviews,
-        error,
+        // error,
+        projects,
       }
     },
   }
