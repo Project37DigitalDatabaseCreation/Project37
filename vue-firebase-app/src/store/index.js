@@ -293,19 +293,16 @@ export default createStore({
                     scoreStandard = getters.standards.find(x => x.id === score.standard_ref.id)
                 }
 
-                if (scoreStandard && score.met) rev.points += scoreStandard.points
+                if (scoreStandard) {
+                    if (score.met) rev.points += scoreStandard.points
+                    score.standard = scoreStandard
+                }
 
                 rev.scores.push(score)
             })
             //  If this is the last review, set our reviews to be loaded
             if (i === obj.docs.length - 1) commit('SET_LOADING', false)
         })
-        //  Parse the reviewer for this document
-        // let reviewer = await rev.reviewer_ref.get()
-
-        // //  Attach to our reviewer
-        // rev.reviewer = reviewer.data()
-        // if (rev.reviewer) rev.reviewer.id = reviewer.id
 
         //  Push the document onto the container
         response.push(rev)

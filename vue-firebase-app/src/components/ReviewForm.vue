@@ -93,31 +93,56 @@
                                             style="display:flex; border-bottom:1px solid grey; background-color:#ffffff; flex-direction:column;"
                                             :style="j == scores.length - 1 ? 'border-bottom:unset !important;' : ''">
                                             <div class="standard-container-title col-12 px-0"
-                                                style="display:flex; font-size:12px; color:rgba(0,0,0,.6);">
-                                                <div class="col-1 px-0"
-                                                    style="justify-content:center; align-items:center; text-align:center;">
-                                                    MET</div>
-                                                <div class="col-9 px-0">Standard
-                                                    {{ `${item.number}.${score.standard.number}` }}
-                                                </div>
-                                                <div class="col-2 px-0"
-                                                    style="text-align:center;">Points
-                                                </div>
+                                                style="display:flex; font-size:14px; color:rgba(0,0,0,.6);">
+                                                <button class="collapsible"
+                                                    :id="`collapsible-${i}-${j}`"
+                                                    style="display:flex; font-size:14px; color:rgba(0,0,0,.6);"
+                                                    @click="expand(i,j)">
+
+                                                    <div class="col-1 px-0"
+                                                        style="justify-content:center; align-items:center; text-align:center; font-weight:bold;"
+                                                        :style="`background-color:${score.met ? 'green' : ''}; color:${score.met ? 'white' : 'rgba(0,0,0,.6)'}`">
+                                                        MET
+                                                    </div>
+                                                    <div class="col-10 pr-0"
+                                                        style="font-weight:bold;">Standard
+                                                        {{ `${item.number}.${score.standard.number}` }}
+                                                    </div>
+                                                    <div class="col-1 px-0"
+                                                        style="text-align:center; font-weight:bold;">
+                                                        Points:
+                                                        {{ score.met ? score.standard.points : 0 }}
+                                                    </div>
+                                                    <!-- <div class="col-1 px-0"
+                                                        style="text-align:center; font-weight:bold;">
+
+                                                    </div> -->
+                                                </button>
                                             </div>
-                                            <div class="standard-container-body col-12 px-0"
-                                                style="display:flex;">
-                                                <div class="col-1 px-0"
-                                                    style="justify-content:center; align-items:center; display:flex;">
-                                                    <input id="st-1" type="checkbox"
-                                                        name="MET" v-model="score.met" />
+                                            <span :id="`collapse-content-${i}-${j}`"
+                                                class="collapse-content">
+                                                <div class="standard-container-body col-12 px-0"
+                                                    style="display:flex;">
+                                                    <div class="col-1 px-0"
+                                                        style="justify-content:center; align-items:center; display:flex;">
+                                                        <input id="st-1" type="checkbox"
+                                                            name="MET"
+                                                            v-model="score.met" />
+                                                    </div>
+                                                    <div
+                                                        class="col-11 col-form-label px-0">
+                                                        {{ score.standard.title }}</div>
                                                 </div>
-                                                <div class="col-9 col-form-label px-0">
-                                                    {{ score.standard.title }}</div>
-                                                <div class="col-2 px-0"
-                                                    style="justify-content:center; align-items:center; display:flex;">
-                                                    {{ score.met ? score.standard.points : 0 }}
+                                                <div class="standard-container-comments col-12 px-0"
+                                                    style="display:flex; justify-content:center; align-items:center; flex-direction:column; margin-bottom:10px;">
+                                                    <div
+                                                        style="width:100%; text-align:left; padding-left:15px;">
+                                                        Comments</div>
+                                                    <textarea cols="75" rows="6"
+                                                        style="resize:none;"
+                                                        v-model="score.comment" />
                                                 </div>
-                                            </div>
+                                            </span>
                                         </div>
                                     </template>
                                     <div class="col-12 pr-0 py-4 pl-3"
@@ -125,6 +150,8 @@
                                         :style="`background-color:${standardMet(item) ? 'rgb(213, 232, 212);' : 'rgb(232, 213, 212)' }`">
                                         Standard Met:
                                         {{ standardMet(item) ? 'Yes' : 'No' }}
+                                        <br />
+                                        Total Points: {{ pointTotal(item) }}
                                     </div>
                                 </div>
                             </template>
@@ -205,12 +232,23 @@ export default {
         }
     },
     methods: {
-        //  Filters our scores based on general standard
+        expand(i, j) {
+            let doc = document.getElementById(`collapse-content-${i}-${j}`)
+            if (doc.style.maxHeight) doc.style.maxHeight = null
+            else doc.style.maxHeight = doc.scrollHeight + 'px'
+        },
         filteredScores(genStandard) {
-            //  Find all scores that match the genstandard id
-            return this.currScores.filter((x) => {
+            //  Filters our scores based on general standard
+            const filtered = this.currScores.filter((x) => {
                 return x.standard.generalStandard.id === genStandard.id
             })
+
+            filtered.sort((a, b) => {
+                return a.standard.number > b.standard.number ? 1 : -1
+            })
+
+            //  Order our scores
+            return filtered
         },
         getProjects() {
             firebase
@@ -250,6 +288,18 @@ export default {
                     console.log('Error getting documents: ', error)
                 })
             console.log('OUR REVIEWERS', this.reviewers)
+        },
+        pointTotal(genStandard) {
+            const scores = this.filteredScores(genStandard)
+
+            let points = 0
+
+            //  Iterate through these scores
+            for (let i = 0; i < scores.length; i++) {
+                //  Tally our scores
+                if (scores[i].met) points += scores[i].standard.points
+            }
+            return points
         },
         //  This gets triggered to save it as COMPLETE
         async saveComplete() {
@@ -301,7 +351,8 @@ export default {
                             .firestore()
                             .doc(`/Standards/${this.currScores[i].standard.id}`),
                         met: this.currScores[i].met,
-                        review_ref: firebase.firestore().doc(`/Reviews/${res.id}`)
+                        review_ref: firebase.firestore().doc(`/Reviews/${res.id}`),
+                        comment: this.currScores[i].comment
                     }
                     firebase.firestore().collection('Scores').add(score)
                 }
@@ -373,9 +424,11 @@ export default {
         },
         standardMet(genStandard) {
             //  Find all scores that match the genstandard id
-            let scores = this.currScores.filter((x) => {
-                return x.standard.generalStandard.id === genStandard.id
-            })
+            // let scores = this.currScores.filter((x) => {
+            //     return x.standard.generalStandard.id === genStandard.id
+            // })
+            const scores = this.filteredScores(genStandard)
+
             //  Iterate through these scores
             for (let i = 0; i < scores.length; i++) {
                 //  If the score hasn't been met, return false
@@ -403,6 +456,26 @@ export default {
 <style scoped>
 .card {
     width: 100%;
+}
+.collapsible {
+    background-color: #eee;
+    color: white;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+}
+.collapsible:hover {
+    background-color: #ccc;
+}
+.collapse-content {
+    /* display: none; */
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.2s ease-out;
 }
 .form-group {
     border-radius: 4px 4px;
