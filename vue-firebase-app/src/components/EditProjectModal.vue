@@ -14,7 +14,7 @@
         <div class="modal-container">
           <div class="modal-header">
             <slot name="header">
-              Edit Project {{clientObj}}
+              Edit Project
             </slot>
           </div>
 

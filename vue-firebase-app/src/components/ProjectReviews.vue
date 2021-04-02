@@ -70,8 +70,8 @@
           <td>{{ review.course_name }}</td>
           <td>{{ review.reviewer.lastName + ", " + review.reviewer.firstName}}</td>
           <td>{{ review.status }}</td>
-          <td><button class="btn edit" @click="populatePopOut(review)"></button></td>
-          <td><button class="btn delete" @click="deleteReview(review)"></button></td>
+          <td><button title="edit" class="btn edit" @click="populatePopOut(review)"></button></td>
+          <td><button title="delete" class="btn delete" @click="deleteReview(review)"></button></td>
         </tr>
       </tbody>
     </table>    

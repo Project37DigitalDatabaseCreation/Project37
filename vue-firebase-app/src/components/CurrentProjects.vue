@@ -41,8 +41,8 @@
               <td style="text-align:center">{{project.num_reviews}}</td>
               <td>{{project.status}}</td>
               <td>{{project.organization}}</td>
-              <td><button class="btn edit" @click="editProject(project), (showEditModal = true)"></button></td>
-              <td><button class="btn delete" @click="deleteProject(project.id)"></button></td>
+              <td><button title="edit" class="btn edit" @click="editProject(project), (showEditModal = true)"></button></td>
+              <td><button title="delete" class="btn delete" @click="deleteProject(project.id)"></button></td>
             </tr>
         </tbody>
       </table>

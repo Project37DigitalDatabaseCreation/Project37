@@ -8,7 +8,7 @@
 <template>
   <div class="container scrollcontainer">
     <span style="color: red">{{ error }}</span>
-    <div class="row" style="margin-left: 255px;">
+    <div class="row justify-content-center" style="font-family: Glacial Indifference;">
       <div class="col-sm-2">
         <div class="card">
           <div class="card-body">
