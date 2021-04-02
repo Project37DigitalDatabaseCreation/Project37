@@ -36,6 +36,7 @@ body {
     height: 100vh;
 }
 #app {
+    overflow: auto;
     height: 100vh;
 }
 

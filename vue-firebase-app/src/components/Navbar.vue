@@ -11,37 +11,32 @@
             <router-link to="/" class="navbar-brand">
             <img width="428.25" height="168.5" src="../assets/logos/eLMACADEMICTransparent.png">
             </router-link>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            <button id ="navButton" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent" style="font-family: Glacial Indifference; font-size: 1.5em;">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <template v-if="user.loggedIn">
-                            <template v-for="(item,i) in navLinks" :key="i">
-                                <li class="nav-item" style="list-style:none; display:flex; justify-content:space-between; margin-bottom: 30px; text-align: center">
-                                    <router-link v-if="item.link && !item.hidden"
-                                        :to="item.link" class="nav-link">
-                                        {{ item.name }}
-                                    </router-link>
-                                    <div v-else-if="item.display && user.loggedIn"
-                                        class="nav-link disabled" >
-                                        {{ user.displayName }}
-                                    </div>
-                                    <a v-else-if="item.method" class="nav-link"
-                                        @click.prevent="signOut">Sign Out</a>
-                                </li>
-                            </template>
+                        <template v-for="(item,i) in navLinks" :key="i">
+                            <li class="nav-item" style="list-style:none; display:flex;
+                            justify-content:space-between; margin-bottom: 30px; text-align: center" @click.prevent="closeMenu">
+                                <router-link v-if="item.link && !item.hidden" :to="item.link" class="nav-link">
+                                    {{ item.name }}
+                                </router-link>
+                                <div v-else-if="item.display && user.loggedIn" class="nav-link disabled" >
+                                    {{ user.displayName }}
+                                </div>
+                                <a v-else-if="item.method" class="nav-link" @click.prevent="signOut">Sign Out</a>
+                            </li>
+                        </template>
                     </template>
-
                     <template v-else>
-                        <li class="nav-item">
+                        <li class="nav-item" @click.prevent="closeMenu">
                             <router-link to="login" class="nav-link">Login</router-link>
                         </li>
-                        <li class="nav-item">
-                            <router-link to="register" class="nav-link">Register
-                            </router-link>
+                        <li class="nav-item" @click.prevent="closeMenu">
+                            <router-link to="register" class="nav-link">Register</router-link>
                         </li>
                     </template>
                 </ul>
@@ -49,12 +44,22 @@
         </div>
     </nav>
 </template>
+
 <script>
 import { mapGetters } from 'vuex'
 import firebase from 'firebase'
 export default {
     mounted() {
         console.log('USER', this.user)
+        var scripts = [
+            "//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js",
+            "//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"
+        ];
+    scripts.forEach(script => {
+        let tag = document.createElement("script");
+        tag.setAttribute("src", script);
+        document.head.appendChild(tag);
+    });
     },
     computed: {
         ...mapGetters({
@@ -126,17 +131,30 @@ export default {
                     console.log('userasdf', this.user)
                     this.$router.push({ path: 'login' })
                 })
+        },
+        closeMenu() {
+            document.getElementById('navButton').click();
         }
     }
 }
 </script>
+
+<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
 <style>
 .nav {
-  width: auto;
+    width: auto;
 }
 
 .navbar {
     font-family: Glacial Indifference;
+    font-size: 1.5em;
 }
-
+.navbar-toggle .icon-bar{
+    width: 100px !important;
+    height:30px !important;
+}
+.navbar-collapse.collapse.in {
+    display: inline-block; 
+}
 </style>
