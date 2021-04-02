@@ -44,11 +44,11 @@
                                 <td>
                                     <button
                                         @click="modifyClient(client), (showEditModal = true)"
-                                        class="btn edit"></button>
+                                        title="edit" class="btn edit"></button>
                                 </td>
                                 <td>
                                     <button @click="handleDelete(client.id)"
-                                        class="btn delete"></button>
+                                        title="delete" class="btn delete"></button>
                                 </td>
                             </tr>
                         </tbody>
