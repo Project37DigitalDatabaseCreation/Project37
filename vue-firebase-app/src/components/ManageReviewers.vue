@@ -37,18 +37,29 @@
                 <th>Name</th>
                 <th>Email Address</th>
                 <th>Administrator</th>
+                <th></th>
+                <th></th>
                 <!-- <th>Last Login</th> -->
               </tr>
             </thead>
             <tbody class="project-body">
-              <tr
-                v-for="(reviewer, index) in reviewerData"
-                :key="index"
-                @click="modifyReviewer(reviewer.id)"
-              >
+              <tr v-for="(reviewer, index) in reviewerData" :key="index">
                 <td>{{ reviewer.first_name + " " + reviewer.last_name }}</td>
                 <td>{{ reviewer.email }}</td>
                 <td>{{ reviewer.is_admin === true ? "Yes" : "No" }}</td>
+                <td>
+                  <button
+                    @click="modifyReviewer(reviewer.id), (showEditModal = true)"
+                    class="btn edit"
+                  >
+                    Modify
+                  </button>
+                </td>
+                <td>
+                  <button @click="handleDelete(reviewer.id)" class="btn delete">
+                    Delete
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -86,6 +97,9 @@ export default {
     },
     nextPage() {
       alert("TODO - next page");
+    },
+    handleDelete(reviewerId) {
+      alert("todo " + reviewerId);
     },
 
     modifyReviewer(reviewerId) {
