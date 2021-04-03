@@ -1,85 +1,91 @@
 <template>
-    <div class="container">
-        <div class="container-layout">
-            <div class="col-md-10">
-            <div class="card">
-            <div class="card-header">All Reviews</div>
-            <table class="table">
-                <thead class="project-head">
-                    <tr>
-                        <th>Course Name</th>
-                        <th>Reviewer</th>
-                        <th>Status</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody class="project-body">
-                    <tr v-for="review in reviews" :key="review.id">
-                        <td>{{ review.course_name }}</td>
-                        <td>{{ reviewerName(review) }}
-                        </td>
-                        <td>{{ review.status }}</td>
-                        <td>
-                            <button class="btn btn-primary" @click="goToEdit(review)">
-                                Edit Review
-                            </button>
-                        </td>
-                        <!-- <td><button class="btn btn-primary" @click="populatePopOut(review)">Edit</button></td>
+  <div class="container">
+    <div class="container-layout">
+      <div class="col-md-10">
+        <div class="card">
+          <div class="card-header">All Reviews</div>
+          <table class="table">
+            <thead class="project-head">
+              <tr>
+                <th>Course Name</th>
+                <th>Reviewer</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody class="project-body">
+              <tr v-for="review in reviews" :key="review.id">
+                <td>{{ review.course_name }}</td>
+                <td>{{ reviewerName(review) }}</td>
+                <td>{{ review.status }}</td>
+                <td>
+                  <button
+                    title="edit"
+                    class="btn edit"
+                    @click="goToEdit(review)"
+                  ></button>
+                </td>
+                <!-- <td><button class="btn btn-primary" @click="populatePopOut(review)">Edit</button></td>
                 <td><button class="btn btn-primary" @click="deleteReview(review)">Delete</button></td> -->
-                    </tr>
-                </tbody>
-            </table>
-            <span v-if="sortedStandards"
-                style="display:flex; justify-content:center; align-items:center; flex-direction:column;">
-                <button class="btn btn-primary" @click="goToCreate">
-                    Create Review
-                </button>
-            </span>
-            <span v-else
-                style="display:flex; justify-content:center; align-items:center; flex-direction:column;">
-                <button class="btn btn-primary" :disabled="!ready">
-                    Create Review
-                </button>
-                <div style="font-size:12px; margin-top:6px; color:grey;">We are getting
-                    the standards right now, you can create a review once
-                    they're all loaded.</div>
-            </span>
+              </tr>
+            </tbody>
+          </table>
+          <span
+            v-if="sortedStandards"
+            style="display:flex; justify-content:center; align-items:center; flex-direction:column;"
+          >
+            <button class="btn btn-primary" @click="goToCreate">
+              Create Review
+            </button>
+          </span>
+          <span
+            v-else
+            style="display:flex; justify-content:center; align-items:center; flex-direction:column;"
+          >
+            <button class="btn btn-primary" :disabled="!ready">
+              Create Review
+            </button>
+            <div style="font-size:12px; margin-top:6px; color:grey;">
+              We are getting the standards right now, you can create a review
+              once they're all loaded.
+            </div>
+          </span>
         </div>
-        </div>
-        </div>
-        <router-view></router-view>
+      </div>
     </div>
+    <router-view></router-view>
+  </div>
 </template>
 <script>
-export default {
+  export default {
     mounted() {
-        this.$store.dispatch('fetchReviews')
+      this.$store.dispatch('fetchReviews')
     },
     computed: {
-        reviews() {
-            return this.$store.getters.reviews
-        },
-        sortedStandards() {
-            return this.$store.getters.sortedStandards
-        }
+      reviews() {
+        return this.$store.getters.reviews
+      },
+      sortedStandards() {
+        return this.$store.getters.sortedStandards
+      },
     },
     methods: {
-        goToCreate() {
-            //  Push the router
-            console.log('reviewtemplate', this.selectedReview)
-            this.$router.push({ name: 'Review' })
-        },
-        goToEdit(rev) {
-            console.log('rev', rev.id)
-            //  Push the router
-            this.$router.push({ name: 'Review', params: { review: rev.id } })
-        },
-        reviewerName(review) {
-            if (!review.reviewer) return ''
-            return review.reviewer.lastName + ', ' + review.reviewer.firstName
-        }
-    }
-}
+      goToCreate() {
+        //  Push the router
+        console.log('reviewtemplate', this.selectedReview)
+        this.$router.push({ name: 'Review' })
+      },
+      goToEdit(rev) {
+        console.log('rev', rev.id)
+        //  Push the router
+        this.$router.push({ name: 'Review', params: { review: rev.id } })
+      },
+      reviewerName(review) {
+        if (!review.reviewer) return ''
+        return review.reviewer.lastName + ', ' + review.reviewer.firstName
+      },
+    },
+  }
 </script>
 
 <style scoped src="../assets/styles/styles.css"></style>

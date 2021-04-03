@@ -82,34 +82,90 @@
 
   export default {
     setup() {
+      const clientEmail = firebase.auth().currentUser.email
       const in_progress_reviews = ref([])
-      const completed_reviews = ref([])
+      const reviews_in_project = ref([])
+      let error = ref(null)
+      let projectIds = []
+      // let results = []
       const percentage_completed = 0
-      const projects = []
+      let projects = {}
       // const { documents: reviews_in_project, error } = getCollection('Reviews')
 
-      const load = async () => {
+      const getProjectsByClient = async () => {
         const res = await firebase
           .firestore()
           .collection('Projects')
           .get()
 
+        // map projects to isolate email and user id
         projects.value = res.docs.map((doc) => {
-          return { ...doc.data().clients, id: doc.id }
+          return {
+            email: doc.data().clients.map((client) => client.email),
+            id: doc.id,
+          }
+        })
+
+        // return array of project ids that the current client is
+        // associated with as an array
+        projectIds.value = projects.value.forEach((client) => {
+          if (client.email.includes(clientEmail)) {
+            projectIds.push(client.id)
+          }
         })
       }
-      // const getClientsReference = async (doc) => {
-      //     const clientRefs = doc.filter(client => client.value.email === 'amassart@asu.edu').map(client => client.value.id)
-      // }
-      load()
+      console.log(projectIds)
 
-      console.log(projects)
+      // gather reviews by project reference
+      const loadReviews = async (projectReference) => {
+        const project_ref = firebase
+          .firestore()
+          .collection('Projects')
+          .doc(projectReference)
+
+        console.log(project_ref)
+        const review = ref()
+        try {
+          const res = await firebase
+            .firestore()
+            .collection('Reviews')
+            .where('project_ref', '==', project_ref)
+            .get()
+
+          review.value = res.docs.map((doc) => {
+            return { ...doc.data(), id: doc.id }
+          })
+        } catch (error) {
+          error.value = error.message
+        }
+        return reviews_in_project.value.push(review.value)
+      }
+
+      // results.value = projectIds.value.foreach((projectId) => {
+      // const project_ref = firebase
+      //   .firestore()
+      //   .doc('/Project/Jb5cvRhiz4fLop50oz4O')
+      // const response = firebase
+      //   .firestore()
+      //   .collection('Reviews')
+      //   .where('project_ref', '==', project_ref)
+      //   .get()
+      // console.log(response)
+      // console.log(project_ref.docs.data())
+      // })
+
+      getProjectsByClient()
+
+      loadReviews('Jb5cvRhiz4fLop50oz4O')
+      console.log(reviews_in_project)
+
       return {
         in_progress_reviews,
-        // reviews_in_project,
+        reviews_in_project,
         percentage_completed,
-        completed_reviews,
-        // error,
+        // completed_reviews,
+        loadReviews,
+        error,
         projects,
       }
     },
