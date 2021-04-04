@@ -13,7 +13,7 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Reviews in Progress</h5>
-            <h1>4</h1>
+            <h1>{{ in_progress_reviews.length }}</h1>
           </div>
         </div>
       </div>
@@ -21,7 +21,7 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Reviews Completed</h5>
-            <h1>3</h1>
+            <h1>{{ completed_reviews.length }}</h1>
           </div>
         </div>
       </div>
@@ -37,7 +37,7 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">% Project Complete</h5>
-            <h1>33</h1>
+            <h1>{{ percentage_completed }}%</h1>
           </div>
         </div>
       </div>
@@ -75,21 +75,34 @@
 </template>
 
 <script>
-  import { ref } from 'vue'
+  import { computed, ref } from 'vue'
   import firebase from 'firebase'
   import 'firebase/firestore'
-  import { useRouter, useRoute } from 'vue-router'
+  import { useRouter } from 'vue-router'
 
   export default {
     setup() {
       const router = useRouter()
-      const route = useRoute()
       const clientEmail = firebase.auth().currentUser.email
-      const in_progress_reviews = ref([])
       const reviews_in_project = ref([])
-      let error = ref(null)
+      const in_progress_reviews = computed(() =>
+        reviews_in_project.value.filter((review) =>
+          review.status.includes('In-Progress')
+        )
+      )
+      const completed_reviews = computed(() =>
+        reviews_in_project.value.filter((review) =>
+          review.status.includes('Complete')
+        )
+      )
       const projectIds = []
-      const percentage_completed = 0
+      const percentage_completed = computed(() =>
+        Math.round(
+          (completed_reviews.value.length / reviews_in_project.value.length) *
+            100
+        )
+      )
+      let error = ref(null)
       let projects = {}
 
       const getProjectsByClient = async () => {
@@ -169,7 +182,7 @@
         projects,
         openReview,
         router,
-        route,
+        completed_reviews,
       }
     },
   }
