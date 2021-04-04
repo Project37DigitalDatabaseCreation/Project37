@@ -108,7 +108,7 @@
             </div>
 
             <div class="form-group row">
-              <div class="col-md-14">
+              <div>
                 <button
                   type="button"
                   class="btn save"
@@ -129,7 +129,7 @@
                 >
                   Cancel
                 </button>
-                &nbsp;
+
                 <!-- <button
                   type="button"
                   class="btn btn-danger"

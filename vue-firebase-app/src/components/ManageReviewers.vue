@@ -14,7 +14,6 @@
 
 <template>
   <div class="container scrollcontainer">
-    <router-view></router-view>
     <div class="container-layout">
       <div class="col-md-10">
         <div class="card">
