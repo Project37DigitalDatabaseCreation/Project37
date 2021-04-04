@@ -63,9 +63,9 @@
             <td>Need reference for Points</td>
             <td>{{ review.status }}</td>
             <td>
-              <router-link to="/ClientDashBoard" class="nav-link"
-                >view</router-link
-              >
+              <button class="btn save" @click="openReview(review.id)">
+                Open
+              </button>
             </td>
           </tr>
         </tbody>
@@ -78,9 +78,12 @@
   import { ref } from 'vue'
   import firebase from 'firebase'
   import 'firebase/firestore'
+  import { useRouter, useRoute } from 'vue-router'
 
   export default {
     setup() {
+      const router = useRouter()
+      const route = useRoute()
       const clientEmail = firebase.auth().currentUser.email
       const in_progress_reviews = ref([])
       const reviews_in_project = ref([])
@@ -151,6 +154,12 @@
 
       getProjectsByClient()
 
+      const openReview = (reviewId) => {
+        router.push({
+          name: 'Review',
+          params: { review: reviewId },
+        })
+      }
       return {
         in_progress_reviews,
         reviews_in_project,
@@ -158,6 +167,9 @@
         projectIds,
         error,
         projects,
+        openReview,
+        router,
+        route,
       }
     },
   }
