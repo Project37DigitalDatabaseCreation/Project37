@@ -6,18 +6,17 @@
 -->
 
 <template>
-    <div class="container">
-        <div class="container-layout">
+    <div class="container scrollcontainer">
             <div class="col-md-10">
-                <div class="card">
+                <div class="card" >
                     <div class="card-header"> Manage Clients
                         <div style="float:right;">
                             <button @click="goToInvitations"
-                                class="btn btn-primary btn-sm" style="margin-right:4px;">
+                                class="btn btn-sm" style="margin-right:4px; background-color:  #49703b;">
                                 View Invitations
                             </button>
                             <button @click="showModal = true"
-                                class="btn btn-primary btn-sm">
+                                class="btn btn-sm" style="background-color:  #49703b;">
                                 Add Clients
                             </button>
                             <client-modify-modal v-if="showEditModal"
@@ -45,15 +44,11 @@
                                 <td>
                                     <button
                                         @click="modifyClient(client), (showEditModal = true)"
-                                        class="btn edit">
-                                        Modify
-                                    </button>
+                                        title="edit" class="btn edit"></button>
                                 </td>
                                 <td>
                                     <button @click="handleDelete(client.id)"
-                                        class="btn delete">
-                                        Delete
-                                    </button>
+                                        title="delete" class="btn delete"></button>
                                 </td>
                             </tr>
                         </tbody>
@@ -61,7 +56,6 @@
                     <p class="mt-3">Current Page: {{ currentPage }}</p>
                 </div>
             </div>
-        </div>
     </div>
 
     <!-- modal definition -->

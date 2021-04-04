@@ -1,5 +1,6 @@
 <template>
-    <div style="display:flex;" :style="`height:${contentHeight}px`">
+    <div class="container scrollcontainer" style="display:flex;"
+        :style="`height:${contentHeight}px`">
         <ReviewNav @go-to-item="goToItem"></ReviewNav>
         <ReviewForm v-if="ready" :currentLink="currentLink" :edit="review ? true : false"
             :review="selectedReview" :scores="scores">
@@ -11,7 +12,7 @@
     </div>
 </template>
 <script>
-import firebase from 'firebase'
+import { mapGetters } from 'vuex'
 import ReviewForm from './ReviewForm'
 import ReviewNav from './ReviewNav'
 import _ from 'lodash'
@@ -40,53 +41,19 @@ export default {
     async mounted() {
         console.log('REVIEW', this.review)
         //  If we have a review string, we are editing so fetch our scores
-        if (this.review) {
-            //  We have to grab the review that the id points to
-            const rev = firebase.firestore().collection('Reviews').doc(this.review)
-
-            //  Get our scores
-            const temp = await firebase
-                .firestore()
-                .collection('Scores')
-                .where('review_ref', '==', rev)
-                .get()
-
-            //  We also have to get our review
-            const review = await firebase
-                .firestore()
-                .collection('Reviews')
-                .doc(this.review)
+        if (this.review && this.reviews) {
+            //  Grab our review from the store matching this review
+            const review = this.reviews.find((x) => x.id === this.review)
 
             //  If the review is set, set our selected, else just null
             this.selectedReview = review || null
 
-            //  If these scores exist, use it
-            if (temp) {
-                //  Get each of our score documents
-                for (let i = 0; i < temp.docs.length; i++) {
-                    //  Get the current document
-                    let doc = temp.docs[i]
-                    //  Our score
-                    const score = doc.data()
-                    //  We also have to get our standard
-                    const std = await score.standard_ref.get()
-                    //  Add the standard to our score
-                    score.standard = std.data()
-                    score.standard.id = std.id
-
-                    //  Get the general standard on this standard
-                    const gen = await score.standard.general_standard_ref.get()
-                    //  Add the general standard to our standard
-                    score.standard.generalStandard = gen.data()
-                    score.standard.generalStandard.id = gen.id
-                    //  Append our id
-                    score.id = doc.id
-                    //  Push into our scores array
-                    this.scores.push(score)
-                }
-                console.log('FINISHED', this.scores)
-                //  Signal we are ready to go
+            //  If the review is set, we are ready to go
+            if (this.selectedReview) {
+                //  Set scores equal to our selected review scores
+                this.scores = this.selectedReview.scores
                 this.ready = true
+                return
             } else {
                 this.createTemplate()
             }
@@ -95,9 +62,7 @@ export default {
         }
     },
     computed: {
-        sortedStandards() {
-            return this.$store.getters.sortedStandards
-        }
+        ...mapGetters(['generalStandards', 'reviews', 'sortedStandards', 'standards'])
     },
     components: {
         ReviewForm,
@@ -116,7 +81,8 @@ export default {
                         let score = {
                             standard: _.cloneDeep(curr),
                             met: false,
-                            review_ref: null
+                            review_ref: null,
+                            comment: ''
                         }
                         //  Push onto our array
                         this.scores.push(score)

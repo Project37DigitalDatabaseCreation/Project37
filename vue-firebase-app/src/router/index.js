@@ -47,7 +47,10 @@ const routes = [
   {
     path: '/Pending',
     name: 'Pending',
-    component: InvitationPending
+    component: InvitationPending,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/register',
@@ -194,17 +197,21 @@ router.beforeEach(async (to, from, next) => {
 
   if (requiresAuth && !store.state.user.loggedIn) {
     next("Login");
+  } else if (!requiresAuth && to.name !== "Default") {
+    next(); 
   } else {
     if (to.name === "Default" && store.state.user.isAdmin === true) {
       next("AdminDashboard");
-    } else if (to.name === "Default" && store.state.user.isClient === true) {
+    } else if (to.name === "Default" && store.state.user.isClient === true) {      
       next("ClientDashboard");
     } else if (to.name === "Default" && store.state.user.isReviewer === true) {
       next("ReviewerDashboard");
     } else if (requiresAdmin && store.state.user.isAdmin !== true || requiresReviewer && store.state.user.isReviewer !== true) {
       next("AccessDenied");
-    } else if (to.name === "Default" && store.state.user.isClient === false && store.state.user.isReviewer === false) {
-      next('Pending');
+    } else if (to.name === "Default" && store.state.user.isAdmin === false &&
+    store.state.user.isClient === false && store.state.user.isReviewer === false) {
+      // the user has been authenticated but is not either an admin, client or reviewer.
+      next('Pending');   
     } else {
       next();
     }

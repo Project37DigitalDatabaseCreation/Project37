@@ -1,5 +1,5 @@
 <template>
-    <div class="col-3 px-0" style="height:100%; background-color:#333333;">
+    <div class="col-3 px-0" style="height:100%; background-color:#333333; font-family: Glacial Indifference; font-size: 1.5em;">
         <div>
             <template v-for="(item, i) in sortedStandards" :key="i">
                 <div class="mb-5 mt-5" style="color:white; text-align:center;" :style="selectedIndex === i ? 'background-color:#D5E8D4;' : ''" @click="selectedIndex = i">
