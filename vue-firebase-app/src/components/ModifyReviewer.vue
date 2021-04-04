@@ -221,20 +221,21 @@ export default {
     //This method reads the reviewer from the Firebase Firestore DB and
     // and loads the data into the form.
     async getReviewer() {
-      await firebase
-        .firestore()
-        .collection("Reviewers")
-        .doc(this.passedReviewerId)
-        .get()
-        .then((snapshot) => {
-          // console.log(snapshot.empty);
-          const reviewer = snapshot.data();
-          // console.log(reviewer);
-          this.form.fname = reviewer.firstName;
-          this.form.lname = reviewer.lastName;
-          this.form.email = reviewer.email;
-          this.form.isAdmin = reviewer.isAdmin;
-        });
+      try {
+        const snapshot = await firebase
+          .firestore()
+          .collection("Reviewers")
+          .doc(this.passedReviewerId)
+          .get();
+
+        const reviewer = snapshot.data();
+        this.form.fname = reviewer.firstName;
+        this.form.lname = reviewer.lastName;
+        this.form.email = reviewer.email;
+        this.form.isAdmin = reviewer.isAdmin;
+      } catch (err) {
+        console.log(err);
+      }
     },
 
     //User clicked the delete user button

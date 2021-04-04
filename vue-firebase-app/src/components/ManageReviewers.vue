@@ -108,27 +108,27 @@ export default {
       });
     },
 
-    getReviewers() {
+    async getReviewers() {
       this.reviewerData = [];
-      firebase
-        .firestore()
-        .collection("Reviewers")
-        .get()
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            this.reviewerData.push({
-              email: doc.data().email,
-              first_name: doc.data().firstName,
-              last_name: doc.data().lastName,
-              is_admin: doc.data().isAdmin,
-              id: doc.id,
-            });
-            // console.log(doc.id, " => ", doc.data());
+
+      try {
+        const querySnapshot = await firebase
+          .firestore()
+          .collection("Reviewers")
+          .get();
+
+        querySnapshot.forEach((doc) => {
+          this.reviewerData.push({
+            email: doc.data().email,
+            first_name: doc.data().firstName,
+            last_name: doc.data().lastName,
+            is_admin: doc.data().isAdmin,
+            id: doc.id,
           });
-        })
-        .catch((error) => {
-          alert("Error in ReviewerList.vue : ", error);
         });
+      } catch (err) {
+        console.log(err);
+      }
     },
   },
   mounted() {
