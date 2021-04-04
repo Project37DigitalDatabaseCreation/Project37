@@ -15,6 +15,8 @@ import firebase from 'firebase/app'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import { globalMixin } from '@/mixins/global-mixin'
+import PerfectScrollbar from 'vue2-perfect-scrollbar'
+import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css'
 
 require("firebase/auth");
 require("firebase/firestore");
@@ -34,25 +36,10 @@ firebase.initializeApp({
 //   firebase.firestore().useEmulator("localhost", 8080);
 // }
 
-var unsubscribe = firebase.auth().onAuthStateChanged(user => {
-    store.dispatch("fetchUser", user).then(storeUser => {
-      if(storeUser && storeUser.isAdmin === true) {
-        router.replace({ name: 'AdminDashboard' });
-      } else if(storeUser && storeUser.isClient === true) {
-        router.replace({ name: 'ClientDashboard' });
-      } else if(storeUser && storeUser.isReviewer === true) {
-        router.replace({ name: 'ReviewerDashboard' });
-      } else {
-        router.replace({ name: 'Pending' })
-      }
-
-      unsubscribe();
-    });
-});
-
-
 const app = createApp(App)
 
 app.mixin(globalMixin())
 
 app.use(router).use(store).mount('#app')
+
+app.use(PerfectScrollbar);
