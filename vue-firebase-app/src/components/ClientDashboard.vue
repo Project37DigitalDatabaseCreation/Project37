@@ -43,7 +43,7 @@
       </div>
     </div>
     <div class="row">
-      <h4 class="mt-4 text-center">Completed Reviews:</h4>
+      <h4 class="mt-4 text-center">Reviews:</h4>
       <table class="table mt-5">
         <thead>
           <tr>
