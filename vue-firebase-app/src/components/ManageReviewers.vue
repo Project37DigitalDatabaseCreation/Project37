@@ -23,9 +23,9 @@
             <div style="float: right">
               <button
                 type="button"
-                class="btn btn-primary"
+                class="btn btn-sm"
                 @click.prevent="AddReviewer"
-                style="float: right"
+                style="float: right margin-right:4px; background-color:  #49703b;"
               >
                 + Add Reviewer
               </button>
