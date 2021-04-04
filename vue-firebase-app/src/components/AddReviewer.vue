@@ -10,8 +10,7 @@
 *
 -->
 <template>
-  <div class="container">
-    <div class="container-layout">
+  <div class="container scrollcontainer">
       <div class="col-md-10">
         <div class="card">
           <div class="card-header">Add Reviewer</div>
@@ -128,7 +127,7 @@
               </div>
 
               <div class="form-group row">
-                  <button type="submit" class="btn btn-primary">
+                  <button type="submit" class="btn save">
                     Create Reviewer
                   </button>
                   &nbsp;
@@ -144,7 +143,6 @@
           </div>
         </div>
       </div>
-    </div>
   </div>
 </template>
 

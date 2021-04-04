@@ -99,7 +99,7 @@ export default {
                 this.$router.replace({ name: "AdminDashboard" });
               } else if (storeUser && storeUser.isClient === true) {
                 this.$router.replace({ name: "ClientDashboard" });
-              } else if (storeUser && storeUser.isReviewer) {
+              } else if (storeUser && storeUser.isReviewer === true) {
                 this.$router.replace({ name: "ReviewerDashboard" });
               } else {
                 this.$router.replace({ name: "Pending" });

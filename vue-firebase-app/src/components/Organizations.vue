@@ -47,7 +47,7 @@
 <script>
 import firebase from "firebase";
 import modal from "@/components/EditOrganization";
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 
 export default {
   name: "Organizations",

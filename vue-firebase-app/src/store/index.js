@@ -107,7 +107,7 @@ export default createStore({
     }
   },
   actions: {
-    async fetchUser({ commit }, user) {
+    async fetchUser({ commit, dispatch }, user) {
         commit("SET_LOGGED_IN", user !== null);
 
         if (user) {
@@ -127,27 +127,23 @@ export default createStore({
 
         //  If no invitations, then continue to get a Reviewer
         const reviewers = await firebase.firestore().collection("Reviewers").doc(user.uid).get()
+        //  Start getting our sorted standards
+        dispatch('sortStandards')
 
         if(!reviewers.data()) {
-            const clients = await firebase.firestore().collection('Clients').doc(user.uid).get()
-            //  If result size is 0, then this is an invitation
-            if (clients.size === 0) {
-                return commit("SET_USER", {
-                    displayName: user.displayName,
-                    email: user.email,
-                    isClient: false,
-                    isReviewer: false,
-                    isAdmin: false
-                });
-            } else {
-                return commit("SET_USER", {
-                    displayName: user.displayName,
-                    email: user.email,
-                    isClient: true,
-                    isReviewer: false,
-                    isAdmin: false
-                });
-            }
+          let userToSet = {
+            displayName: user.displayName,
+            email: user.email,
+            isClient: false,
+            isReviewer: false,
+            isAdmin: false
+          };
+
+          const client = await firebase.firestore().collection('Clients').doc(user.uid).get();
+
+          userToSet.isClient = typeof client.data() !== 'undefined';
+
+          return commit("SET_USER", userToSet);
         } else if(reviewers.data().isAdmin === true) {
               return commit("SET_USER", {
                 displayName: user.displayName,
@@ -232,7 +228,7 @@ export default createStore({
       //  Stop loading
       commit('SET_LOADING', false)
     },
-    async fetchReviews({commit}) {
+    async fetchReviews({commit, getters}) {
       //  Start loading
       commit('SET_LOADING', true)
 
@@ -253,16 +249,60 @@ export default createStore({
         rev.id = obj.docs[i].id
 
         //  Parse the project for this document
-        let proj = await rev.project_ref.get()
+        rev.project_ref.get().then(doc => {
+            let proj = doc.data();
+            
+            if (proj) {
+                proj.id = doc.id;
+                rev.project = proj;
 
-        //  Parse the reviewer for this document
-        let reviewer = await rev.reviewer_ref.get()
+                proj.org_ref.get()
+                .then(doc => {
+                    let org = doc.data();
 
-        //  Attach to our reviewer
-        rev.project = proj.data()
-        if (rev.project) rev.project.id = proj.id
-        rev.reviewer = reviewer.data()
-        if (rev.reviewer) rev.reviewer.id = reviewer.id
+                    if(org) {
+                        org.id = doc.id;
+                        rev.org = org; 
+                    }
+                });
+            }
+        });
+
+        //  Get our reviewer
+        rev.reviewer_ref.get().then(doc => {
+            let reviewer = doc.data();
+            
+            if(reviewer) {
+                reviewer.id = doc.id;
+                rev.reviewer = reviewer;
+            }
+        });
+
+        // Initialize our scores array and points values
+        rev.scores = []
+        rev.points = 0
+        const revDoc = firebase.firestore().doc(`/Reviews/${rev.id}`)
+        
+        //  Store our scores
+        firebase.firestore().collection("Scores").where("review_ref", "==", revDoc).get().then(result => {
+            result.forEach(doc => {
+                let score = doc.data()
+                let scoreStandard = null
+
+                if (score.standard_ref && getters.standards) {
+                    scoreStandard = getters.standards.find(x => x.id === score.standard_ref.id)
+                }
+
+                if (scoreStandard) {
+                    if (score.met) rev.points += scoreStandard.points
+                    score.standard = scoreStandard
+                }
+
+                rev.scores.push(score)
+            })
+            //  If this is the last review, set our reviews to be loaded
+            if (i === obj.docs.length - 1) commit('SET_LOADING', false)
+        })
 
         //  Push the document onto the container
         response.push(rev)
@@ -270,9 +310,6 @@ export default createStore({
 
       //  We have our documents, now we can set our reviews
       commit('SET_REVIEWS', response);
-
-      // Stop loading
-      commit('SET_LOADING', false)
     },
     async fetchReviewers({commit}) {
       //  Our collection of reviewers
@@ -311,17 +348,15 @@ export default createStore({
     async mapStandards({ commit }, obj) {
       const standards = []
 
-      //  Iterate through each standard so we can give it the parsed general standard ref if needed
-      obj.snapshot.docs.forEach(async doc => {
-          //  Our standard from the data
-          const standard = doc.data()
+      for (let i = 0; i < obj.snapshot.docs.length; i++) {
+          let doc = obj.snapshot.docs[i]
+          let std = doc.data()
+          std.id = doc.id
+          standards.push(std)
+      }
 
-          //  Attach the id
-          standard.id = doc.id
-
-          //  If the general standard ref doesn't exist, then just push
-          return standards.push(standard)
-      })
+      //  Commit this early so we can access our standards points
+      commit(`SET_${obj.type}`, standards)
 
       //  If this is the standards array, discover the general standard refs
       if (obj.discover) {
@@ -364,8 +399,10 @@ export default createStore({
           sorted[getters.standards[i].generalStandard.number - 1].standards.push(getters.standards[i])
       }
 
+      const value = _.cloneDeep(sorted)
+
       //  Set our sorted standards (we use lodash to deep clone and remove proxies)
-      commit('SET_SORTED_STANDARDS', _.cloneDeep(sorted))
+      commit('SET_SORTED_STANDARDS', value)
 
       //  Stop loading
       commit('SET_LOADING', false)
