@@ -23,7 +23,6 @@ import CurrentProjects from '../components/CurrentProjects'
 import ViewProject from '../components/ViewProject'
 import ManageReviewers from '../components/ManageReviewers'
 import ManageClients from '../components/ManageClients'
-import ReviewerList from '../components/ReviewerList'
 import Organizations from '../components/Organizations'
 import store from '../store/index'
 import ForgotPassword from '../components/ForgotPassword'
@@ -135,7 +134,7 @@ const routes = [
     name: 'ManageReviewers',
     component: ManageReviewers, children: [
 
-      { path: '', name: 'ReviewerList', component: ReviewerList },
+
       { path: '/modifyreviewer', name: 'ModifyReviewer', component: ModifyReviewer, props: true }
 
     ],
@@ -198,20 +197,20 @@ router.beforeEach(async (to, from, next) => {
   if (requiresAuth && !store.state.user.loggedIn) {
     next("Login");
   } else if (!requiresAuth && to.name !== "Default") {
-    next(); 
+    next();
   } else {
     if (to.name === "Default" && store.state.user.isAdmin === true) {
       next("AdminDashboard");
-    } else if (to.name === "Default" && store.state.user.isClient === true) {      
+    } else if (to.name === "Default" && store.state.user.isClient === true) {
       next("ClientDashboard");
     } else if (to.name === "Default" && store.state.user.isReviewer === true) {
       next("ReviewerDashboard");
     } else if (requiresAdmin && store.state.user.isAdmin !== true || requiresReviewer && store.state.user.isReviewer !== true) {
       next("AccessDenied");
     } else if (to.name === "Default" && store.state.user.isAdmin === false &&
-    store.state.user.isClient === false && store.state.user.isReviewer === false) {
+      store.state.user.isClient === false && store.state.user.isReviewer === false) {
       // the user has been authenticated but is not either an admin, client or reviewer.
-      next('Pending');   
+      next('Pending');
     } else {
       next();
     }
