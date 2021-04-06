@@ -36,9 +36,9 @@
               <td>{{project.title}}</td>
               <td>{{project.description}}</td>
               <div v-for="client in project.clients" :key="client.id">
-                <td style="text-align:center">{{client.firstName + ' ' + client.lastName}}</td>
+                <td>{{client.firstName + ' ' + client.lastName}}</td>
               </div>
-              <td style="text-align:center">{{project.num_reviews}}</td>
+              <td>{{project.num_reviews}}</td>
               <td>{{project.status}}</td>
               <td>{{project.organization}}</td>
               <td><button title="edit" class="btn edit" @click="editProject(project), (showEditModal = true)"></button></td>
