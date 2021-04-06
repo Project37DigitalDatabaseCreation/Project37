@@ -2,14 +2,14 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp();
 
-// Function Author: Ben McElyea 
+// Function Author: Ben McElyea
 // Date: February 2021
-// createReviewer - A Cloud function to add users to the Firebase authentication DB 
-// To update this function you must run the command firebase deploy --only functions 
+// createReviewer - A Cloud function to add users to the Firebase authentication DB
+// To update this function you must run the command firebase deploy --only functions
 exports.createReviewer = functions.https.onCall((request, context) => {
     console.log(request.email)
 
-    //Only allow authenticated users to call this function. 
+    //Only allow authenticated users to call this function.
     if (!context.auth) {
         return { message: 'Authentication Required!', code: 401 };
     } else {
@@ -30,13 +30,13 @@ exports.createReviewer = functions.https.onCall((request, context) => {
 
 // Function Author: Ben McElyea
 // Date: February 2021
-// deleteReviewer - A Cloud function to delete users to the Firebase authentication DB 
-// To update this function you must run the command firebase deploy --only functions 
+// deleteReviewer - A Cloud function to delete users to the Firebase authentication DB
+// To update this function you must run the command firebase deploy --only functions
 
 exports.deleteReviewer = functions.https.onCall((request, context) => {
     console.log("Deleting user" + request.email)
 
-    //Only allow authenticated users to call this function. 
+    //Only allow authenticated users to call this function.
     if (!context.auth) {
         return { message: 'Authentication Required!', code: 401 };
     }
@@ -58,7 +58,7 @@ const db = admin.firestore();
 // Function Author: Steve Kizer
 // Date: March 2021
 // reviewCreateStatusCounter - Aggregates Review counts by status on document creation
-// To update this function you must run the command firebase deploy --only functions 
+// To update this function you must run the command firebase deploy --only functions
 exports.reviewCreateStatusCounter = functions.firestore.document('Reviews/{reviewId}')
     .onCreate(async (snap, context) => {
         try {
@@ -71,10 +71,10 @@ exports.reviewCreateStatusCounter = functions.firestore.document('Reviews/{revie
             let docId = snap.id;
 
             // handle a new review
-            if(newReview.status === "New") {
+            if (newReview.status === "New") {
                 let result = await col.where("NewReviews", "array-contains", docId).get();
-                    
-                if(result.size === 0) {
+
+                if (result.size === 0) {
                     return doc.set({
                         NewReviewsCount: increment,
                         NewReviews: arrayUnion(docId)
@@ -98,7 +98,7 @@ exports.reviewCreateStatusCounter = functions.firestore.document('Reviews/{revie
 // Function Author: Steve Kizer
 // Date: March 2021
 // reviewUpdateStatusCounter - Aggregates Review counts by status on document updates
-// To update this function you must run the command firebase deploy --only functions 
+// To update this function you must run the command firebase deploy --only functions
 exports.reviewUpdateStatusCounter = functions.firestore.document('Reviews/{reviewId}')
     .onUpdate(async (change, context) => {
         try {
@@ -118,7 +118,7 @@ exports.reviewUpdateStatusCounter = functions.firestore.document('Reviews/{revie
 
             if (reviewBefore.status !== reviewAfter.status) {
                 // handle review going from New to In-Progress              
-                if(reviewBefore.status === "New" && reviewAfter.status === "In-Progress") {
+                if (reviewBefore.status === "New" && reviewAfter.status === "In-Progress") {
                     let result = await col.where("NewReviews", "array-contains", reviewBefore.id).get();
 
                     if (result.size > 0) {
@@ -137,7 +137,7 @@ exports.reviewUpdateStatusCounter = functions.firestore.document('Reviews/{revie
                 }
 
                 // handle review going from In-Progress to Complete
-                if(reviewBefore.status === "In-Progress" && reviewAfter.status === "Complete") {
+                if (reviewBefore.status === "In-Progress" && reviewAfter.status === "Complete") {
                     let result = await col.where("InProgressReviews", "array-contains", reviewBefore.id).get();
 
                     if (result.size > 0) {
@@ -169,7 +169,7 @@ exports.reviewUpdateStatusCounter = functions.firestore.document('Reviews/{revie
 // Function Author: Steve Kizer
 // Date: March 2021
 // reviewDeleteStatusCounter - Aggregates Review counts by status on document deletion
-// To update this function you must run the command firebase deploy --only functions 
+// To update this function you must run the command firebase deploy --only functions
 exports.reviewDeleteStatusCounter = functions.firestore.document('Reviews/{reviewId}')
     .onDelete(async (snap, context) => {
         try {
@@ -183,7 +183,7 @@ exports.reviewDeleteStatusCounter = functions.firestore.document('Reviews/{revie
             let docId = snap.id;
 
             // each possible status needs to be handled
-            if(deletedReview.status === "New") {          
+            if (deletedReview.status === "New") {
                 let result = await col.where("NewReviews", "array-contains", docId).get();
 
                 if (result.size > 0) {
@@ -197,7 +197,7 @@ exports.reviewDeleteStatusCounter = functions.firestore.document('Reviews/{revie
                 } else {
                     return null;
                 }
-            } else if(deletedReview.status === "In-Progress") {
+            } else if (deletedReview.status === "In-Progress") {
                 let result = await col.where("InProgressReviews", "array-contains", docId).get();
 
                 if (result.size > 0) {
@@ -232,12 +232,12 @@ exports.reviewDeleteStatusCounter = functions.firestore.document('Reviews/{revie
             return null;
         }
     }
-);
+    );
 
 // Function Author: Steve Kizer
 // Date: March 2021
 // projectCreateStatusCounter - Aggregates Project counts by status on document creation
-// To update this function you must run the command firebase deploy --only functions 
+// To update this function you must run the command firebase deploy --only functions
 exports.projectCreateStatusCounter = functions.firestore.document('Projects/{projectId}')
     .onCreate(async (snap, context) => {
         try {
@@ -251,15 +251,15 @@ exports.projectCreateStatusCounter = functions.firestore.document('Projects/{pro
 
             // handle a new project
             let result = await col.where("CurrentProjects", "array-contains", docId).get();
-                
-            if(result.size === 0) {
+
+            if (result.size === 0) {
                 return doc.set({
                     CurrentProjectsCount: increment,
                     CurrentProjects: arrayUnion(docId)
                 },
-                {
-                    merge: true
-                });
+                    {
+                        merge: true
+                    });
             } else {
                 return null;
             }
@@ -273,7 +273,7 @@ exports.projectCreateStatusCounter = functions.firestore.document('Projects/{pro
 // Function Author: Steve Kizer
 // Date: March 2021
 // projectUpdateStatusCounter - Aggregates Project counts by status on document updates
-// To update this function you must run the command firebase deploy --only functions 
+// To update this function you must run the command firebase deploy --only functions
 exports.projectUpdateStatusCounter = functions.firestore.document('Projects/{projectId}')
     .onUpdate(async (change, context) => {
         try {
@@ -301,9 +301,9 @@ exports.projectUpdateStatusCounter = functions.firestore.document('Projects/{pro
                         CurrentProjects: arrayRemove(projectAfter.id),
                         CompletedProjects: arrayUnion(projectAfter.id)
                     },
-                    {
-                        merge: true
-                    });
+                        {
+                            merge: true
+                        });
                 } else {
                     return null;
                 }
@@ -320,7 +320,7 @@ exports.projectUpdateStatusCounter = functions.firestore.document('Projects/{pro
 // Function Author: Steve Kizer
 // Date: March 2021
 // projectDeleteStatusCounter - Aggregates Project counts by status on document deletion
-// To update this function you must run the command firebase deploy --only functions 
+// To update this function you must run the command firebase deploy --only functions
 exports.projectDeleteStatusCounter = functions.firestore.document('Projects/{projectId}')
     .onDelete(async (snap, context) => {
         try {
@@ -334,7 +334,7 @@ exports.projectDeleteStatusCounter = functions.firestore.document('Projects/{pro
             let docId = snap.id;
 
             // each possible status needs to be handled
-            if(deletedProject.status === "Complete") {          
+            if (deletedProject.status === "Complete") {
                 let result = await col.where("CompletedProjects", "array-contains", docId).get();
 
                 if (result.size > 0) {
@@ -342,9 +342,9 @@ exports.projectDeleteStatusCounter = functions.firestore.document('Projects/{pro
                         CompletedProjectsCount: decrement,
                         CompletedProjects: arrayRemove(docId)
                     },
-                    {
-                        merge: true
-                    });
+                        {
+                            merge: true
+                        });
                 } else {
                     return null;
                 }
@@ -356,9 +356,9 @@ exports.projectDeleteStatusCounter = functions.firestore.document('Projects/{pro
                         CurrentProjectsCount: decrement,
                         CurrentProjects: arrayRemove(docId)
                     },
-                    {
-                        merge: true
-                    });
+                        {
+                            merge: true
+                        });
                 }
                 else {
                     return null;
@@ -369,4 +369,4 @@ exports.projectDeleteStatusCounter = functions.firestore.document('Projects/{pro
             return null;
         }
     }
-);
+    );
