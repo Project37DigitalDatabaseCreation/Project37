@@ -7,7 +7,7 @@
 -->
 <template>
     <nav class="navbar navbar-expand-lg navbar-light">
-        <div class="container">
+        <div class="container" style="width: 450px; text-align:center; justify-content:center">
             <router-link to="/" class="navbar-brand">
             <img width="428.25" height="168.5" src="../assets/logos/eLMACADEMICTransparent.png">
             </router-link>
@@ -20,7 +20,7 @@
                     <template v-if="user.loggedIn">
                         <template v-for="(item,i) in navLinks" :key="i">
                             <li class="nav-item" style="list-style:none; display:flex;
-                            justify-content:space-between; margin-bottom: 30px; text-align: center" @click.prevent="closeMenu">
+                            justify-content:space-between; margin-bottom: 30px; text-align: center;" @click.prevent="closeMenu">
                                 <router-link v-if="item.link && !item.hidden" :to="item.link" class="nav-link">
                                     {{ item.name }}
                                 </router-link>
@@ -32,10 +32,12 @@
                         </template>
                     </template>
                     <template v-else>
-                        <li class="nav-item" @click.prevent="closeMenu">
+                        <li class="nav-item" @click.prevent="closeMenu" style="list-style:none; display:flex;
+                            justify-content:space-between; margin-bottom: 30px; text-align: center;">
                             <router-link to="login" class="nav-link">Login</router-link>
                         </li>
-                        <li class="nav-item" @click.prevent="closeMenu">
+                        <li class="nav-item" @click.prevent="closeMenu" style="list-style:none; display:flex;
+                            justify-content:space-between; margin-bottom: 30px; text-align: center;">
                             <router-link to="register" class="nav-link">Register</router-link>
                         </li>
                     </template>
@@ -133,7 +135,7 @@ export default {
                 })
         },
         closeMenu() {
-            document.getElementById('navButton').click();
+            //document.getElementById('navButton').click();
         }
     }
 }
