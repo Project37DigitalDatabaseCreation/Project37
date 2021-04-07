@@ -135,7 +135,7 @@ export default {
                 })
         },
         closeMenu() {
-            //document.getElementById('navButton').click();
+            if (!document.getElementById('navButton').classList.contains('collapsed')) {document.getElementById('navButton').click();}
         }
     }
 }

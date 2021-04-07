@@ -11,7 +11,7 @@
     <div class="row justify-content-center" style="font-family: Glacial Indifference;">
       <div class="col-sm-2">
         <div class="card">
-          <div class="card-body">
+          <div class="card-body" style="justify-content:center; text-align: center;">
             <h5 class="card-title">Reviews in Progress</h5>
             <h1>{{ in_progress_reviews.length }}</h1>
           </div>
@@ -19,7 +19,7 @@
       </div>
       <div class="col-sm-2">
         <div class="card">
-          <div class="card-body">
+          <div class="card-body" style="justify-content:center; text-align: center;">
             <h5 class="card-title">Reviews Completed</h5>
             <h1>{{ completed_reviews.length }}</h1>
           </div>
@@ -27,7 +27,7 @@
       </div>
       <div class="col-sm-2">
         <div class="card">
-          <div class="card-body">
+          <div class="card-body" style="justify-content:center; text-align: center;">
             <h5 class="card-title">Reviews in Project</h5>
             <h1>{{ reviews_in_project.length }}</h1>
           </div>
@@ -35,7 +35,7 @@
       </div>
       <div class="col-sm-2">
         <div class="card">
-          <div class="card-body">
+          <div class="card-body" style="justify-content:center; text-align: center;">
             <h5 class="card-title">% Project Complete</h5>
             <h1>{{ percentage_completed }}%</h1>
           </div>
