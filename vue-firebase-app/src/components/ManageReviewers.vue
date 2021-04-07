@@ -47,10 +47,7 @@
                 <td>{{ reviewer.email }}</td>
                 <td>{{ reviewer.is_admin === true ? "Yes" : "No" }}</td>
                 <td>
-                  <button
-                    @click="modifyReviewer(reviewer.id), (showEditModal = true)"
-                    class="btn edit"
-                  >
+                  <button @click="showModifyReviewerModal()" class="btn edit">
                     Modify
                   </button>
                 </td>
@@ -71,6 +68,11 @@
         </div>
       </div>
     </div>
+
+    <modifyReviewerModal
+      v-if="showEditReviewerModal"
+      @close="showEditReviewerModal = false"
+    />
   </div>
 </template>
 
@@ -78,12 +80,17 @@
 <script>
 import firebase from "firebase";
 import "firebase/firestore";
+import modifyReviewerModal from "@/components/ModifyReviewerModal";
 
 export default {
+  components: {
+    modifyReviewerModal,
+  },
   data() {
     return {
       reviewerData: [],
       reviewer: {},
+      showEditReviewerModal: false,
     };
   },
   methods: {
@@ -101,11 +108,12 @@ export default {
       alert("todo " + reviewerId);
     },
 
-    modifyReviewer(reviewerId) {
-      this.$router.push({
-        name: "ModifyReviewer",
-        params: { passedReviewerId: reviewerId },
-      });
+    showModifyReviewerModal() {
+      // this.$router.push({
+      //   name: "ModifyReviewer",
+      //   params: { passedReviewerId: reviewerId },
+      // });
+      this.showEditReviewerModal = true;
     },
 
     async getReviewers() {
