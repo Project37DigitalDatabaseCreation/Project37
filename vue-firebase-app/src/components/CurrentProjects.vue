@@ -8,14 +8,13 @@
 
 <template>
     <!-- Card which displays all  -->
-    <div class="container">
-    <div class="container-layout">
+    <div class="container scrollcontainer">
     <div class="col-md-10">
     <div class="card">
     <div class="card-header">Current Projects
       <div style="float:right;">
-        <button @click="showModal = true" class="btn btn-primary btn-sm">
-          New Project
+        <button @click="showModal = true" class="btn btn-sm" style="background-color:  #49703b;">
+          Add Project
         </button>
       </div>
     </div>
@@ -37,17 +36,16 @@
               <td>{{project.title}}</td>
               <td>{{project.description}}</td>
               <div v-for="client in project.clients" :key="client.id">
-                <td>{{client}}</td>
+                <td>{{client.firstName + ' ' + client.lastName}}</td>
               </div>
               <td style="text-align:center">{{project.num_reviews}}</td>
               <td>{{project.status}}</td>
               <td>{{project.organization}}</td>
-              <td><button class="btn edit" @click="editProject(project), (showEditModal = true)">Edit</button></td>
-              <td><button class="btn delete" @click="deleteProject(project.id)">Delete</button></td>
+              <td><button title="edit" class="btn edit" @click="editProject(project), (showEditModal = true)"></button></td>
+              <td><button title="delete" class="btn delete" @click="deleteProject(project.id)"></button></td>
             </tr>
         </tbody>
       </table>
-    </div>
     </div>
     </div>
     </div>
