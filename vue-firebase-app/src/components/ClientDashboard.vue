@@ -11,7 +11,7 @@
     <div class="row justify-content-center" style="font-family: Glacial Indifference;">
       <div class="col-sm-2">
         <div class="card">
-          <div class="card-body">
+          <div class="card-body" style="justify-content:center; text-align: center;">
             <h5 class="card-title">Reviews in Progress</h5>
             <h1>{{ in_progress_reviews.length }}</h1>
           </div>
@@ -19,7 +19,7 @@
       </div>
       <div class="col-sm-2">
         <div class="card">
-          <div class="card-body">
+          <div class="card-body" style="justify-content:center; text-align: center;">
             <h5 class="card-title">Reviews Completed</h5>
             <h1>{{ completed_reviews.length }}</h1>
           </div>
@@ -27,7 +27,7 @@
       </div>
       <div class="col-sm-2">
         <div class="card">
-          <div class="card-body">
+          <div class="card-body" style="justify-content:center; text-align: center;">
             <h5 class="card-title">Reviews in Project</h5>
             <h1>{{ reviews_in_project.length }}</h1>
           </div>
@@ -35,7 +35,7 @@
       </div>
       <div class="col-sm-2">
         <div class="card">
-          <div class="card-body">
+          <div class="card-body" style="justify-content:center; text-align: center;">
             <h5 class="card-title">% Project Complete</h5>
             <h1>{{ percentage_completed }}%</h1>
           </div>
@@ -79,7 +79,6 @@
   import firebase from 'firebase'
   import 'firebase/firestore'
   import { useRouter } from 'vue-router'
-
   export default {
     setup() {
       const router = useRouter()
@@ -104,13 +103,11 @@
       )
       let error = ref(null)
       let projects = {}
-
       const getProjectsByClient = async () => {
         const res = await firebase
           .firestore()
           .collection('Projects')
           .get()
-
         // map projects to isolate email and user id
         projects.value = res.docs.map((doc) => {
           return {
@@ -118,7 +115,6 @@
             id: doc.id,
           }
         })
-
         // return array of project ids that the current client is
         // associated with as an array
         projects.value.forEach((client) => {
@@ -126,14 +122,12 @@
             projectIds.push(client.id)
           }
         })
-
         // gather reviews by project reference
         const loadReviews = async (projectReference) => {
           const project_ref = firebase
             .firestore()
             .collection('Projects')
             .doc(projectReference)
-
           const review = ref()
           try {
             const res = await firebase
@@ -141,19 +135,16 @@
               .collection('Reviews')
               .where('project_ref', '==', project_ref)
               .get()
-
             review.value = res.docs.map((doc) => {
               return { ...doc.data(), id: doc.id }
             })
           } catch (error) {
             error.value = error.message
           }
-
           return (reviews_in_project.value = reviews_in_project.value.concat(
             review.value
           ))
         }
-
         // load all the reviews by looping throught the aggregated
         // ids and waiting for their Promise to return
         const loadAllReviews = async (ids) => {
@@ -161,12 +152,9 @@
             loadReviews(id)
           }
         }
-
         loadAllReviews(projectIds)
       }
-
       getProjectsByClient()
-
       const openReview = (reviewId) => {
         router.push({
           name: 'Review',

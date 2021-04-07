@@ -50,14 +50,10 @@
                   <button
                     @click="modifyReviewer(reviewer.id), (showEditModal = true)"
                     class="btn edit"
-                  >
-                    Modify
-                  </button>
+                  ></button>
                 </td>
                 <td>
-                  <button @click="handleDelete(reviewer.id)" class="btn delete">
-                    Delete
-                  </button>
+                  <button @click="handleDelete(reviewer.id)" class="btn delete"></button>
                 </td>
               </tr>
             </tbody>
