@@ -1,6 +1,7 @@
 <template>
     <div>
         Testing the pdf conversion...
+        <img width="428.25" height="168.5" src="../assets/logos/eLMACADEMICTransparent.png" hidden id="logo">
     </div>
 </template>
 <script>
@@ -14,7 +15,8 @@ export default {
     },
     methods: {
         async exportReviewToPDF(reviewId) {
-            const db = firebase.firestore();  
+            const db = firebase.firestore();
+            let img = document.getElementById("logo");
             let reviewRef = db.doc("/Reviews/" + reviewId);
             let review = await reviewRef.get();
             let scores = await db.collection("Scores").where("review_ref", "==", reviewRef).get();
@@ -71,17 +73,19 @@ export default {
                 hotfixes: ["px_scaling"]
             });
 
+            doc.addImage(img, 'PNG', 5, 5, 250, 100, 'logo');
+
             doc.html(html, {
                 callback: function (doc) {
                     doc.save("review.pdf");
                 },
                 x: 5,
-                y: 5
+                y: 100
             }); 
         }
     },
     mounted() {
-        this.exportReviewToPDF("WJihLFLoY9yyWJIBTUPZ");
+        this.exportReviewToPDF("WaHS87NBJYclmNsnWrMu");        
     }
 }
 </script>
