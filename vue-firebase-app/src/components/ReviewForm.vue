@@ -306,7 +306,7 @@ export default {
             //  Create a timestamp
             const timestamp = firebase.firestore.Timestamp.fromDate(new Date()).toDate()
             //  Our payload is an object that is only 1D
-            const payload = { updated: timestamp, status: 'COMPLETE' }
+            const payload = { updated: timestamp, status: 'Complete' }
             //  If we have a review, we can populate it with those fields
             payload.course_name = this.currReview.course_name
             payload.created = this.currReview.created || timestamp

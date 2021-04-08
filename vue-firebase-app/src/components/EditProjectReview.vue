@@ -14,7 +14,7 @@
 
           <div class="modal-header">
             <slot v-if="review.id" name="header">              
-              Update Review
+              Update Review Status
             </slot>
             <slot v-else name="header">              
               Add New Review to Project
