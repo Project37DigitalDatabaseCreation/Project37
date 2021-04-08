@@ -13,6 +13,7 @@ export default createStore({
   state: {
     generalStandards: null,
     loading: false,
+    notificationBar: null,
     organizations: null,
     projects: null,
     reviews: null,
@@ -35,6 +36,9 @@ export default createStore({
     },
     loading(state) {
       return state.loading
+    },
+    notificationBar(state) {
+        return state.notificationBar
     },
     organizations(state) {
       return state.organizations
@@ -71,6 +75,9 @@ export default createStore({
     },
     SET_LOGGED_IN(state, value) {
       state.user.loggedIn = value;
+    },
+    SET_NOTIFICATION_BAR(state, obj) {
+        state.notificationBar = obj
     },
     SET_ORGANIZATIONS(state, value) {
       console.log("ORGS", value)
