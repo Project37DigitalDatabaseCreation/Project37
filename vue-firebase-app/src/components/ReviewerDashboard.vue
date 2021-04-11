@@ -8,7 +8,7 @@
 
 <template>
   <div class="container">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center" style="font-family: Glacial Indifference; float:center; margin-left: 0 auto; margin-right: 0 auto; margin: 0 auto">
       <div class="col-sm-2">
         <div class="card">
           <div class="card-body">
@@ -50,7 +50,6 @@
         </div>
       </div>
     </div>
-    <div class="row">
       <h4 class="mt-4 text-center">Completed Reviews:</h4>
       <table class="table mt-5">
         <thead>
@@ -78,7 +77,6 @@
           </tr>
         </tbody>
       </table>
-    </div>
   </div>
 </template>
 

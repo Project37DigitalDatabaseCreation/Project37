@@ -12,15 +12,15 @@
             <img width="428.25" height="168.5" src="../assets/logos/eLMACADEMICTransparent.png">
             </router-link>
             <button id ="navButton" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" style="padding: 15px 218px;">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
+                <ul class="navbar-nav mx-auto">
                     <template v-if="user.loggedIn">
                         <template v-for="(item,i) in navLinks" :key="i">
                             <li class="nav-item" style="list-style:none; display:flex;
-                            justify-content:space-between; margin-bottom: 30px; text-align: center;" @click.prevent="closeMenu">
+                            justify-content:space-between; margin-bottom: 30px; text-align: center; width: auto;" @click.prevent="closeMenu">
                                 <router-link v-if="item.link && !item.hidden" :to="item.link" class="nav-link">
                                     {{ item.name }}
                                 </router-link>

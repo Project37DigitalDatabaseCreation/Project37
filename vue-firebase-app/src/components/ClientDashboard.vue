@@ -7,11 +7,13 @@
 -->
 
 <template>
-  <div class="container scrollcontainer">
-    <div class="row justify-content-center" style="font-family: Glacial Indifference;">
+  <div class="container">
+    <span style="color: red">{{ error }}</span>
+    <div class="row" style="font-family: Glacial Indifference; float:center; margin-left: 0 auto; margin-right: 0 auto; margin: 0 auto">
+      
       <div class="col-sm-2">
         <div class="card">
-          <div class="card-body" style="justify-content:center; text-align: center;">
+          <div class="card-body">
             <h5 class="card-title">Reviews in Progress</h5>
             <h1>{{ in_progress_reviews.length }}</h1>
           </div>
@@ -19,7 +21,7 @@
       </div>
       <div class="col-sm-2">
         <div class="card">
-          <div class="card-body" style="justify-content:center; text-align: center;">
+          <div class="card-body">
             <h5 class="card-title">Reviews Completed</h5>
             <h1>{{ completed_reviews.length }}</h1>
           </div>
@@ -27,7 +29,7 @@
       </div>
       <div class="col-sm-2">
         <div class="card">
-          <div class="card-body" style="justify-content:center; text-align: center;">
+          <div class="card-body">
             <h5 class="card-title">Reviews in Project</h5>
             <h1>{{ reviews_in_project.length }}</h1>
           </div>
@@ -35,14 +37,13 @@
       </div>
       <div class="col-sm-2">
         <div class="card">
-          <div class="card-body" style="justify-content:center; text-align: center;">
+          <div class="card-body">
             <h5 class="card-title">% Project Complete</h5>
             <h1>{{ percentage_completed }}%</h1>
           </div>
         </div>
       </div>
     </div>
-    <div class="row">
       <h4 class="mt-4 text-center">Reviews:</h4>
       <table class="table mt-5">
         <thead>
@@ -70,7 +71,6 @@
           </tr>
         </tbody>
       </table>
-    </div>
   </div>
 </template>
 

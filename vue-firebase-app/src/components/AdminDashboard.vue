@@ -6,20 +6,22 @@
 *
 -->
 <template>
-  <div class="container scrollcontainer">
+  <div class="container">
     <span style="color: red">{{ error }}</span>
-    <div class="row justify-content-center" style="font-family: Glacial Indifference;">
+    <div class="row" style="font-family: Glacial Indifference; float:center; margin-left: 0 auto; margin-right: 0 auto; margin: 0 auto">
+
       <div class="col-sm-2">
         <div class="card">
-          <div class="card-body" style="justify-content:center; text-align: center;">
+          <div class="card-body">
             <h5 class="card-title">New Reviews</h5>
             <h1>{{ reviewStats.NewReviewsCount }}</h1>
           </div>
         </div>
       </div>
+
       <div class="col-sm-2">
         <div class="card">
-          <div class="card-body" style="justify-content:center; text-align: center;">
+          <div class="card-body">
             <h5 class="card-title">In Progress Reviews</h5>
             <h1>{{ reviewStats.InProgressReviewsCount }}</h1>
           </div>
@@ -27,7 +29,7 @@
       </div>
       <div class="col-sm-2">
         <div class="card">
-          <div class="card-body" style="justify-content:center; text-align: center;">
+          <div class="card-body">
             <h5 class="card-title">Complete Reviews</h5>
             <h1>{{ reviewStats.CompletedReviewsCount }}</h1>
           </div>
@@ -35,7 +37,7 @@
       </div>
       <div class="col-sm-2">
         <div class="card">
-          <div class="card-body" style="justify-content:center; text-align: center;">
+          <div class="card-body">
             <h5 class="card-title">Current Projects</h5>
             <h1>{{ projectStats.CurrentProjectsCount }}</h1>
           </div>
@@ -43,7 +45,7 @@
       </div>
       <div class="col-sm-2">
         <div class="card">
-          <div class="card-body" style="justify-content:center; text-align: center;">
+          <div class="card-body">
             <h5 class="card-title">Complete Projects</h5>
             <h1>{{ projectStats.CompletedProjectsCount }}</h1>
           </div>
