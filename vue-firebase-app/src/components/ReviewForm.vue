@@ -20,6 +20,19 @@
                             <div class="form-group row" style="background-color:#ffffff;">
                                 <div
                                     style="padding:10px; width:100%; background-color:#ffffff; border-radius:4px 4px; font-size:20px; font-weight:bold;">
+                                    Executive Summary
+                                </div>
+                                <div class="col-12" style="padding-bottom:30px;">
+                                    <textarea v-if="currReview" id="exec_summary"
+                                        class="form-control" name="exec_summary" value
+                                        required autofocus
+                                        v-model="currReview.exec_summary"
+                                        style="border-color:black !important;" />
+                                </div>
+                            </div>
+                            <div class="form-group row" style="background-color:#ffffff;">
+                                <div
+                                    style="padding:10px; width:100%; background-color:#ffffff; border-radius:4px 4px; font-size:20px; font-weight:bold;">
                                     Course Name
                                 </div>
                                 <div class="col-12" style="padding-bottom:30px;">
@@ -324,6 +337,7 @@ export default {
             //  Our payload is an object that is only 1D
             const payload = { updated: timestamp, status: 'Complete' }
             //  If we have a review, we can populate it with those fields
+            payload.exec_summary = this.currReview.exec_summary
             payload.course_name = this.currReview.course_name
             payload.course_code = this.currReview.course_code
             payload.created = this.currReview.created || timestamp
@@ -387,6 +401,7 @@ export default {
             //  Our payload is an object that is only 1D
             const payload = { updated: timestamp, status: 'INCOMPLETE' }
             //  If we have a review, we can populate it with those fields
+            payload.exec_summary = this.currReview.exec_summary
             payload.course_name = this.currReview.course_name
             payload.course_code = this.currReview.course_code
             payload.created = this.currReview.created || timestamp
