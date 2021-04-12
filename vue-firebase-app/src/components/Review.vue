@@ -1,6 +1,6 @@
 <template>
-    <div class="container scrollcontainer" style="display:flex;"
-        :style="`height:${contentHeight}px`">
+    <div class="container" style="display:flex;"
+        :style="`height:${contentHeight}px; max-width:100% !important; min-width:100% !important; padding:0 !important; margin:0 !important;`">
         <ReviewNav @go-to-item="goToItem"></ReviewNav>
         <ReviewForm v-if="ready" :currentLink="currentLink" :edit="review ? true : false"
             :review="selectedReview" :scores="scores">
@@ -30,6 +30,7 @@ export default {
         const ready = ref(false)
         const reviewTemplate = reactive({
             course_name: null,
+            course_code: null,
             status: null,
             created: null,
             updated: null

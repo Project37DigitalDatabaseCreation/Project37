@@ -7,7 +7,7 @@
         <div class="justify-content-center">
             <div class="col-md-12"
                 style="padding:0 !important; font-family: Glacial Indifference">
-                <div class="card">
+                <div class="card" :style="`height:${contentHeight}px;`">
                     <div class="card-header"
                         style="font-family: Glacial Indifference; font-size: 1.5em;">
                         Quality Review Form</div>
