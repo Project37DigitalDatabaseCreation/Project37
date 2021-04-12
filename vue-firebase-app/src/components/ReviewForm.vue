@@ -5,9 +5,12 @@
     </div>
     <div v-else class="col-9 no-gutters px-0">
         <div class="justify-content-center">
-            <div class="col-md-12" style="padding:0 !important; font-family: Glacial Indifference">
+            <div class="col-md-12"
+                style="padding:0 !important; font-family: Glacial Indifference">
                 <div class="card">
-                    <div class="card-header" style="font-family: Glacial Indifference; font-size: 1.5em;">Quality Review Form</div>
+                    <div class="card-header"
+                        style="font-family: Glacial Indifference; font-size: 1.5em;">
+                        Quality Review Form</div>
                     <div class="card-body"
                         style="overflow:auto; background-color:#f1f1f1;"
                         :style="`height:${cardHeight}px;`">
@@ -23,6 +26,19 @@
                                     <input v-if="currReview" id="fname" type="text"
                                         class="form-control" name="fname" value required
                                         autofocus v-model="currReview.course_name"
+                                        style="border-color:black !important;" />
+                                </div>
+                            </div>
+                            <div class="form-group row" style="background-color:#ffffff;">
+                                <div
+                                    style="padding:10px; width:100%; background-color:#ffffff; border-radius:4px 4px; font-size:20px; font-weight:bold;">
+                                    Course Code
+                                </div>
+                                <div class="col-12" style="padding-bottom:30px;">
+                                    <input v-if="currReview" id="course_code" type="text"
+                                        class="form-control" name="course_code" value
+                                        required autofocus
+                                        v-model="currReview.course_code"
                                         style="border-color:black !important;" />
                                 </div>
                             </div>
@@ -309,6 +325,7 @@ export default {
             const payload = { updated: timestamp, status: 'Complete' }
             //  If we have a review, we can populate it with those fields
             payload.course_name = this.currReview.course_name
+            payload.course_code = this.currReview.course_code
             payload.created = this.currReview.created || timestamp
 
             //  Get our reviewer document to be the reference
@@ -371,6 +388,7 @@ export default {
             const payload = { updated: timestamp, status: 'INCOMPLETE' }
             //  If we have a review, we can populate it with those fields
             payload.course_name = this.currReview.course_name
+            payload.course_code = this.currReview.course_code
             payload.created = this.currReview.created || timestamp
 
             //  Get our reviewer document to be the reference
