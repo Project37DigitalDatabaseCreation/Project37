@@ -55,6 +55,19 @@
                                         style="border-color:black !important;" />
                                 </div>
                             </div>
+                            <div class="form-group row" style="background-color:#ffffff;">
+                                <div
+                                    style="padding:10px; width:100%; background-color:#ffffff; border-radius:4px 4px; font-size:20px; font-weight:bold;">
+                                    Review Date
+                                </div>
+                                <div class="col-12" style="padding-bottom:30px;">
+                                    <input v-if="currReview" id="review_date" type="date"
+                                        class="form-control" name="review_date" value
+                                        required autofocus
+                                        v-model="currReview.review_date"
+                                        style="border-color:black !important;" />
+                                </div>
+                            </div>
                             <div class="form-group row" style="background-color:#f8f8f8;">
                                 <div
                                     style="padding:10px; width:100%; background-color:#ffffff; border-radius:4px 4px; font-size:20px; font-weight:bold;">
@@ -340,6 +353,7 @@ export default {
             payload.exec_summary = this.currReview.exec_summary
             payload.course_name = this.currReview.course_name
             payload.course_code = this.currReview.course_code
+            payload.review_date = this.currReview.review_date
             payload.created = this.currReview.created || timestamp
 
             //  Get our reviewer document to be the reference
@@ -404,6 +418,7 @@ export default {
             payload.exec_summary = this.currReview.exec_summary
             payload.course_name = this.currReview.course_name
             payload.course_code = this.currReview.course_code
+            payload.review_date = this.currReview.review_date
             payload.created = this.currReview.created || timestamp
 
             //  Get our reviewer document to be the reference
