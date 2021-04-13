@@ -256,12 +256,10 @@ export default {
     mounted() {
         this.getProjects()
         this.getReviewers()
-        console.log('SCORE TYPE IS??? ', this.scores)
         //  Once review prop is here we do this
         this.currReview = _.cloneDeep(this.review)
         //  Once scores prop is here we do this
         this.currScores = _.cloneDeep(this.scores)
-        console.log('CONTENT HEIGHT', this.contentHeight)
     },
     computed: {
         cardHeight() {
@@ -310,7 +308,6 @@ export default {
                 .catch((error) => {
                     console.log('Error getting documents: ', error)
                 })
-            console.log('OUR PROJECTS', this.projects)
         },
         getReviewers() {
             firebase
@@ -330,7 +327,6 @@ export default {
                 .catch((error) => {
                     console.log('Error getting documents: ', error)
                 })
-            console.log('OUR REVIEWERS', this.reviewers)
         },
         pointTotal(genStandard) {
             const scores = this.filteredScores(genStandard)
@@ -503,12 +499,6 @@ export default {
             if (val) {
                 let element = document.getElementById(val)
                 element.scrollIntoView(true)
-            }
-        },
-        currReview: {
-            deep: true,
-            handler() {
-                console.log('CURR REVIEW', this.currReview)
             }
         }
     }

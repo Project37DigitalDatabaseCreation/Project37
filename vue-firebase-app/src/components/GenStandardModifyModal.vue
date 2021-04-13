@@ -1,5 +1,5 @@
 <!--
-* StandardCreateModal.vue
+* StandardModifyModal.vue
 *
 * Description: Provides a modal window to allow an admin user
 * to edit a standard
@@ -13,7 +13,7 @@
                 <div class="modal-container">
                     <div class="modal-header">
                         <slot name="header">
-                            Add Standard
+                            Edit General Standard
                         </slot>
                     </div>
                     <div class="modal-body">
@@ -23,7 +23,7 @@
                                     class="col-md-4 col-form-label text-md-right font-size: 1.1em">Title</label>
                                 <div class="col-md-6">
                                     <input type="text" class="form-control" value required
-                                        placeholder="Title" v-model="add.title" />
+                                        placeholder="Title" v-model="update.title" />
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -32,40 +32,26 @@
                                 <div class="col-md-6">
                                     <textarea class="form-control" value required
                                         placeholder="Annotation"
-                                        v-model="add.annotation" />
+                                        v-model="update.annotation" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label
+                                    class="col-md-4 col-form-label text-md-right font-size: 1.1em">Description</label>
+                                <div class="col-md-6">
+                                    <textarea class="form-control" value required
+                                        placeholder="Description"
+                                        v-model="update.description" />
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label
                                     class="col-md-4 col-form-label text-md-right">General
                                     Standard
-                                </label>
-                                <div class="col-md-6">
-                                    <select class="form-control" required
-                                        v-model="add.general_standard_ref"
-                                        style="width:100%; height:40px; border-radius:4px;">
-                                        <option v-for="gen in generalStandards"
-                                            v-bind:key="gen.id" v-bind:value="gen.id">
-                                            {{ gen.number }}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label
-                                    class="col-md-4 col-form-label text-md-right">Standard
                                     Number</label>
                                 <div class="col-md-6">
                                     <input type="text" class="form-control" value required
-                                        v-model="add.number" />
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label
-                                    class="col-md-4 col-form-label text-md-right">Points</label>
-                                <div class="col-md-6">
-                                    <input type="text" class="form-control" value required
-                                        v-model="add.points" />
+                                        v-model="update.number" />
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -73,15 +59,16 @@
                                     class="col-md-4 col-form-label text-md-right">Active</label>
                                 <div class="col-md-6">
                                     <input type="checkbox" class="form-control" value
-                                        required v-model="add.is_active" />
+                                        required v-model="update.is_active" />
                                 </div>
                             </div>
                         </slot>
                     </div>
                     <div class="modal-footer">
                         <slot name="footer">
-                            <button class="btn save" @click="handleSubmit()">
-                                Save Standard
+                            <button class="btn save"
+                                @click="handleSubmit(), $emit('close', update)">
+                                Save General Standard
                             </button>
                             <button class="btn cancel" @click="$emit('close')">
                                 Cancel
@@ -96,50 +83,28 @@
 
 <script>
 import { reactive } from 'vue'
-import firebase from 'firebase'
+import modifyDocument from '../composables/modifyDocument'
 
 export default {
     emits: ['close'],
-    setup(props, { emit }) {
-        var add = reactive({
-            title: null,
-            annotation: null,
-            number: null,
-            general_standard_ref: null,
-            points: null,
-            is_active: null
-        })
+    props: ['std'],
+    setup(props) {
+        const update = reactive({ ...props.std })
 
         const handleSubmit = async () => {
-            //  Get general_standard doc ref
-            const gen = firebase
-                .firestore()
-                .doc(`/GeneralStandards/${add.general_standard_ref}`)
-            //  Replace general_standard_ref with the doc ref
-            add.general_standard_ref = gen
+            const modified = {
+                title: update.title,
+                number: update.number,
+                is_active: update.is_active,
+                annotation: update.annotation,
+                description: update.description,
+                id: update.id
+            }
 
-            //  Create the document in firestore
-            const resp = await firebase.firestore().collection('Standards').add(add)
-
-            //  Get our document from firestore
-            add = await firebase.firestore().doc(resp.path).get()
-            add = add.data()
-
-            //  Now that it is inserted into the DB, parse our general standard for our list
-            const genStd = await add.general_standard_ref.get()
-            add.generalStandard = genStd.data()
-            add.generalStandard.id = genStd.id
-
-            //  Close the dialog
-            emit('close', add)
+            modifyDocument('GeneralStandards', update.id).updateDoc(modified)
         }
 
-        return { add, handleSubmit }
-    },
-    computed: {
-        generalStandards() {
-            return this.$store.getters.generalStandards
-        }
+        return { update, handleSubmit }
     }
 }
 </script>

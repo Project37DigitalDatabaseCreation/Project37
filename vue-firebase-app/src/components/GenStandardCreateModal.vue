@@ -37,35 +37,21 @@
                             </div>
                             <div class="form-group row">
                                 <label
-                                    class="col-md-4 col-form-label text-md-right">General
-                                    Standard
-                                </label>
+                                    class="col-md-4 col-form-label text-md-right font-size: 1.1em">Description</label>
                                 <div class="col-md-6">
-                                    <select class="form-control" required
-                                        v-model="add.general_standard_ref"
-                                        style="width:100%; height:40px; border-radius:4px;">
-                                        <option v-for="gen in generalStandards"
-                                            v-bind:key="gen.id" v-bind:value="gen.id">
-                                            {{ gen.number }}
-                                        </option>
-                                    </select>
+                                    <textarea class="form-control" value required
+                                        placeholder="Description"
+                                        v-model="add.description" />
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label
-                                    class="col-md-4 col-form-label text-md-right">Standard
+                                    class="col-md-4 col-form-label text-md-right">General
+                                    Standard
                                     Number</label>
                                 <div class="col-md-6">
                                     <input type="text" class="form-control" value required
                                         v-model="add.number" />
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label
-                                    class="col-md-4 col-form-label text-md-right">Points</label>
-                                <div class="col-md-6">
-                                    <input type="text" class="form-control" value required
-                                        v-model="add.points" />
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -81,7 +67,7 @@
                     <div class="modal-footer">
                         <slot name="footer">
                             <button class="btn save" @click="handleSubmit()">
-                                Save Standard
+                                Save General Standard
                             </button>
                             <button class="btn cancel" @click="$emit('close')">
                                 Cancel
@@ -104,42 +90,27 @@ export default {
         var add = reactive({
             title: null,
             annotation: null,
+            description: null,
             number: null,
-            general_standard_ref: null,
-            points: null,
             is_active: null
         })
 
         const handleSubmit = async () => {
-            //  Get general_standard doc ref
-            const gen = firebase
-                .firestore()
-                .doc(`/GeneralStandards/${add.general_standard_ref}`)
-            //  Replace general_standard_ref with the doc ref
-            add.general_standard_ref = gen
-
             //  Create the document in firestore
-            const resp = await firebase.firestore().collection('Standards').add(add)
+            const resp = await firebase
+                .firestore()
+                .collection('GeneralStandards')
+                .add(add)
 
             //  Get our document from firestore
             add = await firebase.firestore().doc(resp.path).get()
             add = add.data()
-
-            //  Now that it is inserted into the DB, parse our general standard for our list
-            const genStd = await add.general_standard_ref.get()
-            add.generalStandard = genStd.data()
-            add.generalStandard.id = genStd.id
 
             //  Close the dialog
             emit('close', add)
         }
 
         return { add, handleSubmit }
-    },
-    computed: {
-        generalStandards() {
-            return this.$store.getters.generalStandards
-        }
     }
 }
 </script>

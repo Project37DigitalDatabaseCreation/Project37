@@ -123,6 +123,11 @@ export default {
                     hidden: !this.user.isAdmin
                 },
                 {
+                    link: '/general-standards',
+                    name: 'Manage General Standards',
+                    hidden: !this.user.isAdmin
+                },
+                {
                     display: true
                 },
                 {

@@ -40,7 +40,6 @@ export default {
         return { currentLink, ready, reviewTemplate, scores, selectedReview }
     },
     async mounted() {
-        console.log('REVIEW', this.review)
         //  If we have a review string, we are editing so fetch our scores
         if (this.review && this.reviews) {
             //  Grab our review from the store matching this review
@@ -89,7 +88,6 @@ export default {
                         this.scores.push(score)
                     }
                 }
-                console.log('FINISHED', this.scores)
 
                 //  Finished
                 this.selectedReview = _.cloneDeep(this.reviewTemplate)

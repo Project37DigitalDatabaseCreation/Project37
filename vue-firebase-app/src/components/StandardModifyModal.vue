@@ -28,6 +28,15 @@
                             </div>
                             <div class="form-group row">
                                 <label
+                                    class="col-md-4 col-form-label text-md-right font-size: 1.1em">Annotation</label>
+                                <div class="col-md-6">
+                                    <textarea class="form-control" value required
+                                        placeholder="Annotation"
+                                        v-model="update.annotation" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label
                                     class="col-md-4 col-form-label text-md-right">General
                                     Standard
                                 </label>
@@ -103,6 +112,7 @@ export default {
                 general_standard_ref: update.general_standard_ref,
                 points: update.points,
                 is_active: update.is_active,
+                annotation: update.annotation,
                 id: update.id
             }
 
@@ -110,9 +120,6 @@ export default {
         }
 
         return { update, handleSubmit }
-    },
-    mounted() {
-        console.log('props', this.std)
     },
     computed: {
         generalStandards() {

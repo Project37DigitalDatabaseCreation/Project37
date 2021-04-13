@@ -78,11 +78,9 @@ export default {
     methods: {
         goToCreate() {
             //  Push the router
-            console.log('reviewtemplate', this.selectedReview)
             this.$router.push({ name: 'Review' })
         },
         goToEdit(rev) {
-            console.log('rev', rev.id)
             //  Push the router
             this.$router.push({ name: 'Review', params: { review: rev.id } })
         },
