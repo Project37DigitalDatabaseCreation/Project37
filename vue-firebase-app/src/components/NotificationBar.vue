@@ -28,7 +28,8 @@ export default {
                 top: 0,
                 'padding-left': '10%',
                 'padding-right': '10%',
-                'font-family': 'Glacial Indifference',
+                'font-family':
+                    'Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif',
                 background: '#4BB543',
                 'pointer-events': 'none',
                 'z-index': '4',

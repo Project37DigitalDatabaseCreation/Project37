@@ -1,33 +1,36 @@
 <template>
-    <div v-if="!currScores || !generalStandards || loading"
-        style="display:flex; justify-content:center; align-items:center; width:100%; font-family: Glacial Indifference;">
+    <div v-if="!currScores || !generalStandards || loading" style="display:flex; justify-content:center; align-items:center; width:100%; font-family: Calibri, Candara, Segoe, '
+        Segoe UI', Optima, Arial, sans-serif;">
         <div class="loader"></div>
     </div>
     <div v-else class="col-9 no-gutters px-0">
         <div class="justify-content-center">
-            <div class="col-md-12"
-                style="padding:0 !important; font-family: Glacial Indifference">
+            <div class="col-md-12" style="padding:0 !important; font-family: Calibri, Candara, Segoe, 'Segoe
+                UI', Optima, Arial, sans-serif">
                 <div class="card" :style="`height:${contentHeight}px;`">
-                    <div class="card-header"
-                        style="font-family: Glacial Indifference; font-size: 1.5em;">
+                    <div class="card-header" style="font-family: Calibri, Candara, Segoe, 'Segoe UI', Optima,
+                        Arial, sans-serif; font-size: 1.5em;">
                         Quality Review Form</div>
                     <div class="card-body"
                         style="overflow:auto; background-color:#f1f1f1;"
                         :style="`height:${cardHeight}px;`">
                         <div v-if="error" class="alert alert-danger">{{error}}</div>
                         <div v-if="generalStandards">
-
-                            <div class="form-group row" style="background-color:#ffffff;">
+                            <div class="form-group row" style="background-color:#f8f8f8;">
                                 <div
                                     style="padding:10px; width:100%; background-color:#ffffff; border-radius:4px 4px; font-size:20px; font-weight:bold;">
-                                    Executive Summary
+                                    Project
                                 </div>
-                                <div class="col-12" style="padding-bottom:30px;">
-                                    <textarea v-if="currReview" id="exec_summary"
-                                        class="form-control" name="exec_summary" value
-                                        required autofocus
-                                        v-model="currReview.exec_summary"
-                                        style="border-color:black !important;" />
+                                <div
+                                    style="display:flex; justify-content:center; align-items:center; width:100%; height:80px; padding-left:15px; padding-right:15px;">
+                                    <select required v-model="currReview.project_ref"
+                                        style="width:100%; height:40px; border-radius:4px;">
+                                        <option v-for="project in projects"
+                                            v-bind:key="project.id"
+                                            v-bind:value="project.id">
+                                            {{ project.title }}
+                                        </option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-group row" style="background-color:#ffffff;">
@@ -53,36 +56,6 @@
                                         required autofocus
                                         v-model="currReview.course_code"
                                         style="border-color:black !important;" />
-                                </div>
-                            </div>
-                            <div class="form-group row" style="background-color:#ffffff;">
-                                <div
-                                    style="padding:10px; width:100%; background-color:#ffffff; border-radius:4px 4px; font-size:20px; font-weight:bold;">
-                                    Review Date
-                                </div>
-                                <div class="col-12" style="padding-bottom:30px;">
-                                    <input v-if="currReview" id="review_date" type="date"
-                                        class="form-control" name="review_date" value
-                                        required autofocus
-                                        v-model="currReview.review_date"
-                                        style="border-color:black !important;" />
-                                </div>
-                            </div>
-                            <div class="form-group row" style="background-color:#f8f8f8;">
-                                <div
-                                    style="padding:10px; width:100%; background-color:#ffffff; border-radius:4px 4px; font-size:20px; font-weight:bold;">
-                                    Project
-                                </div>
-                                <div
-                                    style="display:flex; justify-content:center; align-items:center; width:100%; height:80px; padding-left:15px; padding-right:15px;">
-                                    <select required v-model="currReview.project_ref"
-                                        style="width:100%; height:40px; border-radius:4px;">
-                                        <option v-for="project in projects"
-                                            v-bind:key="project.id"
-                                            v-bind:value="project.id">
-                                            {{ project.title }}
-                                        </option>
-                                    </select>
                                 </div>
                             </div>
                             <!-- <div class="form-group row" style="background-color:#f8f8f8;">
@@ -117,6 +90,44 @@
                                             {{ reviewer.email }}
                                         </option>
                                     </select>
+                                </div>
+                            </div>
+                            <div class="form-group row" style="background-color:#ffffff;">
+                                <div
+                                    style="padding:10px; width:100%; background-color:#ffffff; border-radius:4px 4px; font-size:20px; font-weight:bold;">
+                                    Date of Review
+                                </div>
+                                <div class="col-12" style="padding-bottom:30px;">
+                                    <input v-if="currReview" id="review_date" type="date"
+                                        class="form-control" name="review_date" value
+                                        required autofocus
+                                        v-model="currReview.review_date"
+                                        style="border-color:black !important;" />
+                                </div>
+                            </div>
+                            <div class="form-group row" style="background-color:#ffffff;">
+                                <div
+                                    style="padding:10px; width:100%; background-color:#ffffff; border-radius:4px 4px; font-size:20px; font-weight:bold;">
+                                    Status
+                                </div>
+                                <div class="col-12" style="padding-bottom:30px;">
+                                    <input v-if="currReview" id="status" type="text"
+                                        class="form-control" name="status" value required
+                                        autofocus v-model="currReview.status"
+                                        style="border-color:black !important;" />
+                                </div>
+                            </div>
+                            <div class="form-group row" style="background-color:#ffffff;">
+                                <div
+                                    style="padding:10px; width:100%; background-color:#ffffff; border-radius:4px 4px; font-size:20px; font-weight:bold;">
+                                    Executive Summary
+                                </div>
+                                <div class="col-12" style="padding-bottom:30px;">
+                                    <textarea v-if="currReview" id="exec_summary"
+                                        class="form-control" name="exec_summary" value
+                                        required autofocus
+                                        v-model="currReview.exec_summary"
+                                        style="border-color:black !important;" />
                                 </div>
                             </div>
 
@@ -345,13 +356,14 @@ export default {
             //  Create a timestamp
             const timestamp = firebase.firestore.Timestamp.fromDate(new Date()).toDate()
             //  Our payload is an object that is only 1D
-            const payload = { updated: timestamp, status: 'Complete' }
+            const payload = { updated: timestamp }
             //  If we have a review, we can populate it with those fields
             payload.exec_summary = this.currReview.exec_summary
             payload.course_name = this.currReview.course_name
             payload.course_code = this.currReview.course_code
             payload.review_date = this.currReview.review_date
             payload.created = this.currReview.created || timestamp
+            payload.status = this.currReview.status || 'Complete'
 
             //  Get our reviewer document to be the reference
             payload.reviewer_ref = firebase
@@ -410,13 +422,14 @@ export default {
             //  Create a timestamp
             const timestamp = firebase.firestore.Timestamp.fromDate(new Date()).toDate()
             //  Our payload is an object that is only 1D
-            const payload = { updated: timestamp, status: 'INCOMPLETE' }
+            const payload = { updated: timestamp }
             //  If we have a review, we can populate it with those fields
             payload.exec_summary = this.currReview.exec_summary
             payload.course_name = this.currReview.course_name
             payload.course_code = this.currReview.course_code
             payload.review_date = this.currReview.review_date
             payload.created = this.currReview.created || timestamp
+            payload.status = this.currReview.status || 'In-Progress'
 
             //  Get our reviewer document to be the reference
             payload.reviewer_ref = firebase
@@ -506,7 +519,7 @@ export default {
 </script>
 <style scoped>
 .card {
-    font-family: Glacial Indifference;
+    font-family: Calibri, Candara, Segoe, 'Segoe UI', Optima, Arial, sans-serif;
     width: 100%;
 }
 .collapsible {
@@ -530,7 +543,7 @@ export default {
     transition: max-height 0.2s ease-out;
 }
 .form-group {
-    font-family: Glacial Indifference;
+    font-family: Calibri, Candara, Segoe, 'Segoe UI', Optima, Arial, sans-serif;
     border-radius: 4px 4px;
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
         0 1px 5px 0 rgba(0, 0, 0, 0.12) !important;
