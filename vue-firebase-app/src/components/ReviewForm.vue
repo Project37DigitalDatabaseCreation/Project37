@@ -121,8 +121,8 @@
                             </div>
 
                             <template v-for="(item, i) in generalStandards" :key="i">
-                                <div class="form-group row" :id="item.number"
-                                    style="background-color:#f8f8f8;">
+                                <div v-if="showGen(item)" class="form-group row"
+                                    :id="item.number" style="background-color:#f8f8f8;">
 
                                     <div
                                         style="padding:10px; width:100%; background-color:#ffffff; border-radius:4px 4px; font-size:20px; font-weight:bold;">
@@ -131,7 +131,8 @@
 
                                     <template v-for="(score, j) in filteredScores(item)"
                                         :key="i + '-' + j">
-                                        <div class="standard-container col-12 px-0 mb-1"
+                                        <div v-if="showStd(score)"
+                                            class="standard-container col-12 px-0 mb-1"
                                             style="display:flex; border-bottom:1px solid grey; background-color:#ffffff; flex-direction:column;"
                                             :style="j == scores.length - 1 ? 'border-bottom:unset !important;' : ''">
                                             <div class="standard-container-title col-12 px-0"
@@ -469,6 +470,18 @@ export default {
 
             //  Get our reviews again
             this.$store.dispatch('fetchReviews')
+        },
+        showGen(std) {
+            //  Return true if editing
+            if (this.edit) return true
+            //  Else, return based on is_active
+            return std.is_active
+        },
+        showStd(score) {
+            //  Return true if editing
+            if (this.edit) return true
+            //  Else, return based on is_active
+            return score.standard.is_active
         },
         standardMet(genStandard) {
             //  Find all scores that match the genstandard id

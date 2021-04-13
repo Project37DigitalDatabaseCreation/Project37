@@ -25,6 +25,7 @@ export default {
                     this.notificationBar && this.notificationBar.open ? '48px' : '0px',
                 width: '100%',
                 color: 'white',
+                top: 0,
                 'padding-left': '10%',
                 'padding-right': '10%',
                 'font-family': 'Glacial Indifference',

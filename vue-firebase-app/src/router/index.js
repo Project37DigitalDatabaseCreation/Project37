@@ -26,6 +26,7 @@ import ManageClients from '../components/ManageClients'
 import Organizations from '../components/Organizations'
 import store from '../store/index'
 import ForgotPassword from '../components/ForgotPassword'
+import ManageStandards from '../components/ManageStandards'
 
 const routes = [
   {
@@ -180,8 +181,15 @@ const routes = [
     path: '/forgotpassword',
     name: 'ForgotPassword',
     component: ForgotPassword,
+  },
+  {
+    path: '/standards',
+    name: 'ManageStandards',
+    component: ManageStandards,
+    meta: {
+        requiresAdmin: true
+    }
   }
-
 ]
 
 const router = createRouter({

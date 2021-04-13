@@ -109,6 +109,9 @@ export default {
 }
 </script>
 <style scoped>
+.container {
+    padding: 0 !important;
+}
 .loader {
     border: 16px solid #f3f3f3; /* Light grey */
     border-top: 16px solid #3498db; /* Blue */
