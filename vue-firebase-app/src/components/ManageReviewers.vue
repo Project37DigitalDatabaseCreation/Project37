@@ -47,7 +47,10 @@
                 <td>{{ reviewer.email }}</td>
                 <td>{{ reviewer.is_admin === true ? "Yes" : "No" }}</td>
                 <td>
-                  <button @click="showModifyReviewerModal()" class="btn edit">
+                  <button
+                    @click="showModifyReviewerModal(reviewer.id)"
+                    class="btn edit"
+                  >
                     Modify
                   </button>
                 </td>
@@ -71,6 +74,8 @@
 
     <modifyReviewerModal
       v-if="showEditReviewerModal"
+      :passedReviewerId="this.id"
+      v-on:update-clicked="updateUserConfirmed"
       @close="showEditReviewerModal = false"
     />
   </div>
@@ -91,6 +96,7 @@ export default {
       reviewerData: [],
       reviewer: {},
       showEditReviewerModal: false,
+      id: "",
     };
   },
   methods: {
@@ -108,11 +114,18 @@ export default {
       alert("todo " + reviewerId);
     },
 
-    showModifyReviewerModal() {
+    updateUserConfirmed() {
+      this.getReviewers();
+    },
+
+    showModifyReviewerModal(id) {
       // this.$router.push({
       //   name: "ModifyReviewer",
       //   params: { passedReviewerId: reviewerId },
       // });
+
+      this.id = id;
+      console.log(`The id is ${this.id}`);
       this.showEditReviewerModal = true;
     },
 

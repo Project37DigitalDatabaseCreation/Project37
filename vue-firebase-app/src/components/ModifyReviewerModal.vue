@@ -28,10 +28,11 @@
                   <input
                     type="text"
                     class="form-control"
+                    name="fname"
                     value
                     required
-                    placeholder="First Name"
-                    v-model="firstName"
+                    autofocus
+                    v-model="form.fname"
                   />
                 </div>
               </div>
@@ -43,10 +44,10 @@
                   <input
                     type="text"
                     class="form-control"
+                    name="lname"
                     value
                     required
-                    placeholder="Last Name"
-                    v-model="lastName"
+                    v-model="form.lname"
                   />
                 </div>
               </div>
@@ -58,26 +59,38 @@
                   <input
                     type="email"
                     class="form-control"
+                    name="email"
                     value
                     required
-                    placeholder="Email"
-                    v-model="email"
+                    v-model="form.email"
                   />
                 </div>
               </div>
               <div class="form-group row">
-                <label class="col-md-4 col-form-label text-md-right"
-                  >Organization</label
+                <label
+                  for="password"
+                  class="col-md-6 col-form-label text-md-right"
+                  >Administrator Access</label
                 >
                 <div class="col-md-6">
-                  <select class="form-control" required v-model="organization">
-                    <option
-                      v-for="organization in organizations"
-                      v-bind:key="organization.title"
-                    >
-                      {{ organization.title }}
-                    </option>
-                  </select>
+                  <input
+                    class="radioButton"
+                    type="radio"
+                    name="admin"
+                    value="yes"
+                    v-model="form.isAdmin"
+                  />
+                  <label for="Administrator Access">Yes</label>
+                  <br />
+                  <input
+                    class="radioButton"
+                    type="radio"
+                    name="admin"
+                    value="no"
+                    v-model="form.isAdmin"
+                  />
+                  <label for="No access">No</label>
+                  <br />
                 </div>
               </div>
             </slot>
@@ -85,8 +98,8 @@
 
           <div class="modal-footer">
             <slot name="footer">
-              <button class="btn save" @click="handleSubmit(), $emit('close')">
-                Add Client
+              <button class="btn save" @click="updateClicked(), $emit('close')">
+                Update
               </button>
               <button class="btn cancel" @click="$emit('close')">Cancel</button>
             </slot>
@@ -107,7 +120,7 @@ export default {
   components: {
     // modal,
   },
-  emits: ["ok-click", "close"],
+  emits: ["update-clicked", "close"],
   props: {
     // The Firestore doc id of the reviewer is passed into this prop
     // when the user is clicked on in the ReviewerList.vue table
@@ -127,6 +140,7 @@ export default {
       error: null,
       modalMessage: "Are you sure you want to delete the user ",
       modalMessageTitle: "Are you sure?",
+      isAdminSet: false,
     };
   },
 
@@ -134,12 +148,20 @@ export default {
     //Method to modify a existing user
     async updateClicked() {
       // console.log("Update clicked");
-      let isAdminSet = this.form.isAdmin === "true";
+
+      console.log(`isAdmin is set to ${this.form.isAdmin}`);
+
+      if (this.form.isAdmin === "yes") {
+        this.isAdminSet = true;
+      } else {
+        this.isAdminSet = false;
+      }
+
       let modifiedUser = {
         firstName: this.form.fname,
         lastName: this.form.lname,
         email: this.form.email,
-        isAdmin: isAdminSet,
+        isAdmin: this.isAdminSet,
       };
 
       await firebase
@@ -147,8 +169,10 @@ export default {
         .collection("Reviewers")
         .doc(this.passedReviewerId)
         .set(modifiedUser);
-      // console.log(modifiedUser);
-      this.returnToPreviousScreen();
+      console.log(modifiedUser);
+      this.$emit("update-clicked");
+      this.$emit("close");
+      // this.returnToPreviousScreen();
     },
 
     //Returns to the previous screen/view
@@ -170,7 +194,12 @@ export default {
         this.form.fname = reviewer.firstName;
         this.form.lname = reviewer.lastName;
         this.form.email = reviewer.email;
-        this.form.isAdmin = reviewer.isAdmin;
+
+        if (reviewer.isAdmin === true) {
+          this.form.isAdmin = "yes";
+        } else {
+          this.form.isAdmin = "no";
+        }
       } catch (err) {
         console.log(err);
       }
