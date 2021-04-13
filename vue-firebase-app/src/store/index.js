@@ -13,6 +13,7 @@ export default createStore({
   state: {
     generalStandards: null,
     loading: false,
+    notificationBar: null,
     organizations: null,
     projects: null,
     reviews: null,
@@ -35,6 +36,9 @@ export default createStore({
     },
     loading(state) {
       return state.loading
+    },
+    notificationBar(state) {
+        return state.notificationBar
     },
     organizations(state) {
       return state.organizations
@@ -72,18 +76,17 @@ export default createStore({
     SET_LOGGED_IN(state, value) {
       state.user.loggedIn = value;
     },
+    SET_NOTIFICATION_BAR(state, obj) {
+        state.notificationBar = obj
+    },
     SET_ORGANIZATIONS(state, value) {
-      console.log("ORGS", value)
       state.organizations = value
     },
     SET_PROJECTS(state, value) {
-      console.log("pROJS", value)
       state.projects = value
     },
     SET_REVIEWS(state, value) {
-      console.log('VALUE', value)
       state.reviews = value
-      console.log('NEW',state.reviews)
     },
     SET_REVIEWERS(state, value) {
       state.reviewers = value
@@ -102,7 +105,6 @@ export default createStore({
       state.user = data;
     },
     SET_USER_LOADING(state, bool) {
-        console.log('bool',bool)
         state.userLoading = bool
     }
   },
@@ -287,6 +289,7 @@ export default createStore({
         firebase.firestore().collection("Scores").where("review_ref", "==", revDoc).get().then(result => {
             result.forEach(doc => {
                 let score = doc.data()
+                score.id = doc.id
                 let scoreStandard = null
 
                 if (score.standard_ref && getters.standards) {

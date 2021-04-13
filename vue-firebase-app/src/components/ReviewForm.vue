@@ -1,31 +1,21 @@
 <template>
-    <div v-if="!currScores || !generalStandards || loading"
-        style="display:flex; justify-content:center; align-items:center; width:100%; font-family: Glacial Indifference;">
+    <div v-if="!currScores || !generalStandards || loading" style="display:flex; justify-content:center; align-items:center; width:100%; font-family: Calibri, Candara, Segoe, '
+        Segoe UI', Optima, Arial, sans-serif;">
         <div class="loader"></div>
     </div>
     <div v-else class="col-9 no-gutters px-0">
         <div class="justify-content-center">
-            <div class="col-md-12" style="padding:0 !important; font-family: Glacial Indifference">
-                <div class="card">
-                    <div class="card-header" style="font-family: Glacial Indifference; font-size: 1.5em;">Quality Review Form</div>
+            <div class="col-md-12" style="padding:0 !important; font-family: Calibri, Candara, Segoe, 'Segoe
+                UI', Optima, Arial, sans-serif">
+                <div class="card" :style="`height:${contentHeight}px;`">
+                    <div class="card-header" style="font-family: Calibri, Candara, Segoe, 'Segoe UI', Optima,
+                        Arial, sans-serif; font-size: 1.5em;">
+                        Quality Review Form</div>
                     <div class="card-body"
                         style="overflow:auto; background-color:#f1f1f1;"
                         :style="`height:${cardHeight}px;`">
                         <div v-if="error" class="alert alert-danger">{{error}}</div>
                         <div v-if="generalStandards">
-
-                            <div class="form-group row" style="background-color:#ffffff;">
-                                <div
-                                    style="padding:10px; width:100%; background-color:#ffffff; border-radius:4px 4px; font-size:20px; font-weight:bold;">
-                                    Course Name
-                                </div>
-                                <div class="col-12" style="padding-bottom:30px;">
-                                    <input v-if="currReview" id="fname" type="text"
-                                        class="form-control" name="fname" value required
-                                        autofocus v-model="currReview.course_name"
-                                        style="border-color:black !important;" />
-                                </div>
-                            </div>
                             <div class="form-group row" style="background-color:#f8f8f8;">
                                 <div
                                     style="padding:10px; width:100%; background-color:#ffffff; border-radius:4px 4px; font-size:20px; font-weight:bold;">
@@ -41,6 +31,31 @@
                                             {{ project.title }}
                                         </option>
                                     </select>
+                                </div>
+                            </div>
+                            <div class="form-group row" style="background-color:#ffffff;">
+                                <div
+                                    style="padding:10px; width:100%; background-color:#ffffff; border-radius:4px 4px; font-size:20px; font-weight:bold;">
+                                    Course Name
+                                </div>
+                                <div class="col-12" style="padding-bottom:30px;">
+                                    <input v-if="currReview" id="fname" type="text"
+                                        class="form-control" name="fname" value required
+                                        autofocus v-model="currReview.course_name"
+                                        style="border-color:black !important;" />
+                                </div>
+                            </div>
+                            <div class="form-group row" style="background-color:#ffffff;">
+                                <div
+                                    style="padding:10px; width:100%; background-color:#ffffff; border-radius:4px 4px; font-size:20px; font-weight:bold;">
+                                    Course Code
+                                </div>
+                                <div class="col-12" style="padding-bottom:30px;">
+                                    <input v-if="currReview" id="course_code" type="text"
+                                        class="form-control" name="course_code" value
+                                        required autofocus
+                                        v-model="currReview.course_code"
+                                        style="border-color:black !important;" />
                                 </div>
                             </div>
                             <!-- <div class="form-group row" style="background-color:#f8f8f8;">
@@ -77,10 +92,48 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="form-group row" style="background-color:#ffffff;">
+                                <div
+                                    style="padding:10px; width:100%; background-color:#ffffff; border-radius:4px 4px; font-size:20px; font-weight:bold;">
+                                    Date of Review
+                                </div>
+                                <div class="col-12" style="padding-bottom:30px;">
+                                    <input v-if="currReview" id="review_date" type="date"
+                                        class="form-control" name="review_date" value
+                                        required autofocus
+                                        v-model="currReview.review_date"
+                                        style="border-color:black !important;" />
+                                </div>
+                            </div>
+                            <div class="form-group row" style="background-color:#ffffff;">
+                                <div
+                                    style="padding:10px; width:100%; background-color:#ffffff; border-radius:4px 4px; font-size:20px; font-weight:bold;">
+                                    Status
+                                </div>
+                                <div class="col-12" style="padding-bottom:30px;">
+                                    <input v-if="currReview" id="status" type="text"
+                                        class="form-control" name="status" value required
+                                        autofocus v-model="currReview.status"
+                                        style="border-color:black !important;" />
+                                </div>
+                            </div>
+                            <div class="form-group row" style="background-color:#ffffff;">
+                                <div
+                                    style="padding:10px; width:100%; background-color:#ffffff; border-radius:4px 4px; font-size:20px; font-weight:bold;">
+                                    Executive Summary
+                                </div>
+                                <div class="col-12" style="padding-bottom:30px;">
+                                    <textarea v-if="currReview" id="exec_summary"
+                                        class="form-control" name="exec_summary" value
+                                        required autofocus
+                                        v-model="currReview.exec_summary"
+                                        style="border-color:black !important;" />
+                                </div>
+                            </div>
 
                             <template v-for="(item, i) in generalStandards" :key="i">
-                                <div class="form-group row" :id="item.number"
-                                    style="background-color:#f8f8f8;">
+                                <div v-if="showGen(item)" class="form-group row"
+                                    :id="item.number" style="background-color:#f8f8f8;">
 
                                     <div
                                         style="padding:10px; width:100%; background-color:#ffffff; border-radius:4px 4px; font-size:20px; font-weight:bold;">
@@ -89,7 +142,8 @@
 
                                     <template v-for="(score, j) in filteredScores(item)"
                                         :key="i + '-' + j">
-                                        <div class="standard-container col-12 px-0 mb-1"
+                                        <div v-if="showStd(score)"
+                                            class="standard-container col-12 px-0 mb-1"
                                             style="display:flex; border-bottom:1px solid grey; background-color:#ffffff; flex-direction:column;"
                                             :style="j == scores.length - 1 ? 'border-bottom:unset !important;' : ''">
                                             <div class="standard-container-title col-12 px-0"
@@ -213,12 +267,10 @@ export default {
     mounted() {
         this.getProjects()
         this.getReviewers()
-        console.log('SCORE TYPE IS??? ', this.scores)
         //  Once review prop is here we do this
         this.currReview = _.cloneDeep(this.review)
         //  Once scores prop is here we do this
         this.currScores = _.cloneDeep(this.scores)
-        console.log('CONTENT HEIGHT', this.contentHeight)
     },
     computed: {
         cardHeight() {
@@ -267,7 +319,6 @@ export default {
                 .catch((error) => {
                     console.log('Error getting documents: ', error)
                 })
-            console.log('OUR PROJECTS', this.projects)
         },
         getReviewers() {
             firebase
@@ -287,7 +338,6 @@ export default {
                 .catch((error) => {
                     console.log('Error getting documents: ', error)
                 })
-            console.log('OUR REVIEWERS', this.reviewers)
         },
         pointTotal(genStandard) {
             const scores = this.filteredScores(genStandard)
@@ -306,10 +356,15 @@ export default {
             //  Create a timestamp
             const timestamp = firebase.firestore.Timestamp.fromDate(new Date()).toDate()
             //  Our payload is an object that is only 1D
-            const payload = { updated: timestamp, status: 'COMPLETE' }
+            const payload = { updated: timestamp }
             //  If we have a review, we can populate it with those fields
+            payload.exec_summary = this.currReview.exec_summary
             payload.course_name = this.currReview.course_name
+            payload.course_code = this.currReview.course_code
+            payload.review_date = this.currReview.review_date
             payload.created = this.currReview.created || timestamp
+            payload.status = this.currReview.status || 'Complete'
+            payload.id = this.currReview.id
 
             //  Get our reviewer document to be the reference
             payload.reviewer_ref = firebase
@@ -368,10 +423,15 @@ export default {
             //  Create a timestamp
             const timestamp = firebase.firestore.Timestamp.fromDate(new Date()).toDate()
             //  Our payload is an object that is only 1D
-            const payload = { updated: timestamp, status: 'INCOMPLETE' }
+            const payload = { updated: timestamp }
             //  If we have a review, we can populate it with those fields
+            payload.exec_summary = this.currReview.exec_summary
             payload.course_name = this.currReview.course_name
+            payload.course_code = this.currReview.course_code
+            payload.review_date = this.currReview.review_date
             payload.created = this.currReview.created || timestamp
+            payload.status = this.currReview.status || 'In-Progress'
+            payload.id = this.currReview.id
 
             //  Get our reviewer document to be the reference
             payload.reviewer_ref = firebase
@@ -422,6 +482,18 @@ export default {
             //  Get our reviews again
             this.$store.dispatch('fetchReviews')
         },
+        showGen(std) {
+            //  Return true if editing
+            if (this.edit) return true
+            //  Else, return based on is_active
+            return std.is_active
+        },
+        showStd(score) {
+            //  Return true if editing
+            if (this.edit) return true
+            //  Else, return based on is_active
+            return score.standard.is_active
+        },
         standardMet(genStandard) {
             //  Find all scores that match the genstandard id
             // let scores = this.currScores.filter((x) => {
@@ -443,19 +515,13 @@ export default {
                 let element = document.getElementById(val)
                 element.scrollIntoView(true)
             }
-        },
-        currReview: {
-            deep: true,
-            handler() {
-                console.log('CURR REVIEW', this.currReview)
-            }
         }
     }
 }
 </script>
 <style scoped>
 .card {
-    font-family: Glacial Indifference;
+    font-family: Calibri, Candara, Segoe, 'Segoe UI', Optima, Arial, sans-serif;
     width: 100%;
 }
 .collapsible {
@@ -479,7 +545,7 @@ export default {
     transition: max-height 0.2s ease-out;
 }
 .form-group {
-    font-family: Glacial Indifference;
+    font-family: Calibri, Candara, Segoe, 'Segoe UI', Optima, Arial, sans-serif;
     border-radius: 4px 4px;
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
         0 1px 5px 0 rgba(0, 0, 0, 0.12) !important;

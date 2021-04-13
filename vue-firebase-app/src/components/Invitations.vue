@@ -87,13 +87,25 @@ export default {
                 .doc(inv.uid)
                 .set(payload)
 
-            //  If this wasn't successful, just retun
+            //  If this wasn't successful, just return
             if (!client) return
+
+            //  Pop the notification bar
+            this.$store.commit('SET_NOTIFICATION_BAR', {
+                open: true,
+                text: `${inv.name} has been added as a Client!`
+            })
 
             //  Delete the invitation
             this.deleteInvitation(inv, i)
         },
         async decline(inv, i) {
+            //  Pop the notification bar
+            this.$store.commit('SET_NOTIFICATION_BAR', {
+                open: true,
+                text: `Invitation declined`
+            })
+
             //  Decline the invitation by just deleting it
             this.deleteInvitation(inv, i)
         },

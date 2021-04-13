@@ -1,6 +1,6 @@
 <template>
-    <div class="container scrollcontainer" style="display:flex;"
-        :style="`height:${contentHeight}px`">
+    <div class="container" style="display:flex;"
+        :style="`height:${contentHeight}px; max-width:100% !important; min-width:100% !important; padding:0 !important; margin:0 !important;`">
         <ReviewNav @go-to-item="goToItem"></ReviewNav>
         <ReviewForm v-if="ready" :currentLink="currentLink" :edit="review ? true : false"
             :review="selectedReview" :scores="scores">
@@ -30,6 +30,7 @@ export default {
         const ready = ref(false)
         const reviewTemplate = reactive({
             course_name: null,
+            course_code: null,
             status: null,
             created: null,
             updated: null
@@ -39,7 +40,6 @@ export default {
         return { currentLink, ready, reviewTemplate, scores, selectedReview }
     },
     async mounted() {
-        console.log('REVIEW', this.review)
         //  If we have a review string, we are editing so fetch our scores
         if (this.review && this.reviews) {
             //  Grab our review from the store matching this review
@@ -88,7 +88,6 @@ export default {
                         this.scores.push(score)
                     }
                 }
-                console.log('FINISHED', this.scores)
 
                 //  Finished
                 this.selectedReview = _.cloneDeep(this.reviewTemplate)
@@ -108,6 +107,9 @@ export default {
 }
 </script>
 <style scoped>
+.container {
+    padding: 0 !important;
+}
 .loader {
     border: 16px solid #f3f3f3; /* Light grey */
     border-top: 16px solid #3498db; /* Blue */
