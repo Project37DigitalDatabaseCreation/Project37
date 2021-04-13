@@ -54,7 +54,9 @@
                             <th>Course Name</th>
                             <th>Course Code</th>
                             <th>Reviewer</th>
+                            <th>Date of Review</th>
                             <th>Status</th>
+                            <th>Points</th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -65,7 +67,9 @@
                             <td>{{ review.course_code }}</td>
                             <td>{{ review.reviewer.lastName + ", " + review.reviewer.firstName}}
                             </td>
+                            <td>{{ review.review_date }}</td>
                             <td>{{ review.status }}</td>
+                            <td>{{ review.points }}</td>
                             <td><button title="edit" class="btn edit"
                                     @click="populatePopOut(review)"></button></td>
                             <td><button title="delete" class="btn delete"

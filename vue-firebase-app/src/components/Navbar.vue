@@ -173,7 +173,7 @@ export default {
 }
 
 .navbar {
-    font-family: Glacial Indifference;
+    font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
     font-size: 1.5em;
 }
 .navbar-toggle .icon-bar{
