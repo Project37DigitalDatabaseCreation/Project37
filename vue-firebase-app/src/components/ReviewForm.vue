@@ -364,6 +364,7 @@ export default {
             payload.review_date = this.currReview.review_date
             payload.created = this.currReview.created || timestamp
             payload.status = this.currReview.status || 'Complete'
+            payload.id = this.currReview.id
 
             //  Get our reviewer document to be the reference
             payload.reviewer_ref = firebase
@@ -430,6 +431,7 @@ export default {
             payload.review_date = this.currReview.review_date
             payload.created = this.currReview.created || timestamp
             payload.status = this.currReview.status || 'In-Progress'
+            payload.id = this.currReview.id
 
             //  Get our reviewer document to be the reference
             payload.reviewer_ref = firebase

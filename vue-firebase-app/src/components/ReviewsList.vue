@@ -30,6 +30,7 @@
                             <th>Course Name</th>
                             <th>Course Code</th>
                             <th>Reviewer</th>
+                            <th>Date of Review</th>
                             <th>Status</th>
                             <th>Points</th>
                             <th></th>
@@ -46,11 +47,12 @@
                             <td>
                                 {{ reviewerName(review) }}
                             </td>
+                            <td>{{ review.review_date }}</td>
                             <td>{{ review.status }}</td>
                             <td>{{ review.points }}</td>
                             <td>
-                                <button title="edit" class="btn edit"
-                                    @click="goToEdit(review)"></button>
+                                <button :disabled="!sortedStandards" title="edit"
+                                    class="btn edit" @click="goToEdit(review)"></button>
                             </td>
                             <!-- <td><button class="btn btn-primary" @click="populatePopOut(review)">Edit</button></td>
                 <td><button class="btn btn-primary" @click="deleteReview(review)">Delete</button></td> -->

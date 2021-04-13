@@ -96,6 +96,7 @@
 </template>
 
 <script>
+import firebase from 'firebase'
 import { reactive } from 'vue'
 import modifyDocument from '../composables/modifyDocument'
 
@@ -106,10 +107,15 @@ export default {
         const update = reactive({ ...props.std })
 
         const handleSubmit = async () => {
+            //  Get general_standard doc ref
+            const gen = firebase
+                .firestore()
+                .doc(`/GeneralStandards/${update.general_standard_ref}`)
+
             const modified = {
                 title: update.title,
                 number: update.number,
-                general_standard_ref: update.general_standard_ref,
+                general_standard_ref: gen,
                 points: update.points,
                 is_active: update.is_active,
                 annotation: update.annotation,

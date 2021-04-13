@@ -289,6 +289,7 @@ export default createStore({
         firebase.firestore().collection("Scores").where("review_ref", "==", revDoc).get().then(result => {
             result.forEach(doc => {
                 let score = doc.data()
+                score.id = doc.id
                 let scoreStandard = null
 
                 if (score.standard_ref && getters.standards) {
