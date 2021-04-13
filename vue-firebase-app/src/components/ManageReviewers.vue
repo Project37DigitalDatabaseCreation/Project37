@@ -15,21 +15,21 @@
 <template>
   <div class="container scrollcontainer">
     <div class="container-layout">
-      <div class="col-md-10">
-        <div class="card">
-          <div class="card-header">
-            Reviewers
-            <div style="float: right">
-              <button
-                type="button"
-                class="btn btn-sm"
-                @click.prevent="AddReviewer"
-                style="float: right margin-right:4px; background-color:  #49703b;"
-              >
-                + Add Reviewer
-              </button>
-            </div>
+      <div class="card">
+        <div class="card-header">
+          Reviewers
+          <div style="float: right">
+            <button
+              type="button"
+              class="btn btn-sm"
+              @click.prevent="AddReviewer"
+              style="float: right margin-right:4px; background-color:  #49703b;"
+            >
+              + Add Reviewer
+            </button>
           </div>
+        </div>
+        <div class="table-responsive">
           <table class="table">
             <thead class="project-head">
               <tr>
@@ -53,18 +53,21 @@
                   ></button>
                 </td>
                 <td>
-                  <button @click="handleDelete(reviewer.id)" class="btn delete"></button>
+                  <button
+                    @click="handleDelete(reviewer.id)"
+                    class="btn delete"
+                  ></button>
                 </td>
               </tr>
             </tbody>
           </table>
-          <!-- <div class="paginationContainer">
+        </div>
+        <!-- <div class="paginationContainer">
       <p>
         <button class="btn" @click="prevPage">Previous</button>
         <button class="btn" @click="nextPage">Next</button>
       </p>
     </div> -->
-        </div>
       </div>
     </div>
   </div>

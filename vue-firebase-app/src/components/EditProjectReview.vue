@@ -11,23 +11,22 @@
     <div class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-container">
-
           <div class="modal-header">
-            <slot v-if="review.id" name="header">              
-              Update Review Status
-            </slot>
-            <slot v-else name="header">              
-              Add New Review to Project
-            </slot>
+            <slot v-if="review.id" name="header"> Update Review Status </slot>
+            <slot v-else name="header"> Add New Review to Project </slot>
           </div>
 
           <div class="modal-body">
             <slot name="body">
               <div class="form-group row">
-                <label for="course_name" class="col-md-4 col-form-label text-md-right">Course Name</label>
+                <label
+                  for="course_name"
+                  class="col-md-4 col-form-label text-md-right"
+                  >Course Name</label
+                >
 
                 <div class="col-md-6">
-                    <input
+                  <input
                     id="course_name"
                     type="text"
                     class="form-control"
@@ -36,25 +35,37 @@
                     required
                     autofocus
                     v-model="review.course_name"
-                    />
+                  />
                 </div>
               </div>
 
               <div class="form-group row">
-                <label for="reviewer" class="col-md-4 col-form-label text-md-right">Reviewer</label>
+                <label
+                  for="reviewer"
+                  class="col-md-4 col-form-label text-md-right"
+                  >Reviewer</label
+                >
 
                 <div class="col-md-6">
-                    <select
+                  <select
                     id="reviewer"
                     class="form-control"
                     name="reviewer"
                     required
                     v-model="review.reviewer.id"
+                  >
+                    <option
+                      v-for="reviewer in reviewers"
+                      :value="reviewer.id"
+                      :key="reviewer.id"
                     >
-                    <option v-for="reviewer in reviewers" :value="reviewer.id" :key="reviewer.id">
-                        {{ reviewer.data().lastName + ", " + reviewer.data().firstName}}
-                    </option>                
-                    </select>
+                      {{
+                        reviewer.data().lastName +
+                        ", " +
+                        reviewer.data().firstName
+                      }}
+                    </option>
+                  </select>
                 </div>
               </div>
             </slot>
@@ -76,20 +87,20 @@ export default {
   name: "EditProjectReview",
   props: {
     selected_review: Object,
-    reviewers: Array
+    reviewers: Array,
   },
   data() {
-      return {
-        showModal: false,
-        review: this.selected_review
-      }
+    return {
+      showModal: false,
+      review: this.selected_review,
+    };
   },
   methods: {
     handleSubmit() {
       this.$emit("edit-review", this.review);
-      this.$emit('close');
-    }
-  }
+      this.$emit("close");
+    },
+  },
 };
 </script>
 

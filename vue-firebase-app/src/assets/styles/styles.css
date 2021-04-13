@@ -103,19 +103,15 @@ form {
 
  /* Table Info Format */
 .container-layout {
-  position:fixed;
-  left:200px;
-  width:90%;
+  width:100%;
   justify-content: center;
+  margin-left: 0 auto; margin-right: 0 auto; margin: 0 auto;
 }
 
 .scrollcontainer {
   font-family: Glacial Indifference;
-  min-width: 1000px;
-  max-width: 2000px;
-  margin-left: 685px;
-  margin-right: 685px;
-  margin: 0 auto;
+
+  margin-left: 0 auto; margin-right: 0 auto; margin: 0 auto;
 }
 
  /* Project Table Head Format */
@@ -128,6 +124,7 @@ form {
  .project-body {
   font-size: 1.1em;
   font-family: Glacial Indifference;
+  
 }
 
  /* Column Format */
@@ -186,9 +183,13 @@ td {
 /* Table */
 table {
   padding: 12px;
-  width: 100%;
   border: 1px solid #ddd;
   font-family: Glacial Indifference;
+  border-collapse:collapse;
+  border-spacing:0;
+  margin-left: 0 auto; margin-right: 0 auto; margin: 0 auto;
+  overflow: auto;
+  width: 100%;
 }
 
 /* Button */
