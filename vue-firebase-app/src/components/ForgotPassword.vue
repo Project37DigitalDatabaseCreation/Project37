@@ -23,18 +23,13 @@
                 <div class="col-12 text-center mb-4 mt-1">
                   <h5>Forgot your password?</h5>
                   <p>
-                    Please enter your email address. We will send you an email
-                    to reset your password.
+                    Please enter your email address and we will send you an
+                    email to reset your password.
                   </p>
                 </div>
               </div>
 
               <div class="form-group row">
-                <!-- <label
-                  for="email"
-                  class="col-md-4 col-form-label text-md-right mb-2"
-                  >Email:</label
-                > -->
                 <div class="col-md-2 col-form-label">
                   <label for="email">Email:</label>
                 </div>
@@ -157,5 +152,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+h5 {
+  font-family: Glacial Indifference;
+}
+</style>
 
 
