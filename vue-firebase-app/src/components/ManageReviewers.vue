@@ -48,16 +48,12 @@
                 <td>{{ reviewer.is_admin === true ? "Yes" : "No" }}</td>
                 <td>
                   <button
-                    @click="modifyReviewer(reviewer.id), (showEditModal = true)"
+                    @click="showModifyReviewerModal(reviewer.id)"
                     class="btn edit"
-                  >
-                    Modify
-                  </button>
+                  ></button>
                 </td>
                 <td>
-                  <button @click="handleDelete(reviewer.id)" class="btn delete">
-                    Delete
-                  </button>
+                  <button @click="handleDelete(reviewer.id)" class="btn delete"></button>
                 </td>
               </tr>
             </tbody>
@@ -71,6 +67,13 @@
         </div>
       </div>
     </div>
+
+    <modifyReviewerModal
+      v-if="showEditReviewerModal"
+      :passedReviewerId="this.id"
+      v-on:update-clicked="updateUserConfirmed"
+      @close="showEditReviewerModal = false"
+    />
   </div>
 </template>
 
@@ -78,12 +81,18 @@
 <script>
 import firebase from "firebase";
 import "firebase/firestore";
+import modifyReviewerModal from "@/components/ModifyReviewerModal";
 
 export default {
+  components: {
+    modifyReviewerModal,
+  },
   data() {
     return {
       reviewerData: [],
       reviewer: {},
+      showEditReviewerModal: false,
+      id: "",
     };
   },
   methods: {
@@ -101,11 +110,19 @@ export default {
       alert("todo " + reviewerId);
     },
 
-    modifyReviewer(reviewerId) {
-      this.$router.push({
-        name: "ModifyReviewer",
-        params: { passedReviewerId: reviewerId },
-      });
+    updateUserConfirmed() {
+      this.getReviewers();
+    },
+
+    showModifyReviewerModal(id) {
+      // this.$router.push({
+      //   name: "ModifyReviewer",
+      //   params: { passedReviewerId: reviewerId },
+      // });
+
+      this.id = id;
+      console.log(`The id is ${this.id}`);
+      this.showEditReviewerModal = true;
     },
 
     async getReviewers() {
