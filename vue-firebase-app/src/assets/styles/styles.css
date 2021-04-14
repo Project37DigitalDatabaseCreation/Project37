@@ -3,6 +3,7 @@
     position: relative;
     background-color: rgb(2, 2, 2);
     overflow: hidden;
+    font-family: Glacial Indifference;
   }
 
   /* Style links inside navigation bar */
@@ -15,7 +16,7 @@
     background-color: black;    
     font-size: 30px;
     color: rgb(235, 245, 243);
-    
+    font-family: Glacial Indifference;
   }
 
   /* Hover Color */
@@ -103,18 +104,17 @@ form {
 
  /* Table Info Format */
 .container-layout {
-  position:fixed;
-  left:200px;
-  width:90%;
+  width:100%;
   justify-content: center;
+  margin-left: 0 auto;
+  margin-right: 0 auto;
+  margin: 0 auto;
 }
 
 .scrollcontainer {
   font-family: Glacial Indifference;
-  min-width: 1000px;
-  max-width: 2000px;
-  margin-left: 685px;
-  margin-right: 685px;
+  margin-left: 0 auto;
+  margin-right: 0 auto;
   margin: 0 auto;
 }
 
@@ -138,9 +138,28 @@ form {
   margin-right: 140px;
 }
 
+.col-sm-2 {
+  margin-left: auto;
+  margin-right: auto;
+  font-family: Glacial Indifference;
+}
+.card {
+  min-height: 165px;
+  font-family: Glacial Indifference;
+}
+
+.card-body {
+  justify-content:center;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: auto;
+  font-family: Glacial Indifference;
+}
+
 /* Margin Radio Button */
 .radioButton {
   margin-right: 10px;
+  font-family: Glacial Indifference;
 }
 
 /* Place all buttons on same line */
@@ -165,14 +184,19 @@ th {
 /* Data Cell */
 td {
   text-align: center;
-  padding: 10px;
+  padding: 20px;
 }
 
 /* Table */
 table {
   padding: 12px;
-  width: 100%;
   border: 1px solid #ddd;
+  font-family: Glacial Indifference;
+  border-collapse:collapse;
+  border-spacing:0;
+  margin-left: 0 auto; margin-right: 0 auto; margin: 0 auto;
+  overflow: auto;
+  width: 100%;
 }
 
 /* Button */
@@ -206,14 +230,15 @@ button {
 }
 
 .modal-container {
-  width: 600px;
-  margin: 0px auto;
+  width: fit-content;
+  margin-left: 0 auto; margin-right: 0 auto; margin: 0 auto;
   padding: 20px 30px;
   background-color: #fff;
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
   font-family: Glacial Indifference;
+  overflow: hidden;
 }
 
 .modal-header h3 {

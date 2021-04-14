@@ -7,8 +7,7 @@
 -->
 
 <template>
-  <transition name="modal" style="font-size: .68em;
-  font-family: Arial, Helvetica, sans-serif;">
+  <transition name="modal">
     <div class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-container">
@@ -274,3 +273,4 @@
 </script>
 
 <style src="@vueform/multiselect/themes/default.css"></style>
+<style scoped src="../assets/styles/styles.css"></style>

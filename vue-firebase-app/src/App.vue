@@ -8,21 +8,24 @@
 <template>
     <div id="content">
         <perfect-scrollbar>
-        <navbar></navbar>
-        <main>
-            <router-view></router-view>
-        </main>
+            <navbar></navbar>
+            <NotificationBar />
+            <main>
+                <router-view></router-view>
+            </main>
         </perfect-scrollbar>
     </div>
 </template>
 
 <script>
 import navbar from './components/Navbar'
+import NotificationBar from './components/NotificationBar'
 import './assets/styles/styles.css'
 
 export default {
     components: {
-        navbar
+        navbar,
+        NotificationBar
     }
 }
 </script>
@@ -41,7 +44,7 @@ body {
 }
 
 .ps {
-  height: 200px;
+    height: 200px;
 }
 
 .loader {

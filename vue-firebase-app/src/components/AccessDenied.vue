@@ -12,7 +12,9 @@
         <div class="card">
           <div class="card-header">Access Denied</div>
           <div class="card-body">
-            <div v-if="user" class="alert alert-danger" role="alert">Insufficient Permissions</div>
+            <div v-if="user" class="alert alert-danger" role="alert">
+              Insufficient Permissions
+            </div>
           </div>
         </div>
       </div>
@@ -25,8 +27,8 @@ export default {
   computed: {
     // map `this.user` to `this.$store.getters.user`
     ...mapGetters({
-      user: "user"
-    })
-  }
+      user: "user",
+    }),
+  },
 };
 </script>

@@ -28,7 +28,6 @@
                   </p>
                 </div>
               </div>
-
               <div class="form-group row">
                 <div class="col-md-2 col-form-label">
                   <label for="email">Email:</label>
@@ -47,7 +46,6 @@
                   />
                 </div>
               </div>
-
               <div class="form-group row">
                 <div class="col text-center">
                   <button type="submit" class="btn btn-primary">
@@ -55,7 +53,6 @@
                   </button>
                 </div>
               </div>
-
               <div class="form-group row mb-0">
                 <div class="col text-center">
                   <router-link :to="{ name: 'Login' }"
@@ -74,7 +71,6 @@
                   <p>Check your email for a link to reset your password.</p>
                 </div>
               </div>
-
               <div class="form-group row mb-0">
                 <div class="col text-center">
                   <router-link :to="{ name: 'Login' }"
@@ -93,7 +89,6 @@
                   <p>{{ errorMessage.message }}</p>
                 </div>
               </div>
-
               <div class="form-group row">
                 <div class="col text-center">
                   <button
