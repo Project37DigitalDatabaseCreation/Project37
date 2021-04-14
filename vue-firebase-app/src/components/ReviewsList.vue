@@ -1,36 +1,17 @@
 <template>
   <div class="container scrollcontainer">
     <div class="card">
-      <div
-        class="card-header"
-        style="
-          display: flex;
-          justify-content: space-between;
-          flex-direction: column;
-        "
-      >
-        <div class="col-sm-12" style="display: flex">
-          <div class="col-sm-10" style="padding: 0">
-            <div style="padding-left: 122px">All Reviews</div>
-          </div>
-          <div class="col-sm-2" style="padding: 0">
-            <span
-              style="
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                flex-direction: column;
-              "
-            >
-              <button
-                :disabled="!sortedStandards"
-                class="btn btn-primary"
-                @click="goToCreate"
-              >
-                Create Review
-              </button>
-            </span>
-          </div>
+      <div class="card-header">
+        Reviews
+        <div style="float: right">
+          <button
+            :disabled="!sortedStandards"
+            class="btn btn-sm"
+            style="margin-right: 4px; background-color: #49703b"
+            @click="goToCreate"
+          >
+            Create Review
+          </button>
         </div>
         <div
           v-if="!sortedStandards"
