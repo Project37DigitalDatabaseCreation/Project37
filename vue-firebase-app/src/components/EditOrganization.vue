@@ -11,23 +11,22 @@
     <div class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-container">
-
           <div class="modal-header">
-            <slot v-if="org.id" name="header">              
-              Update Organization
-            </slot>
-            <slot v-else name="header">              
-              Add New Organization
-            </slot>
+            <slot v-if="org.id" name="header"> Update Organization </slot>
+            <slot v-else name="header"> Add New Organization </slot>
           </div>
 
           <div class="modal-body">
             <slot name="body">
               <div class="form-group row">
-                <label for="course_name" class="col-md-4 col-form-label text-md-right">Organization Title</label>
+                <label
+                  for="course_name"
+                  class="col-md-4 col-form-label text-md-right"
+                  >Organization Title</label
+                >
 
                 <div class="col-md-6">
-                    <input
+                  <input
                     id="title"
                     type="text"
                     class="form-control"
@@ -36,7 +35,7 @@
                     required
                     autofocus
                     v-model="org.title"
-                    />
+                  />
                 </div>
               </div>
             </slot>
@@ -44,8 +43,12 @@
 
           <div class="modal-footer">
             <slot name="footer">
-              <button class="btn btn-primary" @click="handleSubmit()">Save</button>
-              <button class="btn btn-primary" @click="$emit('close')">Cancel</button>
+              <button class="btn btn-primary" @click="handleSubmit()">
+                Save
+              </button>
+              <button class="btn btn-primary" @click="$emit('close')">
+                Cancel
+              </button>
             </slot>
           </div>
         </div>
@@ -57,20 +60,20 @@
 export default {
   name: "EditOrganization",
   props: {
-    selected_org: Object
+    selected_org: Object,
   },
   data() {
-      return {
-        showModal: false,
-        org: this.selected_org
-      }
+    return {
+      showModal: false,
+      org: this.selected_org,
+    };
   },
   methods: {
     handleSubmit() {
       this.$emit("edit-org", this.org);
-      this.$emit('close');
-    }
-  }
+      this.$emit("close");
+    },
+  },
 };
 </script>
 <style scoped>

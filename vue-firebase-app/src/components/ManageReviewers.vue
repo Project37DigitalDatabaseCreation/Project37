@@ -15,21 +15,21 @@
 <template>
   <div class="container scrollcontainer">
     <div class="container-layout">
-      <div class="col-md-10">
-        <div class="card">
-          <div class="card-header">
-            Reviewers
-            <div style="float: right">
-              <button
-                type="button"
-                class="btn btn-sm"
-                @click.prevent="AddReviewer"
-                style="float: right margin-right:4px; background-color:  #49703b;"
-              >
-                + Add Reviewer
-              </button>
-            </div>
+      <div class="card">
+        <div class="card-header">
+          Reviewers
+          <div style="float: right">
+            <button
+              type="button"
+              class="btn btn-sm"
+              @click.prevent="AddReviewer"
+              style="float: right margin-right:4px; background-color:  #49703b;"
+            >
+              + Add Reviewer
+            </button>
           </div>
+        </div>
+        <div class="table-responsive">
           <table class="table">
             <thead class="project-head">
               <tr>
@@ -48,32 +48,28 @@
                 <td>{{ reviewer.is_admin === true ? "Yes" : "No" }}</td>
                 <td>
                   <button
-                    @click="showModifyReviewerModal(reviewer.id)"
+                    @click="modifyReviewer(reviewer.id), (showEditModal = true)"
                     class="btn edit"
                   ></button>
                 </td>
                 <td>
-                  <button @click="handleDelete(reviewer.id)" class="btn delete"></button>
+                  <button
+                    @click="handleDelete(reviewer.id)"
+                    class="btn delete"
+                  ></button>
                 </td>
               </tr>
             </tbody>
           </table>
-          <!-- <div class="paginationContainer">
+        </div>
+        <!-- <div class="paginationContainer">
       <p>
         <button class="btn" @click="prevPage">Previous</button>
         <button class="btn" @click="nextPage">Next</button>
       </p>
     </div> -->
-        </div>
       </div>
     </div>
-
-    <modifyReviewerModal
-      v-if="showEditReviewerModal"
-      :passedReviewerId="this.id"
-      v-on:update-clicked="updateUserConfirmed"
-      @close="showEditReviewerModal = false"
-    />
   </div>
 </template>
 
@@ -81,18 +77,12 @@
 <script>
 import firebase from "firebase";
 import "firebase/firestore";
-import modifyReviewerModal from "@/components/ModifyReviewerModal";
 
 export default {
-  components: {
-    modifyReviewerModal,
-  },
   data() {
     return {
       reviewerData: [],
       reviewer: {},
-      showEditReviewerModal: false,
-      id: "",
     };
   },
   methods: {
@@ -110,19 +100,11 @@ export default {
       alert("todo " + reviewerId);
     },
 
-    updateUserConfirmed() {
-      this.getReviewers();
-    },
-
-    showModifyReviewerModal(id) {
-      // this.$router.push({
-      //   name: "ModifyReviewer",
-      //   params: { passedReviewerId: reviewerId },
-      // });
-
-      this.id = id;
-      console.log(`The id is ${this.id}`);
-      this.showEditReviewerModal = true;
+    modifyReviewer(reviewerId) {
+      this.$router.push({
+        name: "ModifyReviewer",
+        params: { passedReviewerId: reviewerId },
+      });
     },
 
     async getReviewers() {
