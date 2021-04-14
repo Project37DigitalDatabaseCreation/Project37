@@ -18,6 +18,7 @@ import ClientDashboard from '../components/ClientDashboard'
 import ReviewerDashboard from '../components/ReviewerDashboard'
 import ProjectReviews from '../components/ProjectReviews'
 import AddReviewer from '../components/AddReviewer'
+import ModifyReviewer from '../components/ModifyReviewer'
 import CurrentProjects from '../components/CurrentProjects'
 import ViewProject from '../components/ViewProject'
 import ManageReviewers from '../components/ManageReviewers'
@@ -25,6 +26,8 @@ import ManageClients from '../components/ManageClients'
 import Organizations from '../components/Organizations'
 import store from '../store/index'
 import ForgotPassword from '../components/ForgotPassword'
+import ManageStandards from '../components/ManageStandards'
+import ManageGeneralStandards from '../components/ManageGeneralStandards'
 
 const routes = [
   {
@@ -131,7 +134,12 @@ const routes = [
   {
     path: '/managereviewers',
     name: 'ManageReviewers',
-    component: ManageReviewers,
+    component: ManageReviewers, children: [
+
+
+      { path: '/modifyreviewer', name: 'ModifyReviewer', component: ModifyReviewer, props: true }
+
+    ],
     meta: {
       requiresAdmin: true
     }
@@ -154,6 +162,15 @@ const routes = [
     },
   },
   {
+    path: '/modifyreviewer',
+    name: 'ModifyReviewer',
+    component: ModifyReviewer,
+    props: true,
+    meta: {
+      requiresAdmin: true
+    }
+  },
+  {
     path: '/organizations',
     name: 'Organizations',
     component: Organizations,
@@ -165,8 +182,23 @@ const routes = [
     path: '/forgotpassword',
     name: 'ForgotPassword',
     component: ForgotPassword,
+  },
+  {
+    path: '/standards',
+    name: 'ManageStandards',
+    component: ManageStandards,
+    meta: {
+        requiresAdmin: true
+    }
+  },
+  {
+    path: '/general-standards',
+    name: 'ManageGeneralStandards',
+    component: ManageGeneralStandards,
+    meta: {
+        requiresAdmin: true
+    }
   }
-
 ]
 
 const router = createRouter({
