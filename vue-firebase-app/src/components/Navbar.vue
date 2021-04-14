@@ -137,16 +137,6 @@ export default {
           hidden: !this.user.isAdmin,
         },
         {
-          link: "/addreviewer",
-          name: "Add Reviewer",
-          hidden: !this.user.isAdmin,
-        },
-        {
-          link: "/modifyreviewer",
-          name: "Modify Reviewers",
-          hidden: !this.user.isAdmin,
-        },
-        {
           link: "/managereviewers",
           name: "Manage Reviewers",
           hidden: !this.user.isAdmin,
@@ -159,6 +149,16 @@ export default {
         {
           link: "/currentprojects",
           name: "Current Projects",
+          hidden: !this.user.isAdmin,
+        },
+        {
+          link: "/standards",
+          name: "Manage Standards",
+          hidden: !this.user.isAdmin,
+        },
+        {
+          link: "/general-standards",
+          name: "Manage General Standards",
           hidden: !this.user.isAdmin,
         },
         {

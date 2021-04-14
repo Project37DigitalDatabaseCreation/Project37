@@ -1,14 +1,12 @@
 <!--
-* AddReviewer.vue
+* ManageReviewers.vue
 *
 * Author: Ben McElyea
 * Date: January 2021
 *
 * Description: Component to manage reviewers in the system. 
-* This is the main landing page to manage reviewers
-*
-*
-* This component is the parent of the ReviewerList.vue component. 
+* This is the main landing page to manage reviewers. It displays a table of 
+* reviewers loaded from the Firestore "Reviewers"
 *
 -->
 
@@ -48,15 +46,24 @@
                 <td>{{ reviewer.is_admin === true ? "Yes" : "No" }}</td>
                 <td>
                   <button
-                    @click="modifyReviewer(reviewer.id), (showEditModal = true)"
+                    @click="showModifyReviewerModal(reviewer.id)"
                     class="btn edit"
                   ></button>
                 </td>
                 <td>
                   <button
-                    @click="handleDelete(reviewer.id)"
+                    @click="
+                      showDeleteUserModal(
+                        reviewer.first_name + ' ' + reviewer.last_name,
+                        reviewer.email,
+                        reviewer.id,
+                        index
+                      )
+                    "
                     class="btn delete"
-                  ></button>
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             </tbody>
@@ -70,6 +77,27 @@
     </div> -->
       </div>
     </div>
+
+    <!-- Modal that is loaded when the users clicks on the edit icon -->
+    <modifyReviewerModal
+      v-if="showEditReviewerModal"
+      :passedReviewerId="this.id"
+      v-on:update-clicked="refreshTable"
+      @close="showEditReviewerModal = false"
+    />
+
+    <!-- Modal that is loaded when the users clicks on the Delete icon -->
+    <deleteReviewerModal
+      v-if="showDeleteReviewerModal"
+      v-on:ok-click="deleteUserConfirmed"
+      :passedMessage="
+        this.deleteModalMessage1 +
+        this.selectedReviewerName +
+        this.deleteModalMessage2
+      "
+      :passedMessageTitle="this.modalMessageTitle"
+      @close="showDeleteReviewerModal = false"
+    />
   </div>
 </template>
 
@@ -77,12 +105,28 @@
 <script>
 import firebase from "firebase";
 import "firebase/firestore";
+import modifyReviewerModal from "@/components/ModifyReviewerModal";
+import deleteReviewerModal from "@/components/DeleteReviewerModal";
 
 export default {
+  components: {
+    modifyReviewerModal,
+    deleteReviewerModal,
+  },
   data() {
     return {
-      reviewerData: [],
+      reviewerData: [], //Used to populate the table
       reviewer: {},
+      showEditReviewerModal: false,
+      showDeleteReviewerModal: false,
+      id: "",
+      selectedReviewerName: "", // Used to pass the name of the selected user to the delete modal
+      selectedReviewerEmail: "",
+      selectedReviewerID: "",
+      selectedReviewerIndex: "",
+      deleteModalMessage1: "Are you sure you want to delete the user ",
+      deleteModalMessage2: "? This action cannot be undone",
+      modalMessageTitle: "Are you sure?",
     };
   },
   methods: {
@@ -90,21 +134,48 @@ export default {
       this.$router.push({ name: "AddReviewer" });
     },
 
-    prevPage() {
-      alert("TODO - previous page");
-    },
-    nextPage() {
-      alert("TODO - next page");
-    },
-    handleDelete(reviewerId) {
-      alert("todo " + reviewerId);
+    refreshTable() {
+      this.getReviewers();
     },
 
-    modifyReviewer(reviewerId) {
-      this.$router.push({
-        name: "ModifyReviewer",
-        params: { passedReviewerId: reviewerId },
-      });
+    //User clicked on the Delete icon
+    showDeleteUserModal(name, email, id, index) {
+      this.selectedReviewerName = name;
+      this.selectedReviewerEmail = email;
+      this.selectedReviewerID = id;
+      this.selectedReviewerIndex = index;
+      this.showDeleteReviewerModal = true;
+    },
+
+    //User confirmed they want to delete the user
+    async deleteUserConfirmed() {
+      //Get reference to cloud function to delete user
+      const deleteReviewer_ref = firebase
+        .functions()
+        .httpsCallable("deleteReviewer");
+
+      //Call cloud function to delete the reviewer from the Firebase *AUTH DB*
+      await deleteReviewer_ref({
+        uid: this.selectedReviewerID,
+        email: this.selectedReviewerEmail,
+      })
+        .then(() => {
+          //Delete reviewer from the *REVIEWERS COLLECTION*
+          firebase
+            .firestore()
+            .collection("Reviewers")
+            .doc(this.selectedReviewerID)
+            .delete();
+
+          //Remove the reviewer from the table array which causes the table to update
+          this.reviewerData.splice(this.selectedReviewerIndex, 1);
+        })
+        .catch((err) => alert(err));
+    },
+
+    showModifyReviewerModal(id) {
+      this.id = id;
+      this.showEditReviewerModal = true;
     },
 
     async getReviewers() {
@@ -126,12 +197,11 @@ export default {
           });
         });
       } catch (err) {
-        console.log(err);
+        alert(err);
       }
     },
   },
   mounted() {
-    // console.log("In mount");
     this.getReviewers();
   },
 };

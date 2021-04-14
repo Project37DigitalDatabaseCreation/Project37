@@ -28,7 +28,11 @@
           </div>
           <div class="modal-footer">
             <slot name="footer">
-              <button class="btn btn-primary" @click="cancelClicked()">
+              <button
+                class="btn btn-md"
+                style="background-color: #49703b"
+                @click="cancelClicked()"
+              >
                 Cancel
               </button>
               <button class="btn btn-danger" @click="okClicked()">
