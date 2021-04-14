@@ -15,22 +15,25 @@
     <div class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-container">
-
           <div class="modal-header">
-            <h3>{{passedMessageTitle}}</h3>
+            <h3>{{ passedMessageTitle }}</h3>
           </div>
 
           <div class="modal-body">
             <slot name="body">
-              <div class="form-group row justify-content-center" >
-                <p>{{passedMessage}}</p>
+              <div class="form-group row justify-content-center">
+                <p>{{ passedMessage }}</p>
               </div>
             </slot>
           </div>
           <div class="modal-footer">
             <slot name="footer">
-              <button class="btn btn-primary" @click="cancelClicked()">Cancel</button>
-                      <button class="btn btn-danger" @click="okClicked()">Delete</button>
+              <button class="btn btn-primary" @click="cancelClicked()">
+                Cancel
+              </button>
+              <button class="btn btn-danger" @click="okClicked()">
+                Delete
+              </button>
             </slot>
           </div>
         </div>
@@ -40,31 +43,26 @@
 </template>
 <script>
 export default {
-
-  emits: ['ok-click', 'close'],
+  emits: ["ok-click", "close"],
   props: {
     passedMessage: String,
     passedMessageTitle: String,
-
-
   },
   data() {
-      return {
-        showModal: false,
-
-      }
+    return {
+      showModal: false,
+    };
   },
   methods: {
     okClicked() {
-      this.$emit('ok-click');
-      this.$emit('close');
+      this.$emit("ok-click");
+      this.$emit("close");
     },
 
-    cancelClicked(){
-
-      this.$emit('close');
-    }
-  }
+    cancelClicked() {
+      this.$emit("close");
+    },
+  },
 };
 </script>
 <style scoped>
@@ -98,8 +96,7 @@ export default {
 
 .modal-header h3 {
   margin-top: 0;
-  
-  }
+}
 
 .modal-body {
   margin: 20px 0;
