@@ -20,7 +20,7 @@
             <div v-if="error" class="alert alert-danger">{{ error }}</div>
             <form action="#" @submit.prevent="submit">
               <div class="row justify-content-center">
-                <div class="col-8 text-center mb-4 mt-1">
+                <div class="col-12 text-center mb-4 mt-1">
                   <h5>Forgot your password?</h5>
                   <p>
                     Please enter your email address. We will send you an email
@@ -30,13 +30,16 @@
               </div>
 
               <div class="form-group row">
-                <label
+                <!-- <label
                   for="email"
                   class="col-md-4 col-form-label text-md-right mb-2"
                   >Email:</label
-                >
+                > -->
+                <div class="col-md-2 col-form-label">
+                  <label for="email">Email:</label>
+                </div>
 
-                <div class="col-md-5">
+                <div class="col-md-8">
                   <input
                     id="email"
                     type="email"

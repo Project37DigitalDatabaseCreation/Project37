@@ -18,7 +18,6 @@ import ClientDashboard from '../components/ClientDashboard'
 import ReviewerDashboard from '../components/ReviewerDashboard'
 import ProjectReviews from '../components/ProjectReviews'
 import AddReviewer from '../components/AddReviewer'
-import ModifyReviewer from '../components/ModifyReviewer'
 import CurrentProjects from '../components/CurrentProjects'
 import ViewProject from '../components/ViewProject'
 import ManageReviewers from '../components/ManageReviewers'
@@ -132,12 +131,7 @@ const routes = [
   {
     path: '/managereviewers',
     name: 'ManageReviewers',
-    component: ManageReviewers, children: [
-
-
-      { path: '/modifyreviewer', name: 'ModifyReviewer', component: ModifyReviewer, props: true }
-
-    ],
+    component: ManageReviewers,
     meta: {
       requiresAdmin: true
     }
@@ -158,15 +152,6 @@ const routes = [
     meta: {
       requiresAuth: true
     },
-  },
-  {
-    path: '/modifyreviewer',
-    name: 'ModifyReviewer',
-    component: ModifyReviewer,
-    props: true,
-    meta: {
-      requiresAdmin: true
-    }
   },
   {
     path: '/organizations',
