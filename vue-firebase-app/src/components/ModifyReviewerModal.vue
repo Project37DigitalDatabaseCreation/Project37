@@ -114,16 +114,12 @@
 <script>
 import firebase from "firebase";
 import "firebase/firestore";
-// import modal from "@/components/DeleteReviewerModal";
 
 export default {
-  components: {
-    // modal,
-  },
   emits: ["update-clicked", "close"],
   props: {
     // The Firestore doc id of the reviewer is passed into this prop
-    // when the user is clicked on in the ReviewerList.vue table
+    // when the user is clicked on in the ModifyReviewer.vue table
     passedReviewerId: {
       type: String, //The Firestore doc id of the reviewer
     },
@@ -136,10 +132,7 @@ export default {
         email: "",
         isAdmin: "",
       },
-      showModal: false,
       error: null,
-      modalMessage: "Are you sure you want to delete the user ",
-      modalMessageTitle: "Are you sure?",
       isAdminSet: false,
     };
   },
@@ -147,10 +140,6 @@ export default {
   methods: {
     //Method to modify a existing user
     async updateClicked() {
-      // console.log("Update clicked");
-
-      console.log(`isAdmin is set to ${this.form.isAdmin}`);
-
       if (this.form.isAdmin === "yes") {
         this.isAdminSet = true;
       } else {
@@ -169,7 +158,7 @@ export default {
         .collection("Reviewers")
         .doc(this.passedReviewerId)
         .set(modifiedUser);
-      console.log(modifiedUser);
+
       this.$emit("update-clicked");
       this.$emit("close");
       // this.returnToPreviousScreen();
@@ -201,44 +190,9 @@ export default {
           this.form.isAdmin = "no";
         }
       } catch (err) {
-        console.log(err);
+        alert(err);
       }
     },
-
-    //User clicked the delete user button
-    showDeleteUserModal() {
-      this.showModal = true;
-    },
-
-    async deleteUserConfirmed() {
-      // console.log(
-      //   "Function called to delete the user " + this.passedReviewerId
-      // );
-      //Get reference to cloud function to delete user
-      const deleteReviewer_ref = firebase
-        .functions()
-        .httpsCallable("deleteReviewer");
-
-      //Call cloud function to delete the reviewer from the Firebase auth db
-      await deleteReviewer_ref({
-        uid: this.passedReviewerId,
-        email: this.form.email,
-      })
-        .then(() => {
-          // console.log(result);
-
-          //Delete reviewer from reviewers collection
-          firebase
-            .firestore()
-            .collection("Reviewers")
-            .doc(this.passedReviewerId)
-            .delete();
-
-          //Return to review list screen
-          this.returnToPreviousScreen();
-        })
-        .catch((err) => alert(err));
-    }, //User confirmed they want to delete the user
   },
 
   // This method runs on page load.

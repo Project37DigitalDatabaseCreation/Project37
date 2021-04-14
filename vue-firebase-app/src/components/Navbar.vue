@@ -137,16 +137,6 @@ export default {
           hidden: !this.user.isAdmin,
         },
         {
-          link: "/addreviewer",
-          name: "Add Reviewer",
-          hidden: !this.user.isAdmin,
-        },
-        {
-          link: "/modifyreviewer",
-          name: "Modify Reviewers",
-          hidden: !this.user.isAdmin,
-        },
-        {
           link: "/managereviewers",
           name: "Manage Reviewers",
           hidden: !this.user.isAdmin,
