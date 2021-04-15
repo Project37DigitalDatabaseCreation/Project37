@@ -146,21 +146,34 @@ export default {
         this.isAdminSet = false;
       }
 
-      let modifiedUser = {
-        firstName: this.form.fname,
-        lastName: this.form.lname,
+      const updateReviewerRef = firebase
+        .functions()
+        .httpsCallable("updateReviewer");
+
+      await updateReviewerRef({
+        uid: this.passedReviewerId,
         email: this.form.email,
-        isAdmin: this.isAdminSet,
-      };
+        name: this.form.firstName + " " + this.form.lastName,
+      })
+        .then(() => {
+          let modifiedUser = {
+            firstName: this.form.fname,
+            lastName: this.form.lname,
+            email: this.form.email,
+            isAdmin: this.isAdminSet,
+          };
 
-      await firebase
-        .firestore()
-        .collection("Reviewers")
-        .doc(this.passedReviewerId)
-        .set(modifiedUser);
+          firebase
+            .firestore()
+            .collection("Reviewers")
+            .doc(this.passedReviewerId)
+            .set(modifiedUser);
 
-      this.$emit("update-clicked");
-      this.$emit("close");
+          this.$emit("update-clicked");
+          this.$emit("close");
+        })
+        .catch((err) => alert(err));
+
       // this.returnToPreviousScreen();
     },
 
