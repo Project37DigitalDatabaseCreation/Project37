@@ -7,11 +7,21 @@
 -->
 
 <template>
-  <div class="container scrollcontainer">
-    <div class="row justify-content-center" style="font-family: Glacial Indifference;">
+  <div class="container">
+    <span style="color: red">{{ error }}</span>
+    <div
+      class="row"
+      style="
+        font-family: Glacial Indifference;
+        float: center;
+        margin-left: 0 auto;
+        margin-right: 0 auto;
+        margin: 0 auto;
+      "
+    >
       <div class="col-sm-2">
         <div class="card">
-          <div class="card-body" style="justify-content:center; text-align: center;">
+          <div class="card-body">
             <h5 class="card-title">Reviews in Progress</h5>
             <h1>{{ in_progress_reviews.length }}</h1>
           </div>
@@ -19,7 +29,7 @@
       </div>
       <div class="col-sm-2">
         <div class="card">
-          <div class="card-body" style="justify-content:center; text-align: center;">
+          <div class="card-body">
             <h5 class="card-title">Reviews Completed</h5>
             <h1>{{ completed_reviews.length }}</h1>
           </div>
@@ -27,7 +37,7 @@
       </div>
       <div class="col-sm-2">
         <div class="card">
-          <div class="card-body" style="justify-content:center; text-align: center;">
+          <div class="card-body">
             <h5 class="card-title">Reviews in Project</h5>
             <h1>{{ reviews_in_project.length }}</h1>
           </div>
@@ -35,15 +45,15 @@
       </div>
       <div class="col-sm-2">
         <div class="card">
-          <div class="card-body" style="justify-content:center; text-align: center;">
+          <div class="card-body">
             <h5 class="card-title">% Project Complete</h5>
             <h1>{{ percentage_completed }}%</h1>
           </div>
         </div>
       </div>
     </div>
-    <div class="row">
-      <h4 class="mt-4 text-center">Reviews:</h4>
+    <h4 class="mt-4 text-center">Reviews:</h4>
+    <div class="table-responsive">
       <table class="table mt-5">
         <thead>
           <tr>
@@ -75,105 +85,101 @@
 </template>
 
 <script>
-  import { computed, ref } from 'vue'
-  import firebase from 'firebase'
-  import 'firebase/firestore'
-  import { useRouter } from 'vue-router'
-  export default {
-    setup() {
-      const router = useRouter()
-      const clientEmail = firebase.auth().currentUser.email
-      const reviews_in_project = ref([])
-      const in_progress_reviews = computed(() =>
-        reviews_in_project.value.filter((review) =>
-          review.status.includes('In-Progress')
-        )
+import { computed, ref } from "vue";
+import firebase from "firebase";
+import "firebase/firestore";
+import { useRouter } from "vue-router";
+export default {
+  setup() {
+    const router = useRouter();
+    const clientEmail = firebase.auth().currentUser.email;
+    const reviews_in_project = ref([]);
+    const in_progress_reviews = computed(() =>
+      reviews_in_project.value.filter((review) =>
+        review.status.includes("In-Progress")
       )
-      const completed_reviews = computed(() =>
-        reviews_in_project.value.filter((review) =>
-          review.status.includes('Complete')
-        )
+    );
+    const completed_reviews = computed(() =>
+      reviews_in_project.value.filter((review) =>
+        review.status.includes("Complete")
       )
-      const projectIds = []
-      const percentage_completed = computed(() =>
-        Math.round(
-          (completed_reviews.value.length / reviews_in_project.value.length) *
-            100
-        )
+    );
+    const projectIds = [];
+    const percentage_completed = computed(() =>
+      Math.round(
+        (completed_reviews.value.length / reviews_in_project.value.length) * 100
       )
-      let error = ref(null)
-      let projects = {}
-      const getProjectsByClient = async () => {
-        const res = await firebase
+    );
+    let error = ref(null);
+    let projects = {};
+    const getProjectsByClient = async () => {
+      const res = await firebase.firestore().collection("Projects").get();
+      // map projects to isolate email and user id
+      projects.value = res.docs.map((doc) => {
+        return {
+          email: doc.data().clients.map((client) => client.email),
+          id: doc.id,
+        };
+      });
+      // return array of project ids that the current client is
+      // associated with as an array
+      projects.value.forEach((client) => {
+        if (client.email.includes(clientEmail)) {
+          projectIds.push(client.id);
+        }
+      });
+      // gather reviews by project reference
+      const loadReviews = async (projectReference) => {
+        const project_ref = firebase
           .firestore()
-          .collection('Projects')
-          .get()
-        // map projects to isolate email and user id
-        projects.value = res.docs.map((doc) => {
-          return {
-            email: doc.data().clients.map((client) => client.email),
-            id: doc.id,
-          }
-        })
-        // return array of project ids that the current client is
-        // associated with as an array
-        projects.value.forEach((client) => {
-          if (client.email.includes(clientEmail)) {
-            projectIds.push(client.id)
-          }
-        })
-        // gather reviews by project reference
-        const loadReviews = async (projectReference) => {
-          const project_ref = firebase
+          .collection("Projects")
+          .doc(projectReference);
+        const review = ref();
+        try {
+          const res = await firebase
             .firestore()
-            .collection('Projects')
-            .doc(projectReference)
-          const review = ref()
-          try {
-            const res = await firebase
-              .firestore()
-              .collection('Reviews')
-              .where('project_ref', '==', project_ref)
-              .get()
-            review.value = res.docs.map((doc) => {
-              return { ...doc.data(), id: doc.id }
-            })
-          } catch (error) {
-            error.value = error.message
-          }
-          return (reviews_in_project.value = reviews_in_project.value.concat(
-            review.value
-          ))
+            .collection("Reviews")
+            .where("project_ref", "==", project_ref)
+            .get();
+          review.value = res.docs.map((doc) => {
+            return { ...doc.data(), id: doc.id };
+          });
+        } catch (error) {
+          error.value = error.message;
         }
-        // load all the reviews by looping throught the aggregated
-        // ids and waiting for their Promise to return
-        const loadAllReviews = async (ids) => {
-          for await (const id of ids) {
-            loadReviews(id)
-          }
+        return (reviews_in_project.value = reviews_in_project.value.concat(
+          review.value
+        ));
+      };
+      // load all the reviews by looping throught the aggregated
+      // ids and waiting for their Promise to return
+      const loadAllReviews = async (ids) => {
+        for await (const id of ids) {
+          loadReviews(id);
         }
-        loadAllReviews(projectIds)
-      }
-      getProjectsByClient()
-      const openReview = (reviewId) => {
-        router.push({
-          name: 'Review',
-          params: { review: reviewId },
-        })
-      }
-      return {
-        in_progress_reviews,
-        reviews_in_project,
-        percentage_completed,
-        projectIds,
-        error,
-        projects,
-        openReview,
-        router,
-        completed_reviews,
-      }
-    },
-  }
+      };
+      loadAllReviews(projectIds);
+    };
+    getProjectsByClient();
+    const openReview = (reviewId) => {
+      router.push({
+        name: "Review",
+        params: { review: reviewId },
+      });
+    };
+    return {
+      in_progress_reviews,
+      reviews_in_project,
+      percentage_completed,
+      projectIds,
+      error,
+      projects,
+      openReview,
+      router,
+      completed_reviews,
+    };
+  },
+};
 </script>
 
 <style scoped src="../assets/styles/styles.css"></style>

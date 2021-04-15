@@ -20,23 +20,20 @@
             <div v-if="error" class="alert alert-danger">{{ error }}</div>
             <form action="#" @submit.prevent="submit">
               <div class="row justify-content-center">
-                <div class="col-8 text-center mb-4 mt-1">
+                <div class="col-12 text-center mb-4 mt-1">
                   <h5>Forgot your password?</h5>
                   <p>
-                    Please enter your email address. We will send you an email
-                    to reset your password.
+                    Please enter your email address and we will send you an
+                    email to reset your password.
                   </p>
                 </div>
               </div>
-
               <div class="form-group row">
-                <label
-                  for="email"
-                  class="col-md-4 col-form-label text-md-right mb-2"
-                  >Email:</label
-                >
+                <div class="col-md-2 col-form-label">
+                  <label for="email">Email:</label>
+                </div>
 
-                <div class="col-md-5">
+                <div class="col-md-8">
                   <input
                     id="email"
                     type="email"
@@ -49,7 +46,6 @@
                   />
                 </div>
               </div>
-
               <div class="form-group row">
                 <div class="col text-center">
                   <button type="submit" class="btn btn-primary">
@@ -57,7 +53,6 @@
                   </button>
                 </div>
               </div>
-
               <div class="form-group row mb-0">
                 <div class="col text-center">
                   <router-link :to="{ name: 'Login' }"
@@ -76,7 +71,6 @@
                   <p>Check your email for a link to reset your password.</p>
                 </div>
               </div>
-
               <div class="form-group row mb-0">
                 <div class="col text-center">
                   <router-link :to="{ name: 'Login' }"
@@ -95,7 +89,6 @@
                   <p>{{ errorMessage.message }}</p>
                 </div>
               </div>
-
               <div class="form-group row">
                 <div class="col text-center">
                   <button
@@ -154,5 +147,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+h5 {
+  font-family: Glacial Indifference;
+}
+</style>
 
 
