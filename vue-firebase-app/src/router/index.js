@@ -26,7 +26,6 @@ import ManageClients from '../components/ManageClients'
 import Organizations from '../components/Organizations'
 import store from '../store/index'
 import ForgotPassword from '../components/ForgotPassword'
-import ReviewToPDF from '../components/ReviewToPDF'
 import ManageStandards from '../components/ManageStandards'
 import ManageGeneralStandards from '../components/ManageGeneralStandards'
 
@@ -185,9 +184,6 @@ const routes = [
     component: ForgotPassword,
   },
   {
-    path: '/reviewtopdf',
-    name: 'ReviewToPDF',
-    component: ReviewToPDF
     path: '/standards',
     name: 'ManageStandards',
     component: ManageStandards,
