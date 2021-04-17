@@ -1,6 +1,6 @@
 <template>
   <div class="container scrollcontainer">
-    <div class="card">
+    <div class="card" style="margin-right: -15px; margin-left: -15px">
       <div class="card-header">
         Reviews
         <div style="float: right">

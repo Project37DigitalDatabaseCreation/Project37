@@ -12,7 +12,7 @@
 <template>
   <transition
     name="modal"
-    style="font-size: 0.68em; font-family: Arial, Helvetica, sans-serif"
+    style="font-size: 0.68em; font-family: Calibri;"
   >
     <div class="modal-mask">
       <div class="modal-wrapper">

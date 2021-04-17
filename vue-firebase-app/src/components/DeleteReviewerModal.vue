@@ -18,7 +18,6 @@
           <div class="modal-header">
             <h3>{{ passedMessageTitle }}</h3>
           </div>
-
           <div class="modal-body">
             <slot name="body">
               <div class="form-group row justify-content-center">

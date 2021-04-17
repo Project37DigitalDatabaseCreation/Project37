@@ -22,7 +22,6 @@
               class="col-md-4 col-form-label text-md-right"
               >First Name</label
             >
-
             <div class="col-md-6">
               <input
                 id="fname"
@@ -36,12 +35,10 @@
               />
             </div>
           </div>
-
           <div class="form-group row">
             <label for="Last Name" class="col-md-4 col-form-label text-md-right"
               >Last Name</label
             >
-
             <div class="col-md-6">
               <input
                 id="lname"
@@ -55,12 +52,10 @@
               />
             </div>
           </div>
-
           <div class="form-group row">
             <label for="email" class="col-md-4 col-form-label text-md-right"
               >Email</label
             >
-
             <div class="col-md-6">
               <input
                 id="email"
@@ -74,12 +69,10 @@
               />
             </div>
           </div>
-
           <div class="form-group row">
             <label for="password" class="col-md-4 col-form-label text-md-right"
               >Password</label
             >
-
             <div class="col-md-6">
               <input
                 id="password"
@@ -91,7 +84,6 @@
               />
             </div>
           </div>
-
           <div class="form-group row">
             <label for="password" class="col-md-6 col-form-label text-md-right"
               >Administrator Access</label
@@ -118,9 +110,8 @@
               <br />
             </div>
           </div>
-
           <div class="form-group row">
-            <button type="submit" class="btn save">Create Reviewer</button>
+            <button type="submit" class="btn save">Create</button>
             &nbsp;
             <button
               type="button"
@@ -135,7 +126,6 @@
     </div>
   </div>
 </template>
-
 
 <script>
 import firebase from "firebase";

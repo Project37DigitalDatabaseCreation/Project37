@@ -30,7 +30,6 @@
                   />
                 </div>
               </div>
-
               <div class="form-group row">
                 <label class="col-md-4 col-form-label text-md-right"
                   >Description</label
@@ -46,7 +45,6 @@
                   />
                 </div>
               </div>
-
               <div class="form-group row">
                 <label class="col-md-4 col-form-label text-md-right"
                   >Organization</label
@@ -67,7 +65,6 @@
                   </select>
                 </div>
               </div>
-
               <div class="form-group row">
                 <label class="col-md-4 col-form-label text-md-right"
                   >Clients</label
@@ -104,7 +101,6 @@
               </div>
             </slot>
           </div>
-
           <div class="modal-footer">
             <slot name="footer">
               <button class="btn save" @click="handleSubmit(), $emit('close')">

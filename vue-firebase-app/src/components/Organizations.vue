@@ -7,45 +7,60 @@
 -->
 
 <template>
-  <div class="container">
-    <h1 class="mt-4 text-center">Organizations</h1>
-    <span style="color: red">{{ error }}</span>
-    <div>
-      <button class="btn btn-primary" id="show-modal" @click="populatePopOut()">
-        Add New Organization
-      </button>
+  <div class="container scrollcontainer">
+    <div class="card" style="margin-right: 15px">
+      <span style="color: red">{{ error }}</span>
+      <div class="card-header justify-content-center">
+        Organizations
+        <div style="float: right">
+          <button
+            class="btn btn-sm"
+            id="show-modal"
+            style="background-color: #49703b; margin-left: 5px;"
+            @click="populatePopOut()"
+          >
+            Add New Organization
+          </button>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table">
+          <thead class="project-head">
+            <tr>
+              <th scope="col" style="text-align: center">Title</th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody class="project-body">
+            <tr v-for="org in organizations" :key="org.id">
+              <td>{{ org.title }}</td>
+              <td>
+                <button
+                  title="edit"
+                  class="btn edit"
+                  @click="populatePopOut(org)"
+                ></button>
+              </td>
+              <td>
+                <button
+                  title="delete"
+                  class="btn delete"
+                  @click="deleteOrg(org)"
+                ></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- use the modal component, pass in the prop -->
+      <modal
+        v-if="showModal"
+        v-on:edit-org="submitEdit"
+        :selected_org="this.selected_org"
+        @close="showModal = false"
+      />
     </div>
-    <table class="table mt-5">
-      <thead>
-        <tr>
-          <th scope="col">Title</th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="org in organizations" :key="org.id">
-          <td>{{ org.title }}</td>
-          <td>
-            <button class="btn btn-primary" @click="populatePopOut(org)">
-              Edit
-            </button>
-          </td>
-          <td>
-            <button class="btn btn-primary" @click="deleteOrg(org)">
-              Delete
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <!-- use the modal component, pass in the prop -->
-    <modal
-      v-if="showModal"
-      v-on:edit-org="submitEdit"
-      :selected_org="this.selected_org"
-      @close="showModal = false"
-    />
   </div>
 </template>
 

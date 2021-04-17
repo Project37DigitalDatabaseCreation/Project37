@@ -11,7 +11,7 @@
     <div
       class="row justify-content-center"
       style="
-        font-family: Glacial Indifference;
+        font-family: Calibri;
         float: center;
         margin-left: 0 auto;
         margin-right: 0 auto;
@@ -54,7 +54,9 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Create Review</h5>
-            <h1><button class="btn btn-primary">Add</button></h1>
+            <h1>
+              <button class="btn save" style="font-size: 0.5em">Add</button>
+            </h1>
           </div>
         </div>
       </div>

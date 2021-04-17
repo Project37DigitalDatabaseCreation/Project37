@@ -15,7 +15,6 @@
             <slot v-if="org.id" name="header"> Update Organization </slot>
             <slot v-else name="header"> Add New Organization </slot>
           </div>
-
           <div class="modal-body">
             <slot name="body">
               <div class="form-group row">
@@ -40,7 +39,6 @@
               </div>
             </slot>
           </div>
-
           <div class="modal-footer">
             <slot name="footer">
               <button class="btn btn-primary" @click="handleSubmit()">
