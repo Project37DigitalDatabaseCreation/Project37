@@ -342,6 +342,17 @@
                   </button>
                 </div>
               </div>
+              <div class="form-group row mb-0">
+                <div class="col-12 px-0">
+                  <button
+                    class="btn btn-primary"
+                    style="width: 100%"
+                    @click="exportReviewToPDF"
+                  >
+                    Export to PDF
+                  </button>
+                </div>
+              </div>              
             </div>
           </div>
         </div>
@@ -352,6 +363,7 @@
 <script>
 import firebase from "firebase";
 import _ from "lodash";
+import { jsPDF } from "jspdf";
 export default {
   props: {
     currentLink: {
@@ -404,6 +416,9 @@ export default {
     generalStandards() {
       return this.$store.getters.generalStandards;
     },
+    standards() {
+      return this.$store.getters.standards;
+    }
   },
   methods: {
     expand(i, j) {
@@ -614,6 +629,77 @@ export default {
       }
       return true;
     },
+    async exportReviewToPDF() {
+        //const db = firebase.firestore();
+        let img = document.getElementById("logo");
+        //let reviewRef = db.doc("/Reviews/" + reviewId);
+        //let review = await reviewRef.get();
+        let review = _.cloneDeep(this.currReview);
+        let scores = _.cloneDeep(this.currScores);
+        //let scores = await db.collection("Scores").where("review_ref", "==", reviewRef).get();
+
+        if (!this.generalStandards || this.generalStandards.length === 0) {
+            await this.$store.dispatch('fetchGeneralStandards');
+        }
+
+        if (!this.standards || this.standards.length === 0) {
+            await this.$store.dispatch('fetchStandards');   
+        }        
+
+        let html = "<h5 style='width: 811px; margin-left: 5px; margin-top: 5px; font-family: sans-serif;'>Course: " + review.course_name + "</h3>";
+
+        this.generalStandards.forEach(gs => {
+            html += "<table style='width: 811px; font-size: 8px; margin-bottom: 5px; font-family: sans-serif;'>";
+            html += "<tr><td style='font-weight: bold; letter-spacing: 2px; letter-spacing: 2px;' colspan=2>Standard " + gs.number + ": " + gs.title + "</td></tr>";
+            html += "<tr><td style='font-weight: bold; letter-spacing: 2px;'>Specific Standards</td><td style='font-weight: bold; letter-spacing: 2px;'>Reviewer Recommendations</td></tr>";
+
+            this.standards.forEach(s => {
+                let score;
+                if (s.general_standard_ref.id === gs.id) {
+                    score = scores.find(element => {
+                        return (s.id === element.standard_ref.id);
+                    });
+
+                    html += "<tr><td style='text-align: left;'><span style='font-weight: bold;'>" + gs.number + "." + s.number + " " + s.title + "</span><br>" + s.annotation;
+
+                    if (score) {
+                        if (score.met) {
+                            html += "<br/>Met</td><td>";
+                        } else {
+                            html += "<br/>Not Met</td><td>";
+                        }
+                        
+                        if (score.comment) {
+                            html += score.comment + "</td></tr>";
+                        }
+
+                        html += "</td></tr>";
+                    } else {
+                        html += "</td><td></td></tr>";
+                    }                   
+                }
+            });
+
+            html += "</table>";
+        });  
+
+        const doc = new jsPDF({
+            orientation: "p", 
+            unit: "px", 
+            format: "letter",
+            hotfixes: ["px_scaling"]
+        });
+
+        doc.addImage(img, 'PNG', 5, 5, 250, 100, 'logo');
+
+        doc.html(html, {
+            callback: function (doc) {
+                doc.save("review.pdf");
+            },
+            x: 5,
+            y: 100
+        }); 
+    }    
   },
   watch: {
     currentLink(val) {

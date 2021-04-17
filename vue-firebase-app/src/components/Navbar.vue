@@ -15,6 +15,7 @@
         <img
           width="428.25"
           height="168.5"
+          id="logo"
           src="../assets/logos/eLMACADEMICTransparent.png"
         />
       </router-link>
