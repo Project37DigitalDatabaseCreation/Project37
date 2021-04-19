@@ -210,7 +210,7 @@ export default {
 }
 
 .navbar {
-    font-family: Glacial Indifference;
+    font-family: Calibri, sans-serif;
     font-size: 1.5em;
 }
 .navbar-toggle .icon-bar{

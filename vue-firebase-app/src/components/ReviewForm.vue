@@ -6,7 +6,7 @@
       justify-content: center;
       align-items: center;
       width: 100%;
-      font-family: Glacial Indifference;
+      font-family: Calibri, sans-serif;
     "
   >
     <div class="loader"></div>
@@ -15,12 +15,12 @@
     <div class="justify-content-center">
       <div
         class="col-md-12"
-        style="padding: 0 !important; font-family: Glacial Indifference"
+        style="padding: 0 !important; font-family: Calibri, sans-serif;"
       >
         <div class="card">
           <div
             class="card-header"
-            style="font-family: Glacial Indifference; font-size: 1.5em"
+            style="font-family: Calibri, sans-serif; font-size: 1.5em"
           >
             Quality Review Form
           </div>
@@ -719,7 +719,7 @@ export default {
 </script>
 <style scoped>
 .card {
-  font-family: Glacial Indifference;
+  font-family: Calibri, sans-serif;
   width: 100%;
 }
 .collapsible {
@@ -743,7 +743,7 @@ export default {
   transition: max-height 0.2s ease-out;
 }
 .form-group {
-  font-family: Glacial Indifference;
+  font-family: Calibri, sans-serif;
   border-radius: 4px 4px;
   box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
     0 1px 5px 0 rgba(0, 0, 0, 0.12) !important;

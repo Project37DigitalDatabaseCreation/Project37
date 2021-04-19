@@ -4,7 +4,7 @@
     style="
       height: 100%;
       background-color: #333333;
-      font-family: Glacial Indifference;
+      font-family: Calibri, sans-serif;
       font-size: 1.5em;
     "
   >
