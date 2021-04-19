@@ -53,6 +53,36 @@ exports.deleteReviewer = functions.https.onCall((request, context) => {
 
 });
 
+// Function Author: Ben McElyea
+// Date: April 2021
+// deleteReviewer - A Cloud function to update a user in the Firebase authentication DB
+// To update this function you must run the command firebase deploy --only functions
+
+exports.updateReviewer = functions.https.onCall((request, context) => {
+    console.log("Updateing user" + request.id)
+    if (!context.auth) {
+        return { message: 'Authentication Required!', code: 401 };
+    }
+    else {
+
+        return admin.auth().updateUser(request.uid, {
+
+            email: request.email,
+            displayName: request.name,
+
+        })
+            .catch((error) => {
+                console.log('Error deleting user:', error);
+                throw new functions.https.HttpsError('internal', error.message)
+            });
+
+    }
+
+});
+
+
+
+
 const db = admin.firestore();
 
 // Function Author: Steve Kizer
