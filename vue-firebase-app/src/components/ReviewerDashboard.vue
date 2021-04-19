@@ -8,21 +8,12 @@
 
 <template>
   <div class="container">
-    <div
-      class="row justify-content-center"
-      style="
-        font-family: Glacial Indifference;
-        float: center;
-        margin-left: 0 auto;
-        margin-right: 0 auto;
-        margin: 0 auto;
-      "
-    >
+    <div class="row justify-content-center">
       <div class="col-sm-2">
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Reviews in Progress</h5>
-            <h1>4</h1>
+            <h1>{{ in_progress_reviews.length }}</h1>
           </div>
         </div>
       </div>
@@ -30,23 +21,23 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Reviews Completed</h5>
-            <h1>3</h1>
+            <h1>{{ completed_reviews.length }}</h1>
           </div>
         </div>
       </div>
       <div class="col-sm-2">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Reviews in Project</h5>
-            <h1>{{ reviews_in_project.length }}</h1>
+            <h5 class="card-title">Reviews</h5>
+            <h1>{{ reviews_from_reviewer.length }}</h1>
           </div>
         </div>
       </div>
       <div class="col-sm-2">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">% Project Complete</h5>
-            <h1>33</h1>
+            <h5 class="card-title">Reviews Complete %</h5>
+            <h1>{{ percentage_completed }}%</h1>
           </div>
         </div>
       </div>
@@ -59,62 +50,143 @@
         </div>
       </div>
     </div>
-    <h4 class="mt-4 text-center">Completed Reviews:</h4>
-    <table class="table mt-5">
-      <thead>
-        <tr>
-          <th scope="col">Course Name</th>
-          <th scope="col">Course Code</th>
-          <th scope="col">Review #</th>
-          <th scope="col">Points</th>
-          <th scope="col">Status</th>
-          <th scope="col">Review</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="review in reviews_in_project" :key="review.id">
-          <td>{{ review.course_name }}</td>
-          <td>{{ review.id }}</td>
-          <td>Need a scheme for review numbers</td>
-          <td>Need reference for Points</td>
-          <td>{{ review.status }}</td>
-          <td>
-            <router-link to="/ClientDashBoard" class="nav-link"
-              >view</router-link
-            >
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="row">
+      <h4 class="mt-4 text-center">Reviews:</h4>
+      <table class="table mt-5">
+        <thead>
+          <tr>
+            <th scope="col">Client</th>
+            <th scope="col">Course Code</th>
+            <th scope="col">Project</th>
+            <th scope="col">Date Created</th>
+            <th scope="col">Status</th>
+            <th scope="col">Review</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="review in reviews_from_reviewer" :key="review.id">
+            <td>{{ review.course_name }}</td>
+            <td>{{ review.course_code }}</td>
+            <td>{{ review.title.value }}</td>
+            <td>{{ review.created }}</td>
+            <td>{{ review.status }}</td>
+            <td>
+              <button class="btn save" @click="openReview(review.id)">
+                Open
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
 <script>
-import { ref } from "vue";
-import getCollection from "../composables/getCollection";
+  import { computed, ref } from 'vue'
+  import firebase from 'firebase'
+  import 'firebase/firestore'
+  import { useRouter } from 'vue-router'
+  export default {
+    setup() {
+      const router = useRouter()
+      const title = ref()
+      const userID = firebase.auth().currentUser.uid
+      const reviews_from_reviewer = ref([])
+      const error = ref(null)
 
-export default {
-  setup() {
-    const in_progress_reviews = ref([]);
-    const completed_reviews = ref([]);
-    const percentage_completed = 0;
-    const { documents: reviews_in_project, error } = getCollection("Reviews");
+      // const projectIDs = ref([])
+      let reviews = {}
 
-    console.log(reviews_in_project);
+      const in_progress_reviews = computed(() =>
+        reviews_from_reviewer.value.filter((review) =>
+          review.status.includes('In-Progress')
+        )
+      )
+      const fetchProjectTitle = (id) => {
+        let item = {}
+        const load = async () => {
+          let res = await firebase
+            .firestore()
+            .collection('Projects')
+            .doc(id)
+            .get()
+          item.value = res.data().title
+        }
+        load()
+        return item
 
-    // const completed_reviews = reviews_in_project.value.filter((review) => {
-    //   return review.status.includes('In-Progress')
-    // })
+        // title.value = res.data().title
+      }
+      const completed_reviews = computed(() =>
+        reviews_from_reviewer.value.filter((review) =>
+          review.status.includes('Complete')
+        )
+      )
+      const percentage_completed = computed(() =>
+        Math.round(
+          (completed_reviews.value.length /
+            reviews_from_reviewer.value.length) *
+            100
+        )
+      )
 
-    return {
-      in_progress_reviews,
-      reviews_in_project,
-      percentage_completed,
-      completed_reviews,
-      error,
-    };
-  },
-};
+      const getReviewsByReviewer = async () => {
+        try {
+          const ref = firebase
+            .firestore()
+            .collection('Reviewers')
+            .doc(userID)
+
+          // fetch the reviews by the reviewer reference returned in getReviewerID()
+          const res = await firebase
+            .firestore()
+            .collection('Reviews')
+            .where('reviewer_ref', '==', ref)
+            .get()
+
+          reviews_from_reviewer.value = res.docs.map((doc) => {
+            return {
+              course_code: doc.data().course_code,
+              course_name: doc.data().course_name,
+              created: new Date(
+                doc.data().created.seconds * 1000
+              ).toUTCString(),
+              status: doc.data().status,
+              id: doc.id,
+              title: fetchProjectTitle(doc.data().project_ref.id),
+            }
+          })
+        } catch (err) {
+          error.value = err.message
+        }
+
+        console.log(reviews_from_reviewer.value[0])
+      }
+
+      //call the function created above
+      getReviewsByReviewer()
+      // for opening Reviews with the router link
+      const openReview = (reviewId) => {
+        router.push({
+          name: 'Review',
+          params: { review: reviewId },
+        })
+      }
+      return {
+        in_progress_reviews,
+        reviews_from_reviewer,
+        percentage_completed,
+        error,
+        reviews,
+        openReview,
+        router,
+        title,
+        fetchProjectTitle,
+        completed_reviews,
+      }
+    },
+  }
 </script>
 
-<style scoped src="../assets/styles/styles.css"></style>
+<style></style>
