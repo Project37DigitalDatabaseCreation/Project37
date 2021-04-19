@@ -58,7 +58,7 @@
             <th scope="col">Client</th>
             <th scope="col">Course Code</th>
             <th scope="col">Project</th>
-            <th scope="col">Points</th>
+            <th scope="col">Date Created</th>
             <th scope="col">Status</th>
             <th scope="col">Review</th>
           </tr>
@@ -66,7 +66,7 @@
         <tbody>
           <tr v-for="review in reviews_from_reviewer" :key="review.id">
             <td>{{ review.course_name }}</td>
-            <td>{{ review.course_code }} Wil be here soon</td>
+            <td>{{ review.course_code }}</td>
             <td>{{ review.title.value }}</td>
             <td>{{ review.created }}</td>
             <td>{{ review.status }}</td>
@@ -146,9 +146,13 @@
             .get()
 
           reviews_from_reviewer.value = res.docs.map((doc) => {
-            // const title = fetchProjectTitle(doc.data().project_ref.id)
             return {
-              ...doc.data(),
+              course_code: doc.data().course_code,
+              course_name: doc.data().course_name,
+              created: new Date(
+                doc.data().created.seconds * 1000
+              ).toUTCString(),
+              status: doc.data().status,
               id: doc.id,
               title: fetchProjectTitle(doc.data().project_ref.id),
             }
