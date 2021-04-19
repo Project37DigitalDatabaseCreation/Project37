@@ -8,7 +8,7 @@
 -->
 <template>
   <div class="container scrollcontainer">
-    <div class="card">
+    <div class="card" style="margin-right: 15px">
       <div class="card-header">Project Reviews</div>
       <div class="card-body">
         <span style="color: red">{{ error }}</span>
@@ -73,6 +73,7 @@
             Add Review To Project
           </button>
         </div>
+        <div class="table-responsive" style="margin-top: 15px">
         <table class="table">
           <thead class="project-head">
             <tr>
@@ -109,6 +110,7 @@
             </tr>
           </tbody>
         </table>
+        </div>
         <!-- use the modal component, pass in the prop -->
         <modal
           v-if="showModal"

@@ -23,7 +23,7 @@
               @click.prevent="AddReviewer"
               style="float: right margin-right:4px; background-color:  #49703b;"
             >
-              + Add Reviewer
+              Add Reviewer
             </button>
           </div>
         </div>
@@ -48,6 +48,7 @@
                   <button
                     @click="showModifyReviewerModal(reviewer.id)"
                     class="btn edit"
+                    title="edit"
                   ></button>
                 </td>
                 <td>
@@ -61,8 +62,8 @@
                       )
                     "
                     class="btn delete"
+                    title="delete"
                   >
-                    Delete
                   </button>
                 </td>
               </tr>

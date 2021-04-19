@@ -2,9 +2,10 @@
   <div
     class="col-3 px-0"
     style="
+      margin-bottom: -25px
       height: 100%;
       background-color: #333333;
-      font-family: Glacial Indifference;
+      font-family: Calibri;
       font-size: 1.5em;
     "
   >

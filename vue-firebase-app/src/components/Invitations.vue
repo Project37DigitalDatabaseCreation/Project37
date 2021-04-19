@@ -1,9 +1,9 @@
 <template>
   <div class="container">
     <div class="container-layout">
-      <div class="col-md-10">
         <div class="card">
           <div class="card-header">Manage Invitations</div>
+          <div class="table-responsive">
           <table class="table">
             <thead class="project-head">
               <tr>
@@ -22,13 +22,11 @@
                   {{ invite.organization_ref.title }}
                 </td>
                 <td>
-                  <button @click="accept(invite, i)" class="btn edit">
-                    Accept
+                  <button @click="accept(invite, i)"  title="accept" class="btn accept">
                   </button>
                 </td>
                 <td>
-                  <button @click="decline(invite, i)" class="btn delete">
-                    Decline
+                  <button @click="decline(invite, i)" title="decline" class="btn delete">
                   </button>
                 </td>
               </tr>
@@ -45,9 +43,9 @@
               <div class="loader"></div>
             </div>
           </table>
+          </div>
           <!-- <p class="mt-3">Current Page: {{ currentPage }}</p> -->
         </div>
-      </div>
     </div>
   </div>
 </template>

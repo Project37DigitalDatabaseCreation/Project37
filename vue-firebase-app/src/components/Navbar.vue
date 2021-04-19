@@ -28,7 +28,7 @@
         aria-controls="navbarSupportedContent"
         aria-expanded="false"
         aria-label="Toggle navigation"
-        style="padding: 15px 218px"
+        style="padding: 15px 148px; margin-left: -118px"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -42,7 +42,7 @@
                   list-style: none;
                   display: flex;
                   justify-content: space-between;
-                  margin-bottom: 30px;
+                  margin-bottom: 5px;
                   text-align: center;
                   width: auto;
                 "
@@ -150,6 +150,11 @@ export default {
         {
           link: "/currentprojects",
           name: "Current Projects",
+          hidden: !this.user.isAdmin,
+        },
+        {
+          link: "/organizations",
+          name: "Manage Organizations",
           hidden: !this.user.isAdmin,
         },
         {

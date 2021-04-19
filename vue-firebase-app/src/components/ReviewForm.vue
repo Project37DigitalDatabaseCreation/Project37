@@ -6,7 +6,7 @@
       justify-content: center;
       align-items: center;
       width: 100%;
-      font-family: Glacial Indifference;
+      font-family: Calibri;
     "
   >
     <div class="loader"></div>
@@ -15,12 +15,12 @@
     <div class="justify-content-center">
       <div
         class="col-md-12"
-        style="padding: 0 !important; font-family: Glacial Indifference"
+        style="padding: 0 !important; font-family: Calibri;"
       >
         <div class="card">
           <div
             class="card-header"
-            style="font-family: Glacial Indifference; font-size: 1.5em"
+            style="font-family: Calibri; font-size: 1.5em"
           >
             Quality Review Form
           </div>
@@ -323,8 +323,8 @@
               <div class="form-group row mb-0">
                 <div class="col-12 px-0">
                   <button
-                    class="btn btn-primary"
-                    style="width: 100%"
+                    class="btn save"
+                    style="width: 100%; margin-bottom: 10px;"
                     @click="saveProgress"
                   >
                     Save Progress
@@ -334,7 +334,7 @@
               <div class="form-group row mb-0">
                 <div class="col-12 px-0">
                   <button
-                    class="btn btn-primary"
+                    class="btn save"
                     style="width: 100%"
                     @click="saveComplete"
                   >
@@ -747,6 +747,12 @@ export default {
   border-radius: 4px 4px;
   box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
     0 1px 5px 0 rgba(0, 0, 0, 0.12) !important;
+}
+/* Save/View Button */
+.save {
+  font-size: 1em;
+  font-family: Glacial Indifference;
+  background-color: #49703b;
 }
 /* TODO: Add in breakpoints for the width */
 </style>
