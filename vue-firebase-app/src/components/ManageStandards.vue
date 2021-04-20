@@ -195,7 +195,7 @@ th {
 /* Save/View Button */
 .save {
   font-size: 0.6em;
-  font-family: Glacial Indifference;
+  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
   background-color: #49703b;
 }
 </style>

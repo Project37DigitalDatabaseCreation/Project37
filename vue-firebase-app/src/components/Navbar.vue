@@ -129,7 +129,7 @@ export default {
       const links = [
         {
           link: "/manage-clients",
-          name: "Manage Clients",
+          name: "Clients",
           hidden: !this.user.isAdmin,
         },
         {
@@ -139,32 +139,32 @@ export default {
         },
         {
           link: "/managereviewers",
-          name: "Manage Reviewers",
+          name: "Reviewers",
           hidden: !this.user.isAdmin,
         },
         {
           link: "/reviews",
-          name: "View Reviews",
+          name: "Reviews",
           hidden: !this.user.isReviewer,
         },
         {
           link: "/currentprojects",
-          name: "Current Projects",
+          name: "Projects",
           hidden: !this.user.isAdmin,
         },
         {
           link: "/organizations",
-          name: "Manage Organizations",
+          name: "Organizations",
           hidden: !this.user.isAdmin,
         },
         {
           link: "/standards",
-          name: "Manage Standards",
+          name: "Standards",
           hidden: !this.user.isAdmin,
         },
         {
           link: "/general-standards",
-          name: "Manage General Standards",
+          name: "General Standards",
           hidden: !this.user.isAdmin,
         },
         {
@@ -215,7 +215,7 @@ export default {
 }
 
 .navbar {
-    font-family: Glacial Indifference;
+    font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
     font-size: 1.5em;
 }
 .navbar-toggle .icon-bar{

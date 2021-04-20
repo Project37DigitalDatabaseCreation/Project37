@@ -65,8 +65,8 @@
         <thead>
           <tr>
             <th scope="col">Client</th>
-            <th scope="col">Course</th>
-            <th scope="col">Code</th>
+            <th scope="col">Course Name</th>
+            <th scope="col">Course Code</th>
             <th scope="col">Reviewer</th>
             <th scope="col">Project</th>
             <th scope="col">Points</th>
@@ -111,8 +111,8 @@
         <thead>
           <tr>
             <th scope="col">Client</th>
-            <th scope="col">Course</th>
-            <th scope="col">Code</th>
+            <th scope="col">Course Name</th>
+            <th scope="col">Course Code</th>
             <th scope="col">Reviewer</th>
             <th scope="col">Project</th>
             <th scope="col">Points</th>

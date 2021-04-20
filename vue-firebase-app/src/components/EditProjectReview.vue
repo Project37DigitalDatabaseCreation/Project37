@@ -12,7 +12,7 @@
       <div class="modal-wrapper">
         <div class="modal-container">
           <div class="modal-header">
-            <slot v-if="review.id" name="header"> Update Review Status </slot>
+            <slot v-if="review.id" name="header"> Update Review </slot>
             <slot v-else name="header"> Add New Review to Project </slot>
           </div>
 
@@ -21,9 +21,8 @@
               <div class="form-group row">
                 <label
                   for="course_name"
-                  class="col-md-4 col-form-label text-md-right"
-                  >Course Name</label
-                >
+                  class="col-md-6 col-form-label text-md-right"
+                  >Course Name</label>
 
                 <div class="col-md-6">
                   <input
@@ -41,8 +40,28 @@
 
               <div class="form-group row">
                 <label
+                  for="course_code"
+                  class="col-md-6 col-form-label text-md-right"
+                  >Course Code</label>
+
+                <div class="col-md-6">
+                  <input
+                    id="course_code"
+                    type="text"
+                    class="form-control"
+                    name="course_code"
+                    value
+                    required
+                    autofocus
+                    v-model="review.course_code"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label
                   for="reviewer"
-                  class="col-md-4 col-form-label text-md-right"
+                  class="col-md-6 col-form-label text-md-right"
                   >Reviewer</label
                 >
 
