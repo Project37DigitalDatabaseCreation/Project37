@@ -1,6 +1,6 @@
 <template>
-    <div class="col-3 px-0" style="height:100%; background-color:#333333; font-family: Calibri, Candara, Segoe, '
-        Segoe UI', Optima, Arial, sans-serif; font-size: 1em;">
+    <div class="col-3 px-0" style="height:100%; background-color:#333333; font-family: Calibri, Candara, Segoe,
+    'Segoe UI', Optima, Arial, sans-serif; font-size: 1em;">
         <div
             style="display:flex; flex-direction:column; justify-content:space-between; height:100%; padding-bottom:10px; padding-top:10px;">
             <template v-for="(item, i) in sortedStandards" :key="i">
