@@ -161,7 +161,7 @@ export default {
             .then(() => {});
 
           //  This user doesn't have any permissions so we have to route them to a default page
-          this.$router.replace({ name: "InvitationPending" });
+          this.$router.replace({ name: "Pending" });
         })
         .catch((err) => {
           this.error = err.message;

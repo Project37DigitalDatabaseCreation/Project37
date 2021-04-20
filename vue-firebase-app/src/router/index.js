@@ -50,7 +50,7 @@ const routes = [
     name: 'Pending',
     component: InvitationPending,
     meta: {
-      requiresAuth: true
+      requiresAuth: false
     }
   },
   {
@@ -188,7 +188,7 @@ const routes = [
     name: 'ManageStandards',
     component: ManageStandards,
     meta: {
-        requiresAdmin: true
+      requiresAdmin: true
     }
   },
   {
@@ -196,7 +196,7 @@ const routes = [
     name: 'ManageGeneralStandards',
     component: ManageGeneralStandards,
     meta: {
-        requiresAdmin: true
+      requiresAdmin: true
     }
   }
 ]
