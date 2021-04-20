@@ -98,7 +98,7 @@ tr:hover {
 div.card-header {
     text-align: center;
     font-size: 1.5em;
-    font-family: Glacial Indifference;
+    font-family: Calibri, Candara, Segoe, 'Segoe UI', Optima, Arial, sans-serif;
 }
 
  /* Form Group */
@@ -125,9 +125,9 @@ form {
 }
 
 .scrollcontainer {
-  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
-  margin-left: 0 auto;
-  margin-right: 0 auto;
+  font-family: Calibri, Candara, Segoe, 'Segoe UI', Optima, Arial, sans-serif;
+  margin-left: 0 auto !important;
+  margin-right: 0 auto !important;
   margin: 0 auto;
 }
 
