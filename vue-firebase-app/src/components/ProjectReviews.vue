@@ -77,7 +77,8 @@
         <table class="table">
           <thead class="project-head">
             <tr>
-              <th>Course</th>
+              <th>Course Name</th>
+              <th>Course Code</th>
               <th>Reviewer</th>
               <th>Status</th>
               <th></th>
@@ -87,6 +88,7 @@
           <tbody class="project-body">
             <tr v-for="review in reviews" :key="review.id">
               <td>{{ review.course_name }}</td>
+              <td>{{ review.course_code }}</td>
               <td>
                 {{
                   review.reviewer.lastName + ", " + review.reviewer.firstName
@@ -304,6 +306,7 @@ export default {
           created: review.created,
           modified: ts,
           course_name: review.course_name,
+          course_code: review.course_code,
           reviewer_ref: reviewerRef,
           project_ref: projectRef,
           status: review.status,
