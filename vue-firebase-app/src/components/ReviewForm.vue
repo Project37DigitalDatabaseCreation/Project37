@@ -218,77 +218,32 @@
                             </div>
                             <div class="form-group row mb-0">
                                 <div class="col-12 px-0">
-                                    <button class="btn btn-primary" style="width:100%;"
+                                    <button class="btn btn-primary"
+                                        style="width:100%; margin-top:5px;"
                                         @click="saveComplete">Save as Complete</button>
+                                </div>
+                            </div>
+                            <div class="form-group row mb-0">
+                                <div class="col-12 px-0">
+                                    <button class="btn btn-primary"
+                                        style="width: 100%; margin-top:5px;"
+                                        @click="exportReviewToPDF">
+                                        Export to PDF
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                  </template>
-                  <div
-                    class="col-12 pr-0 py-4 pl-3"
-                    style="
-                      justify-content: center;
-                      align-items: center;
-                      text-align: center;
-                      font-weight: bold;
-                      font-size: 18px;
-                    "
-                    :style="`background-color:${
-                      standardMet(item)
-                        ? 'rgb(213, 232, 212);'
-                        : 'rgb(232, 213, 212)'
-                    }`"
-                  >
-                    Standard Met:
-                    {{ standardMet(item) ? "Yes" : "No" }}
-                    <br />
-                    Total Points: {{ pointTotal(item) }}
-                  </div>
-                </div>
-              </template>
 
-              <div class="form-group row mb-0">
-                <div class="col-12 px-0">
-                  <button
-                    class="btn save"
-                    style="width: 100%; margin-bottom: 10px;"
-                    @click="saveProgress"
-                  >
-                    Save Progress
-                  </button>
                 </div>
-              </div>
-              <div class="form-group row mb-0">
-                <div class="col-12 px-0">
-                  <button
-                    class="btn save"
-                    style="width: 100%"
-                    @click="saveComplete"
-                  >
-                    Save as Complete
-                  </button>
-                </div>
-              </div>
-              <div class="form-group row mb-0">
-                <div class="col-12 px-0">
-                  <button
-                    class="btn btn-primary"
-                    style="width: 100%"
-                    @click="exportReviewToPDF"
-                  >
-                    Export to PDF
-                  </button>
-                </div>
-              </div>              
             </div>
         </div>
     </div>
 </template>
 <script>
-import firebase from "firebase";
-import _ from "lodash";
-import { jsPDF } from "jspdf";
+import firebase from 'firebase'
+import _ from 'lodash'
+import { jsPDF } from 'jspdf'
 export default {
     props: {
         currentLink: {
@@ -561,103 +516,114 @@ export default {
             // })
             const scores = this.filteredScores(genStandard)
 
-      //  Iterate through these scores
-      for (let i = 0; i < scores.length; i++) {
-        //  If the score hasn't been met, return false
-        if (!scores[i].met) return false;
-      }
-      return true;
-    },
-    async exportReviewToPDF() {
-        //const db = firebase.firestore();
-        let img = document.getElementById("logo");
-        //let reviewRef = db.doc("/Reviews/" + reviewId);
-        //let review = await reviewRef.get();
-        let review = _.cloneDeep(this.currReview);
-        let scores = _.cloneDeep(this.currScores);
-        //let scores = await db.collection("Scores").where("review_ref", "==", reviewRef).get();
+            //  Iterate through these scores
+            for (let i = 0; i < scores.length; i++) {
+                //  If the score hasn't been met, return false
+                if (!scores[i].met) return false
+            }
+            return true
+        },
+        async exportReviewToPDF() {
+            //const db = firebase.firestore();
+            let img = document.getElementById('logo')
+            //let reviewRef = db.doc("/Reviews/" + reviewId);
+            //let review = await reviewRef.get();
+            let review = _.cloneDeep(this.currReview)
+            let scores = _.cloneDeep(this.currScores)
+            //let scores = await db.collection("Scores").where("review_ref", "==", reviewRef).get();
 
-        if (!this.generalStandards || this.generalStandards.length === 0) {
-            await this.$store.dispatch('fetchGeneralStandards');
-        }
+            if (!this.generalStandards || this.generalStandards.length === 0) {
+                await this.$store.dispatch('fetchGeneralStandards')
+            }
 
-        if (!this.standards || this.standards.length === 0) {
-            await this.$store.dispatch('fetchStandards');   
-        }        
+            if (!this.standards || this.standards.length === 0) {
+                await this.$store.dispatch('fetchStandards')
+            }
 
-        let html = "<h5 style='width: 811px; margin-left: 5px; margin-top: 5px; font-family: sans-serif;'>Course: " + review.course_name + "</h3>";
+            let html =
+                "<h5 style='width: 811px; margin-left: 5px; margin-top: 5px; font-family: sans-serif;'>Course: " +
+                review.course_name +
+                '</h3>'
 
-        this.generalStandards.forEach(gs => {
-            html += "<table style='width: 811px; font-size: 8px; margin-bottom: 5px; font-family: sans-serif;'>";
-            html += "<tr><td style='font-weight: bold; letter-spacing: 2px; letter-spacing: 2px;' colspan=2>Standard " + gs.number + ": " + gs.title + "</td></tr>";
-            html += "<tr><td style='font-weight: bold; letter-spacing: 2px;'>Specific Standards</td><td style='font-weight: bold; letter-spacing: 2px;'>Reviewer Recommendations</td></tr>";
+            this.generalStandards.forEach((gs) => {
+                html +=
+                    "<table style='width: 811px; font-size: 8px; margin-bottom: 5px; font-family: sans-serif;'>"
+                html +=
+                    "<tr><td style='font-weight: bold; letter-spacing: 2px; letter-spacing: 2px;' colspan=2>Standard " +
+                    gs.number +
+                    ': ' +
+                    gs.title +
+                    '</td></tr>'
+                html +=
+                    "<tr><td style='font-weight: bold; letter-spacing: 2px;'>Specific Standards</td><td style='font-weight: bold; letter-spacing: 2px;'>Reviewer Recommendations</td></tr>"
 
-            this.standards.forEach(s => {
-                let score;
-                if (s.general_standard_ref.id === gs.id) {
-                    score = scores.find(element => {
-                        return (s.id === element.standard_ref.id);
-                    });
+                this.standards.forEach((s) => {
+                    let score
+                    if (s.general_standard_ref.id === gs.id) {
+                        score = scores.find((element) => {
+                            return s.id === element.standard_ref.id
+                        })
 
-                    html += "<tr><td style='text-align: left;'><span style='font-weight: bold;'>" + gs.number + "." + s.number + " " + s.title + "</span><br>" + s.annotation;
+                        html +=
+                            "<tr><td style='text-align: left;'><span style='font-weight: bold;'>" +
+                            gs.number +
+                            '.' +
+                            s.number +
+                            ' ' +
+                            s.title +
+                            '</span><br>' +
+                            s.annotation
 
-                    if (score) {
-                        if (score.met) {
-                            html += "<br/>Met</td><td>";
+                        if (score) {
+                            if (score.met) {
+                                html += '<br/>Met</td><td>'
+                            } else {
+                                html += '<br/>Not Met</td><td>'
+                            }
+
+                            if (score.comment) {
+                                html += score.comment + '</td></tr>'
+                            }
+
+                            html += '</td></tr>'
                         } else {
-                            html += "<br/>Not Met</td><td>";
+                            html += '</td><td></td></tr>'
                         }
-                        
-                        if (score.comment) {
-                            html += score.comment + "</td></tr>";
-                        }
+                    }
+                })
 
-                        html += "</td></tr>";
-                    } else {
-                        html += "</td><td></td></tr>";
-                    }                   
-                }
-            });
+                html += '</table>'
+            })
 
-            html += "</table>";
-        });  
+            const doc = new jsPDF({
+                orientation: 'p',
+                unit: 'px',
+                format: 'letter',
+                hotfixes: ['px_scaling']
+            })
 
-        const doc = new jsPDF({
-            orientation: "p", 
-            unit: "px", 
-            format: "letter",
-            hotfixes: ["px_scaling"]
-        });
+            doc.addImage(img, 'PNG', 5, 5, 250, 100, 'logo')
 
-        doc.addImage(img, 'PNG', 5, 5, 250, 100, 'logo');
-
-        doc.html(html, {
-            callback: function (doc) {
-                doc.save("review.pdf");
-            },
-            x: 5,
-            y: 100
-        }); 
-    }    
-  },
-  watch: {
-    currentLink(val) {
-      if (val) {
-        let element = document.getElementById(val);
-        element.scrollIntoView(true);
-      }
-    },
-    currReview: {
-      deep: true,
-      handler() {
-        console.log("CURR REVIEW", this.currReview);
-      },
+            doc.html(html, {
+                callback: function (doc) {
+                    doc.save('review.pdf')
+                },
+                x: 5,
+                y: 100
+            })
+        }
     },
     watch: {
         currentLink(val) {
             if (val) {
                 let element = document.getElementById(val)
                 element.scrollIntoView(true)
+            }
+        },
+        currReview: {
+            deep: true,
+            handler() {
+                console.log('CURR REVIEW', this.currReview)
             }
         }
     }
@@ -696,9 +662,9 @@ export default {
 }
 /* Save/View Button */
 .save {
-  font-size: 1em;
-  font-family: Glacial Indifference;
-  background-color: #49703b;
+    font-size: 1em;
+    font-family: Glacial Indifference;
+    background-color: #49703b;
 }
 /* TODO: Add in breakpoints for the width */
 </style>
