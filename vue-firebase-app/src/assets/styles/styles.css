@@ -3,7 +3,7 @@
     position: relative;
     background-color: rgb(2, 2, 2);
     overflow: hidden;
-    font-family: Glacial Indifference;
+    font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
   }
 
   /* Style links inside navigation bar */
@@ -16,7 +16,7 @@
     background-color: black;    
     font-size: 30px;
     color: rgb(235, 245, 243);
-    font-family: Glacial Indifference;
+    font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
   }
 
   /* Hover Color */
@@ -44,7 +44,7 @@ tr:hover {
  /* Save/View Button */
  .save {
   font-size: 1.0em;
-  font-family: Glacial Indifference;
+  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
   background-color:  #49703b;
 }
 
@@ -74,10 +74,23 @@ tr:hover {
   vertical-align: middle; 
 }
 
+/* accept Button */
+.accept {
+  background: url(../icons/accept-tick-icon.png);
+  background-color: transparent; 
+  background-repeat: no-repeat; 
+  background-position: 0px 0px; 
+  border: none; 
+  cursor: pointer; 
+  height: 16px; 
+  padding-left: 16px; 
+  vertical-align: middle; 
+}
+
  /* Submit Button */
  button.submit {
   font-size: 1.1em;
-  font-family: Glacial Indifference;
+  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
   background-color: #0000FF;
 }
 
@@ -85,13 +98,13 @@ tr:hover {
 div.card-header {
     text-align: center;
     font-size: 1.5em;
-    font-family: Glacial Indifference;
+    font-family: Calibri, Candara, Segoe, 'Segoe UI', Optima, Arial, sans-serif;
 }
 
  /* Form Group */
 div.form-group{
   font-size: 1.1em;
-  font-family: Glacial Indifference;
+  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
   justify-content: center;
 }
 
@@ -112,28 +125,28 @@ form {
 }
 
 .scrollcontainer {
-  font-family: Glacial Indifference;
-  margin-left: 0 auto;
-  margin-right: 0 auto;
+  font-family: Calibri, Candara, Segoe, 'Segoe UI', Optima, Arial, sans-serif;
+  margin-left: 0 auto !important;
+  margin-right: 0 auto !important;
   margin: 0 auto;
 }
 
  /* Project Table Head Format */
  .project-head {
   font-size: 1.1em;
-  font-family: Glacial Indifference;
+  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
 }
 
  /* Project Table Body Format */
  .project-body {
   font-size: 1.1em;
-  font-family: Glacial Indifference;
+  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
 }
 
  /* Column Format */
 .col-md-10 {
   padding: 0 !important;
-  font-family: Glacial Indifference;
+  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
   margin-left: 140px;
   margin-right: 140px;
 }
@@ -141,11 +154,11 @@ form {
 .col-sm-2 {
   margin-left: auto;
   margin-right: auto;
-  font-family: Glacial Indifference;
+  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
 }
 .card {
   min-height: 165px;
-  font-family: Glacial Indifference;
+  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
 }
 
 .card-body {
@@ -153,13 +166,13 @@ form {
   text-align: center;
   margin-top: 10px;
   margin-bottom: auto;
-  font-family: Glacial Indifference;
+  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
 }
 
 /* Margin Radio Button */
 .radioButton {
   margin-right: 10px;
-  font-family: Glacial Indifference;
+  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
 }
 
 /* Place all buttons on same line */
@@ -191,7 +204,7 @@ td {
 table {
   padding: 12px;
   border: 1px solid #ddd;
-  font-family: Glacial Indifference;
+  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
   border-collapse:collapse;
   border-spacing:0;
   margin-left: 0 auto; margin-right: 0 auto; margin: 0 auto;
@@ -237,7 +250,7 @@ button {
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
-  font-family: Glacial Indifference;
+  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
   overflow: hidden;
 }
 

@@ -8,9 +8,9 @@
 <template>
   <div class="container scrollcontainer">
     <div class="card">
-      <div class="card-header">
+      <div class="card-header justify-content-center">
         Manage Clients
-        <div style="float: right">
+        <div style="float: right;">
           <button
             @click="goToInvitations"
             class="btn btn-sm"
@@ -21,7 +21,7 @@
           <button
             @click="showModal = true"
             class="btn btn-sm"
-            style="background-color: #49703b"
+            style="background-color: #49703b; margin-right: 40px;"
           >
             Add Clients
           </button>

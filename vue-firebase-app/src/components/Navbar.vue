@@ -15,6 +15,7 @@
         <img
           width="428.25"
           height="168.5"
+          id="logo"
           src="../assets/logos/eLMACADEMICTransparent.png"
         />
       </router-link>
@@ -27,7 +28,7 @@
         aria-controls="navbarSupportedContent"
         aria-expanded="false"
         aria-label="Toggle navigation"
-        style="padding: 15px 218px"
+        style="padding: 15px 148px; margin-left: -118px"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -41,7 +42,7 @@
                   list-style: none;
                   display: flex;
                   justify-content: space-between;
-                  margin-bottom: 30px;
+                  margin-bottom: 5px;
                   text-align: center;
                   width: auto;
                 "
@@ -128,7 +129,7 @@ export default {
       const links = [
         {
           link: "/manage-clients",
-          name: "Manage Clients",
+          name: "Clients",
           hidden: !this.user.isAdmin,
         },
         {
@@ -138,27 +139,32 @@ export default {
         },
         {
           link: "/managereviewers",
-          name: "Manage Reviewers",
+          name: "Reviewers",
           hidden: !this.user.isAdmin,
         },
         {
           link: "/reviews",
-          name: "View Reviews",
+          name: "Reviews",
           hidden: !this.user.isReviewer,
         },
         {
           link: "/currentprojects",
-          name: "Current Projects",
+          name: "Projects",
+          hidden: !this.user.isAdmin,
+        },
+        {
+          link: "/organizations",
+          name: "Organizations",
           hidden: !this.user.isAdmin,
         },
         {
           link: "/standards",
-          name: "Manage Standards",
+          name: "Standards",
           hidden: !this.user.isAdmin,
         },
         {
           link: "/general-standards",
-          name: "Manage General Standards",
+          name: "General Standards",
           hidden: !this.user.isAdmin,
         },
         {
@@ -209,7 +215,7 @@ export default {
 }
 
 .navbar {
-    font-family: Glacial Indifference;
+    font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
     font-size: 1.5em;
 }
 .navbar-toggle .icon-bar{

@@ -12,7 +12,7 @@
     <div
       class="row"
       style="
-        font-family: Glacial Indifference;
+        font-family: Calibri;
         float: center;
         margin-left: 0 auto;
         margin-right: 0 auto;
@@ -85,101 +85,109 @@
 </template>
 
 <script>
-import { computed, ref } from "vue";
-import firebase from "firebase";
-import "firebase/firestore";
-import { useRouter } from "vue-router";
-export default {
-  setup() {
-    const router = useRouter();
-    const clientEmail = firebase.auth().currentUser.email;
-    const reviews_in_project = ref([]);
-    const in_progress_reviews = computed(() =>
-      reviews_in_project.value.filter((review) =>
-        review.status.includes("In-Progress")
+  import { computed, ref } from 'vue'
+  import firebase from 'firebase'
+  import 'firebase/firestore'
+  import { useRouter } from 'vue-router'
+  export default {
+    setup() {
+      const router = useRouter()
+      const clientEmail = firebase.auth().currentUser.email
+      const reviews_in_project = ref([])
+      const in_progress_reviews = computed(() =>
+        reviews_in_project.value.filter((review) =>
+          review.status.includes('In-Progress')
+        )
       )
-    );
-    const completed_reviews = computed(() =>
-      reviews_in_project.value.filter((review) =>
-        review.status.includes("Complete")
+      const completed_reviews = computed(() =>
+        reviews_in_project.value.filter((review) =>
+          review.status.includes('Complete')
+        )
       )
-    );
-    const projectIds = [];
-    const percentage_completed = computed(() =>
-      Math.round(
-        (completed_reviews.value.length / reviews_in_project.value.length) * 100
+      const projectIds = []
+      const percentage_completed = computed(() =>
+        Math.round(
+          (completed_reviews.value.length / reviews_in_project.value.length) *
+            100
+        )
       )
-    );
-    let error = ref(null);
-    let projects = {};
-    const getProjectsByClient = async () => {
-      const res = await firebase.firestore().collection("Projects").get();
-      // map projects to isolate email and user id
-      projects.value = res.docs.map((doc) => {
-        return {
-          email: doc.data().clients.map((client) => client.email),
-          id: doc.id,
-        };
-      });
-      // return array of project ids that the current client is
-      // associated with as an array
-      projects.value.forEach((client) => {
-        if (client.email.includes(clientEmail)) {
-          projectIds.push(client.id);
-        }
-      });
-      // gather reviews by project reference
-      const loadReviews = async (projectReference) => {
-        const project_ref = firebase
+      let error = ref(null)
+      let projects = {}
+      const getProjectsByClient = async () => {
+        const res = await firebase
           .firestore()
-          .collection("Projects")
-          .doc(projectReference);
-        const review = ref();
-        try {
-          const res = await firebase
+          .collection('Projects')
+          .get()
+        // map projects to isolate email and user id
+        projects.value = res.docs.map((doc) => {
+          return {
+            email: doc.data().clients.map((client) => client.email),
+            id: doc.id,
+          }
+        })
+        // return array of project ids that the current client is
+        // associated with as an array
+        projects.value.forEach((client) => {
+          if (client.email.includes(clientEmail)) {
+            projectIds.push(client.id)
+          }
+        })
+        // gather reviews by project reference
+        const loadReviews = async (projectReference) => {
+          const project_ref = firebase
             .firestore()
-            .collection("Reviews")
-            .where("project_ref", "==", project_ref)
-            .get();
-          review.value = res.docs.map((doc) => {
-            return { ...doc.data(), id: doc.id };
-          });
-        } catch (error) {
-          error.value = error.message;
+            .collection('Projects')
+            .doc(projectReference)
+          const review = ref()
+          try {
+            const res = await firebase
+              .firestore()
+              .collection('Reviews')
+              .where('project_ref', '==', project_ref)
+              .get()
+            review.value = res.docs.map((doc) => {
+              return { ...doc.data(), id: doc.id }
+            })
+          } catch (error) {
+            error.value = error.message
+          }
+          return (reviews_in_project.value = reviews_in_project.value.concat(
+            review.value
+          ))
         }
-        return (reviews_in_project.value = reviews_in_project.value.concat(
-          review.value
-        ));
-      };
-      // load all the reviews by looping throught the aggregated
-      // ids and waiting for their Promise to return
-      const loadAllReviews = async (ids) => {
-        for await (const id of ids) {
-          loadReviews(id);
+        // load all the reviews by looping throught the aggregated
+        // ids and waiting for their Promise to return
+        const loadAllReviews = async (ids) => {
+          for await (const id of ids) {
+            loadReviews(id)
+          }
         }
-      };
-      loadAllReviews(projectIds);
-    };
-    getProjectsByClient();
-    const openReview = (reviewId) => {
-      router.push({
-        name: "Review",
-        params: { review: reviewId },
-      });
-    };
-    return {
-      in_progress_reviews,
-      reviews_in_project,
-      percentage_completed,
-      projectIds,
-      error,
-      projects,
-      openReview,
-      router,
-      completed_reviews,
-    };
-  },
-};
+        loadAllReviews(projectIds)
+      }
+
+      //call the function created above
+      getProjectsByClient()
+
+      // for opening Reviews with the router link
+      const openReview = (reviewId) => {
+        router.push({
+          name: 'Review',
+          params: { review: reviewId },
+        })
+      }
+      return {
+        in_progress_reviews,
+        reviews_in_project,
+        percentage_completed,
+        projectIds,
+        error,
+        projects,
+        openReview,
+        router,
+        completed_reviews,
+      }
+    },
+  }
 </script>
 
 <style scoped src="../assets/styles/styles.css"></style>

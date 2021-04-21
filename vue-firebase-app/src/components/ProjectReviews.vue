@@ -8,7 +8,7 @@
 -->
 <template>
   <div class="container scrollcontainer">
-    <div class="card">
+    <div class="card" style="margin-right: 15px">
       <div class="card-header">Project Reviews</div>
       <div class="card-body">
         <span style="color: red">{{ error }}</span>
@@ -73,10 +73,12 @@
             Add Review To Project
           </button>
         </div>
+        <div class="table-responsive" style="margin-top: 15px">
         <table class="table">
           <thead class="project-head">
             <tr>
-              <th>Course</th>
+              <th>Course Name</th>
+              <th>Course Code</th>
               <th>Reviewer</th>
               <th>Status</th>
               <th></th>
@@ -86,6 +88,7 @@
           <tbody class="project-body">
             <tr v-for="review in reviews" :key="review.id">
               <td>{{ review.course_name }}</td>
+              <td>{{ review.course_code }}</td>
               <td>
                 {{
                   review.reviewer.lastName + ", " + review.reviewer.firstName
@@ -109,6 +112,7 @@
             </tr>
           </tbody>
         </table>
+        </div>
         <!-- use the modal component, pass in the prop -->
         <modal
           v-if="showModal"
@@ -302,6 +306,7 @@ export default {
           created: review.created,
           modified: ts,
           course_name: review.course_name,
+          course_code: review.course_code,
           reviewer_ref: reviewerRef,
           project_ref: projectRef,
           status: review.status,

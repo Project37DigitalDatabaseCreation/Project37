@@ -17,7 +17,6 @@
           <div class="modal-header">
             <slot name="header"> Add Client </slot>
           </div>
-
           <div class="modal-body">
             <slot name="body">
               <div class="form-group row">
@@ -82,7 +81,6 @@
               </div>
             </slot>
           </div>
-
           <div class="modal-footer">
             <slot name="footer">
               <button class="btn save" @click="handleSubmit(), $emit('close')">

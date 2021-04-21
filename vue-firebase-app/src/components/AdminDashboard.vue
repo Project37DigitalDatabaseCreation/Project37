@@ -20,9 +20,7 @@
     >
       <div class="col-sm-2">
         <div class="card">
-          <div
-            class="card-body"
-          >
+          <div class="card-body">
             <h5 class="card-title">New Reviews</h5>
             <h1>{{ reviewStats.NewReviewsCount }}</h1>
           </div>
@@ -30,9 +28,7 @@
       </div>
       <div class="col-sm-2">
         <div class="card">
-          <div
-            class="card-body"
-          >
+          <div class="card-body">
             <h5 class="card-title">In Progress Reviews</h5>
             <h1>{{ reviewStats.InProgressReviewsCount }}</h1>
           </div>
@@ -40,9 +36,7 @@
       </div>
       <div class="col-sm-2">
         <div class="card">
-          <div
-            class="card-body"
-          >
+          <div class="card-body">
             <h5 class="card-title">Complete Reviews</h5>
             <h1>{{ reviewStats.CompletedReviewsCount }}</h1>
           </div>
@@ -50,9 +44,7 @@
       </div>
       <div class="col-sm-2">
         <div class="card">
-          <div
-            class="card-body"
-          >
+          <div class="card-body">
             <h5 class="card-title">Current Projects</h5>
             <h1>{{ projectStats.CurrentProjectsCount }}</h1>
           </div>
@@ -60,9 +52,7 @@
       </div>
       <div class="col-sm-2">
         <div class="card">
-          <div
-            class="card-body"
-          >
+          <div class="card-body">
             <h5 class="card-title">Complete Projects</h5>
             <h1>{{ projectStats.CompletedProjectsCount }}</h1>
           </div>
@@ -71,38 +61,38 @@
     </div>
     <h4 class="mt-4 text-center">In-Progress Reviews:</h4>
     <div class="table-responsive">
-    <table class="table mt-5">
-      <thead>
-        <tr>
-          <th scope="col">Client</th>
-          <th scope="col">Course</th>
-          <th scope="col">Code</th>
-          <th scope="col">Reviewer</th>
-          <th scope="col">Project</th>
-          <th scope="col">Points</th>
-          <th scope="col">Status</th>
-          <th scope="col">Review</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="review in inProgressReviews" :key="review.id">
-          <td>{{ review.org.title }}</td>
-          <td>{{ review.course_name }}</td>
-          <td>{{ review.course_code }}</td>
-          <td>
-            {{ review.reviewer.lastName + ", " + review.reviewer.firstName }}
-          </td>
-          <td>{{ review.project.title }}</td>
-          <td>{{ review.points }}</td>
-          <td>{{ review.met_status }}</td>
-          <td>
-            <button class="btn save" @click="openReview(review.id)">
-              Open
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+      <table class="table mt-5">
+        <thead>
+          <tr>
+            <th scope="col">Client</th>
+            <th scope="col">Course Name</th>
+            <th scope="col">Course Code</th>
+            <th scope="col">Reviewer</th>
+            <th scope="col">Project</th>
+            <th scope="col">Points</th>
+            <th scope="col">Status</th>
+            <th scope="col">Review</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="review in inProgressReviews" :key="review.id">
+            <td>{{ review.org.title }}</td>
+            <td>{{ review.course_name }}</td>
+            <td>{{ review.course_code }}</td>
+            <td>
+              {{ review.reviewer.lastName + ", " + review.reviewer.firstName }}
+            </td>
+            <td>{{ review.project.title }}</td>
+            <td>{{ review.points }}</td>
+            <td>{{ review.met_status }}</td>
+            <td>
+              <button class="btn save" @click="openReview(review.id)">
+                Open
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <div v-if="in_progress_reviews.length > PAGE_SIZE">
       <button @click="prevInProgressPage" :disabled="in_progress_page === 1">
@@ -117,38 +107,38 @@
     </div>
     <h4 class="mt-4 text-center">Completed Reviews:</h4>
     <div class="table-responsive">
-    <table class="table mt-5">
-      <thead>
-        <tr>
-          <th scope="col">Client</th>
-          <th scope="col">Course</th>
-          <th scope="col">Code</th>
-          <th scope="col">Reviewer</th>
-          <th scope="col">Project</th>
-          <th scope="col">Points</th>
-          <th scope="col">Status</th>
-          <th scope="col">Review</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="review in completedReviews" :key="review.id">
-          <td>{{ review.org.title }}</td>
-          <td>{{ review.course_name }}</td>
-          <td>{{ review.course_code }}</td>
-          <td>
-            {{ review.reviewer.lastName + ", " + review.reviewer.firstName }}
-          </td>
-          <td>{{ review.project.title }}</td>
-          <td>{{ review.points }}</td>
-          <td>{{ review.met_status }}</td>
-          <td>
-            <button class="btn save" @click="openReview(review.id)">
-              Open
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+      <table class="table mt-5">
+        <thead>
+          <tr>
+            <th scope="col">Client</th>
+            <th scope="col">Course Name</th>
+            <th scope="col">Course Code</th>
+            <th scope="col">Reviewer</th>
+            <th scope="col">Project</th>
+            <th scope="col">Points</th>
+            <th scope="col">Status</th>
+            <th scope="col">Review</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="review in completedReviews" :key="review.id">
+            <td>{{ review.org.title }}</td>
+            <td>{{ review.course_name }}</td>
+            <td>{{ review.course_code }}</td>
+            <td>
+              {{ review.reviewer.lastName + ", " + review.reviewer.firstName }}
+            </td>
+            <td>{{ review.project.title }}</td>
+            <td>{{ review.points }}</td>
+            <td>{{ review.met_status }}</td>
+            <td>
+              <button class="btn save" @click="openReview(review.id)">
+                Open
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <div v-if="completed_reviews.length > PAGE_SIZE">
       <button @click="prevCompletedPage" :disabled="completed_page === 1">
