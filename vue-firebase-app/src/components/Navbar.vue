@@ -28,7 +28,7 @@
         aria-controls="navbarSupportedContent"
         aria-expanded="false"
         aria-label="Toggle navigation"
-        style="padding: 15px 148px; margin-left: -118px"
+        style="padding: 15px 148px; margin-left: -118px; margin-right: -118px"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
