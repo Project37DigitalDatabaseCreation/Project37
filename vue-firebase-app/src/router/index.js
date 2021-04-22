@@ -227,7 +227,7 @@ router.beforeEach(async (to, from, next) => {
     } else if (to.name === "Default" && store.state.user.isAdmin === false &&
       store.state.user.isClient === false && store.state.user.isReviewer === false) {
       // the user has been authenticated but is not either an admin, client or reviewer.
-      next('Pending');
+      next('InvitationPending');
     } else {
       next();
     }
