@@ -9,7 +9,7 @@
   <nav class="navbar navbar-expand-lg navbar-light">
     <div
       class="container"
-      style="width: 450px; text-align: center; justify-content: center"
+      style="width: 400px; text-align: center; justify-content: center"
     >
       <router-link to="/" class="navbar-brand">
         <img
@@ -28,7 +28,7 @@
         aria-controls="navbarSupportedContent"
         aria-expanded="false"
         aria-label="Toggle navigation"
-        style="padding: 15px 148px; margin-left: -118px; margin-right: -118px"
+        style="padding: 15px 100px; margin-right: 140px"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -52,6 +52,7 @@
                   v-if="item.link && !item.hidden"
                   :to="item.link"
                   class="nav-link"
+                  style="color: #1c4d0b;"
                 >
                   {{ item.name }}
                 </router-link>
@@ -64,6 +65,7 @@
                 <a
                   v-else-if="item.method"
                   class="nav-link"
+                  style="color: #1c4d0b;"
                   @click.prevent="signOut"
                   >Sign Out</a
                 >
@@ -128,18 +130,8 @@ export default {
     navLinks() {
       const links = [
         {
-          link: "/manage-clients",
-          name: "Clients",
-          hidden: !this.user.isAdmin,
-        },
-        {
-          link: "/project-reviews",
-          name: "Project Reviews",
-          hidden: !this.user.isAdmin,
-        },
-        {
-          link: "/managereviewers",
-          name: "Reviewers",
+          link: "/currentprojects",
+          name: "Projects",
           hidden: !this.user.isAdmin,
         },
         {
@@ -148,8 +140,13 @@ export default {
           hidden: !this.user.isReviewer,
         },
         {
-          link: "/currentprojects",
-          name: "Projects",
+          link: "/project-reviews",
+          name: "Project Reviews",
+          hidden: !this.user.isAdmin,
+        },
+        {
+          link: "/manage-clients",
+          name: "Clients",
           hidden: !this.user.isAdmin,
         },
         {
@@ -158,13 +155,18 @@ export default {
           hidden: !this.user.isAdmin,
         },
         {
-          link: "/standards",
-          name: "Standards",
+          link: "/managereviewers",
+          name: "Reviewers",
           hidden: !this.user.isAdmin,
         },
         {
           link: "/general-standards",
           name: "General Standards",
+          hidden: !this.user.isAdmin,
+        },
+        {
+          link: "/standards",
+          name: "Standards",
           hidden: !this.user.isAdmin,
         },
         {

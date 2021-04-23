@@ -19,15 +19,15 @@
       "
     >
       <div class="col-sm-2">
-        <div class="card">
+        <div class="card" style="border-color: #1c4d0b;">
           <div class="card-body">
-            <h5 class="card-title">New Reviews</h5>
+            <h5 class="card-title">New <br> Reviews</h5>
             <h1>{{ reviewStats.NewReviewsCount }}</h1>
           </div>
         </div>
       </div>
       <div class="col-sm-2">
-        <div class="card">
+        <div class="card" style="border-color: #1c4d0b;">
           <div class="card-body">
             <h5 class="card-title">In Progress Reviews</h5>
             <h1>{{ reviewStats.InProgressReviewsCount }}</h1>
@@ -35,7 +35,7 @@
         </div>
       </div>
       <div class="col-sm-2">
-        <div class="card">
+        <div class="card" style="border-color: #1c4d0b;">
           <div class="card-body">
             <h5 class="card-title">Complete Reviews</h5>
             <h1>{{ reviewStats.CompletedReviewsCount }}</h1>
@@ -43,7 +43,7 @@
         </div>
       </div>
       <div class="col-sm-2">
-        <div class="card">
+        <div class="card" style="border-color: #1c4d0b;">
           <div class="card-body">
             <h5 class="card-title">Current Projects</h5>
             <h1>{{ projectStats.CurrentProjectsCount }}</h1>
@@ -51,7 +51,7 @@
         </div>
       </div>
       <div class="col-sm-2">
-        <div class="card">
+        <div class="card" style="border-color: #1c4d0b;">
           <div class="card-body">
             <h5 class="card-title">Complete Projects</h5>
             <h1>{{ projectStats.CompletedProjectsCount }}</h1>

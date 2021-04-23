@@ -541,9 +541,9 @@ export default {
             }
 
             let html =
-                "<h5 style='width: 811px; margin-left: 5px; margin-top: 5px; font-family: sans-serif;'>Course: " +
-                review.course_name +
-                '</h3>'
+                "<h5 style='width: 811px; margin-left: 5px; margin-top: 5px; font-family: sans-serif;'>Course Name: " +
+                review.course_name + "<br>" + "Course Code: " + review.course_code +
+                "</h3>";
 
             this.generalStandards.forEach((gs) => {
                 html +=

@@ -22,7 +22,8 @@
                 <label
                   for="course_name"
                   class="col-md-6 col-form-label text-md-right"
-                  >Course Name</label>
+                  >Course Name</label
+                >
 
                 <div class="col-md-6">
                   <input
@@ -42,7 +43,8 @@
                 <label
                   for="course_code"
                   class="col-md-6 col-form-label text-md-right"
-                  >Course Code</label>
+                  >Course Code</label
+                >
 
                 <div class="col-md-6">
                   <input
@@ -87,6 +89,31 @@
                   </select>
                 </div>
               </div>
+
+              <div class="form-group row">
+                <label
+                  for="status"
+                  class="col-md-6 col-form-label text-md-right"
+                  >Status</label
+                >
+                <div class="col-md-6">
+                  <select
+                    id="status"
+                    class="form-control"
+                    name="status"
+                    required
+                    v-model="review.status"
+                  >
+                    <option
+                      v-for="status in statusOptions"
+                      :value="status"
+                      :key="status"
+                    >
+                      {{ status }}
+                    </option>
+                  </select>
+                </div>
+              </div>
             </slot>
           </div>
 
@@ -112,6 +139,7 @@ export default {
     return {
       showModal: false,
       review: this.selected_review,
+      statusOptions: ["New", "In Progress", "Complete"],
     };
   },
   methods: {
