@@ -27,7 +27,7 @@
         <table class="table">
           <thead class="project-head">
             <tr>
-              <th scope="col" style="text-align: center">Title</th>
+              <th scope="col" style="text-align: center">Organization</th>
               <th scope="col"></th>
               <th scope="col"></th>
             </tr>
