@@ -28,7 +28,7 @@
             <tr>
               <th>Project</th>
               <th>Description</th>
-              <th>Clients</th>
+              <th style="text-align: left">Clients</th>
               <th style="text-align: center">Reviews</th>
               <th>Status</th>
               <th>Organization</th>

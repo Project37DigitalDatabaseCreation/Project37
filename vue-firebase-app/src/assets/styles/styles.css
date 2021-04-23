@@ -207,7 +207,9 @@ table {
   font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
   border-collapse:collapse;
   border-spacing:0;
-  margin-left: 0 auto; margin-right: 0 auto; margin: 0 auto;
+  margin-left: 0 auto;
+  margin-right: 0 auto;
+  margin: 0 auto;
   overflow: auto;
   width: 100%;
 }

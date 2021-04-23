@@ -269,7 +269,6 @@ export default {
 
       if (!review.created) {
         review.created = ts;
-        review.status = "New";
 
         firebase
           .firestore()
